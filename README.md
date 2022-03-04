@@ -1,3 +1,6 @@
+[![Java CI with Maven](https://github.com/umjammer/JustFLAC/actions/workflows/maven.yml/badge.svg)](https://github.com/umjammer/JustFLAC/actions/workflows/maven.yml)
+[![CodeQL](https://github.com/umjammer/JustFLAC/actions/workflows/codeql.yml/badge.svg)](https://github.com/umjammer/JustFLAC/actions/workflows/codeql.yml)
+
 Welcome to JustFLAC
 ===================
 
