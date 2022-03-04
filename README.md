@@ -1,4 +1,4 @@
-
+[![Release](https://jitpack.io/v/umjammer/JustFLAC.svg)](https://jitpack.io/#umjammer/JustFLAC)
 [![Java CI with Maven](https://github.com/umjammer/JustFLAC/actions/workflows/maven.yml/badge.svg)](https://github.com/umjammer/JustFLAC/actions/workflows/maven.yml)
 [![CodeQL](https://github.com/umjammer/JustFLAC/actions/workflows/codeql.yml/badge.svg)](https://github.com/umjammer/JustFLAC/actions/workflows/codeql.yml)
 
@@ -9,6 +9,12 @@ What the heck?
 --------------
 
 It isn't a fish, it's just a fork of the popular jFLAC decoder. 
+
+Install
+-------
+
+https://jitpack.io/#umjammer/JustFLAC
+
 
 Why fork jFLAC?
 ---------------
