@@ -1,5 +1,7 @@
 package org.kc7bfi.jflac.sound.spi;
 
+import java.io.BufferedInputStream;
+
 /**
  * libFLAC - Free Lossless Audio Codec library
  * Copyright (C) 2001,2002,2003  Josh Coalson
@@ -97,8 +99,9 @@ public class FlacAudioFileReader extends AudioFileReader {
      *                if an I/O exception occurs.
      */
     public AudioFileFormat getAudioFileFormat(URL url) throws UnsupportedAudioFileException, IOException {
-        InputStream inputStream = url.openStream();
+        InputStream inputStream = null;
         try {
+            inputStream = url.openStream();
             return getAudioFileFormat(inputStream);
         } finally {
             inputStream.close();
@@ -140,7 +143,7 @@ public class FlacAudioFileReader extends AudioFileReader {
     protected AudioFileFormat getAudioFileFormat(InputStream bitStream, int mediaLength) throws UnsupportedAudioFileException, IOException {
 logger.fine("enter available: " + bitStream.available());
         if (!bitStream.markSupported()) {
-            throw new IOException("mark not supoorted");
+            bitStream = new BufferedInputStream(bitStream);
         }
         AudioFormat format;
         try {
