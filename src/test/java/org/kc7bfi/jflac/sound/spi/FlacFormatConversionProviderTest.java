@@ -7,6 +7,8 @@
 package org.kc7bfi.jflac.sound.spi;
 
 import java.io.BufferedInputStream;
+import java.io.File;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -22,6 +24,7 @@ import org.junit.jupiter.api.Test;
 
 import vavi.util.Debug;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static vavi.sound.SoundUtil.volume;
 
@@ -110,6 +113,20 @@ Debug.println("OUT: " + outAudioFormat);
         line.drain();
         line.stop();
         line.close();
+    }
+
+    @Test
+    void test2() throws Exception {
+        URL url = FlacFormatConversionProviderTest.class.getResource(inFile).toURI().toURL();
+        AudioInputStream ais = AudioSystem.getAudioInputStream(url);
+        assertEquals(FlacEncoding.FLAC, ais.getFormat().getEncoding());
+    }
+
+    @Test
+    void test3() throws Exception {
+        File file = Paths.get(FlacFormatConversionProviderTest.class.getResource(inFile).toURI()).toFile();
+        AudioInputStream ais = AudioSystem.getAudioInputStream(file);
+        assertEquals(FlacEncoding.FLAC, ais.getFormat().getEncoding());
     }
 }
 
