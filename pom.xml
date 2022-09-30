@@ -22,7 +22,6 @@
         <configuration>
           <argLine>
             -Djava.util.logging.config.file=${project.build.testOutputDirectory}/logging.properties
-            -Dvavi.test.dev=true
           </argLine>
           <trimStackTrace>false</trimStackTrace>
         </configuration>
