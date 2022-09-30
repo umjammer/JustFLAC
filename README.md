@@ -1,6 +1,7 @@
 [![Release](https://jitpack.io/v/umjammer/JustFLAC.svg)](https://jitpack.io/#umjammer/JustFLAC)
 [![Java CI with Maven](https://github.com/umjammer/JustFLAC/actions/workflows/maven.yml/badge.svg)](https://github.com/umjammer/JustFLAC/actions/workflows/maven.yml)
 [![CodeQL](https://github.com/umjammer/JustFLAC/actions/workflows/codeql.yml/badge.svg)](https://github.com/umjammer/JustFLAC/actions/workflows/codeql.yml)
+![Java](https://img.shields.io/badge/Java-8-b07219)
 
 Welcome to JustFLAC
 ===================
