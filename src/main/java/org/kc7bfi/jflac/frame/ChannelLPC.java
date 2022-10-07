@@ -1,6 +1,4 @@
-package org.kc7bfi.jflac.frame;
-
-/**
+/*
  * libFLAC - Free Lossless Audio Codec library
  * Copyright (C) 2001,2002,2003  Josh Coalson
  *
@@ -20,6 +18,8 @@ package org.kc7bfi.jflac.frame;
  * Boston, MA  02111-1307, USA.
  */
 
+package org.kc7bfi.jflac.frame;
+
 import java.io.IOException;
 
 import org.kc7bfi.jflac.ChannelData;
@@ -33,17 +33,26 @@ import org.kc7bfi.jflac.util.BitMath;
  * @author kc7bfi
  */
 public class ChannelLPC extends Channel {
-    private static final int SUBFRAME_LPC_QLP_COEFF_PRECISION_LEN = 4; /* bits */
-    private static final int SUBFRAME_LPC_QLP_SHIFT_LEN = 5; /* bits */
+    /* bits */
+    private static final int SUBFRAME_LPC_QLP_COEFF_PRECISION_LEN = 4;
+    /* bits */
+    private static final int SUBFRAME_LPC_QLP_SHIFT_LEN = 5;
     private static final int MAX_LPC_ORDER = 32;
 
-    private EntropyCodingMethod entropyCodingMethod; // The residual coding method.
-    private int order; // The FIR order.
-    private int qlpCoeffPrecision; // Quantized FIR filter coefficient precision in bits.
-    private int quantizationLevel; // The qlp coeff shift needed.
-    private int[] qlpCoeff = new int[MAX_LPC_ORDER]; // FIR filter coefficients.
-    private int[] warmup = new int[MAX_LPC_ORDER]; // Warmup samples to prime the predictor, length == order.
-    private int[] residual; // The residual signal, length == (blocksize minus order) samples.
+    /** The residual coding method. */
+    private EntropyCodingMethod entropyCodingMethod;
+    /** The FIR order. */
+    private int order;
+    /** Quantized FIR filter coefficient precision in bits. */
+    private int qlpCoeffPrecision;
+    /** The qlp coeff shift needed. */
+    private int quantizationLevel;
+    /** FIR filter coefficients. */
+    private int[] qlpCoeff = new int[MAX_LPC_ORDER];
+    /** Warmup samples to prime the predictor, length == order. */
+    private int[] warmup = new int[MAX_LPC_ORDER];
+    /** The residual signal, length == (blocksize minus order) samples. */
+    private int[] residual;
 
     /**
      * The constructor.
@@ -124,21 +133,16 @@ public class ChannelLPC extends Channel {
         }
     }
     
-    /**
-     * @see java.lang.Object#toString()
-     */
+    @Override
     public String toString() {
-        StringBuffer sb = new StringBuffer("ChannelLPC: Order=" + order +  " WastedBits=" + wastedBits);
-        sb.append(" qlpCoeffPrecision=" + qlpCoeffPrecision + " quantizationLevel=" + quantizationLevel);
+        StringBuilder sb = new StringBuilder("ChannelLPC: Order=" + order +  " WastedBits=" + wastedBits);
+        sb.append(" qlpCoeffPrecision=").append(qlpCoeffPrecision).append(" quantizationLevel=").append(quantizationLevel);
         sb.append("\n\t\tqlpCoeff: ");
-        for (int i = 0; i < order; i++) sb.append(qlpCoeff[i] + " ");
+        for (int i = 0; i < order; i++) sb.append(qlpCoeff[i]).append(" ");
         sb.append("\n\t\tWarmup: ");
-        for (int i = 0; i < order; i++) sb.append(warmup[i] + " ");
+        for (int i = 0; i < order; i++) sb.append(warmup[i]).append(" ");
         sb.append("\n\t\tParameter: ");
-        for (int i = 0; i < (1 << ((EntropyPartitionedRice) entropyCodingMethod).order); i++) sb.append(((EntropyPartitionedRice) entropyCodingMethod).contents.parameters[i] + " ");
-        //sb.append("\n\t\tResidual: ");
-        //for (int i = 0; i < header.blockSize; i++) sb.append(residual[i] + " ");
+        for (int i = 0; i < (1 << entropyCodingMethod.order); i++) sb.append(entropyCodingMethod.contents.parameters[i]).append(" ");
         return sb.toString();
     }
-
 }

@@ -1,6 +1,4 @@
-package org.kc7bfi.jflac.sound.spi;
-
-/**
+/*
  * libFLAC - Free Lossless Audio Codec library
  * Copyright (C) 2001,2002,2003  Josh Coalson
  *
@@ -20,11 +18,14 @@ package org.kc7bfi.jflac.sound.spi;
  * Boston, MA  02111-1307, USA.
  */
 
+package org.kc7bfi.jflac.sound.spi;
+
 import javax.sound.sampled.AudioFormat;
+
 
 /**
  * Encodings used by the Flac audio decoder.
- * 
+ *
  * @author Marc Gimpel, Wimba S.A. (marc@wimba.com)
  * @version $Revision: 1.2 $
  */
@@ -35,9 +36,8 @@ public class FlacEncoding extends AudioFormat.Encoding {
 
     /**
      * Constructs a new encoding.
-     * 
-     * @param name -
-     *            Name of the Flac encoding.
+     *
+     * @param name Name of the Flac encoding.
      */
     public FlacEncoding(String name) {
         super(name);

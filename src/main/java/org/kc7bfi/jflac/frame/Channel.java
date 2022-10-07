@@ -1,6 +1,4 @@
-package org.kc7bfi.jflac.frame;
-
-/**
+/*
  * libFLAC - Free Lossless Audio Codec library
  * Copyright (C) 2001,2002,2003  Josh Coalson
  *
@@ -19,6 +17,8 @@ package org.kc7bfi.jflac.frame;
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA  02111-1307, USA.
  */
+
+package org.kc7bfi.jflac.frame;
 
 /**
  * Base class for FLAC subframe (channel) classes.

@@ -4,10 +4,11 @@
  * To change the template for this generated file go to
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
+
 package org.kc7bfi.jflac;
 
 import java.util.HashSet;
-import java.util.Iterator;
+import java.util.Set;
 
 import org.kc7bfi.jflac.frame.Frame;
 import org.kc7bfi.jflac.metadata.Metadata;
@@ -18,7 +19,8 @@ import org.kc7bfi.jflac.metadata.Metadata;
  * @author kc7bfi
  */
 class FrameListeners implements FrameListener {
-    private HashSet frameListeners = new HashSet();
+
+    private final Set<FrameListener> frameListeners = new HashSet<>();
     
     /**
      * Add a frame listener.
@@ -43,13 +45,11 @@ class FrameListeners implements FrameListener {
     /**
      * Process metadata records.
      * @param metadata the metadata block
-     * @see org.kc7bfi.jflac.FrameListener#processMetadata(org.kc7bfi.jflac.metadata.MetadataBase)
+     * @see org.kc7bfi.jflac.FrameListener#processMetadata(org.kc7bfi.jflac.metadata.Metadata)
      */
     public void processMetadata(Metadata metadata) {
         synchronized (frameListeners) {
-            Iterator it = frameListeners.iterator();
-            while (it.hasNext()) {
-                FrameListener listener = (FrameListener)it.next();
+            for (FrameListener listener : frameListeners) {
                 listener.processMetadata(metadata);
             }
         }
@@ -62,9 +62,7 @@ class FrameListeners implements FrameListener {
      */
     public void processFrame(Frame frame) {
         synchronized (frameListeners) {
-            Iterator it = frameListeners.iterator();
-            while (it.hasNext()) {
-                FrameListener listener = (FrameListener)it.next();
+            for (FrameListener listener : frameListeners) {
                 listener.processFrame(frame);
             }
         }
@@ -77,12 +75,9 @@ class FrameListeners implements FrameListener {
      */
     public void processError(String msg) {
         synchronized (frameListeners) {
-            Iterator it = frameListeners.iterator();
-            while (it.hasNext()) {
-                FrameListener listener = (FrameListener)it.next();
+            for (FrameListener listener : frameListeners) {
                 listener.processError(msg);
             }
         }
     }
-
 }

@@ -1,6 +1,4 @@
-package org.kc7bfi.jflac.metadata;
-
-/**
+/*
  * libFLAC - Free Lossless Audio Codec library
  * Copyright (C) 2001,2002,2003  Josh Coalson
  *
@@ -19,6 +17,8 @@ package org.kc7bfi.jflac.metadata;
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA  02111-1307, USA.
  */
+
+package org.kc7bfi.jflac.metadata;
 
 import java.io.IOException;
 
@@ -44,10 +44,14 @@ public class CueSheet extends Metadata {
      */
     protected byte[] mediaCatalogNumber = new byte[129];
 
-    protected long leadIn = 0; // The number of lead-in samples.
-    protected boolean isCD = false; // true if CUESHEET corresponds to a Compact Disc, else false
-    protected int numTracks = 0; // The number of tracks.
-    protected CueTrack[] tracks; // NULL if num_tracks == 0, else pointer to array of tracks.
+    /** The number of lead-in samples. */
+    protected long leadIn;
+    /** true if CUESHEET corresponds to a Compact Disc, else false */
+    protected boolean isCD;
+    /** The number of tracks. */
+    protected int numTracks;
+    /** NULL if num_tracks == 0, else pointer to array of tracks. */
+    protected CueTrack[] tracks;
 
     /**
      * The constructor.
@@ -135,5 +139,4 @@ public class CueSheet extends Metadata {
             }
         }
     }
-
 }

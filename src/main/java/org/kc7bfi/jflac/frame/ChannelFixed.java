@@ -1,6 +1,4 @@
-package org.kc7bfi.jflac.frame;
-
-/**
+/*
  * libFLAC - Free Lossless Audio Codec library
  * Copyright (C) 2001,2002,2003  Josh Coalson
  *
@@ -20,6 +18,8 @@ package org.kc7bfi.jflac.frame;
  * Boston, MA  02111-1307, USA.
  */
 
+package org.kc7bfi.jflac.frame;
+
 import java.io.IOException;
 
 import org.kc7bfi.jflac.ChannelData;
@@ -34,10 +34,14 @@ import org.kc7bfi.jflac.io.BitInputStream;
 public class ChannelFixed extends Channel {
     private static final int MAX_FIXED_ORDER = 4;
 
-    private EntropyCodingMethod entropyCodingMethod; // The residual coding method.
-    private int order; // The polynomial order.
-    private int[] warmup = new int[MAX_FIXED_ORDER]; // Warmup samples to prime the predictor, length == order.
-    private int[] residual; // The residual signal, length == (blocksize minus order) samples.
+    /** The residual coding method. */
+    private EntropyCodingMethod entropyCodingMethod;
+    /** The polynomial order. */
+    private int order;
+    /** Warmup samples to prime the predictor, length == order. */
+    private int[] warmup = new int[MAX_FIXED_ORDER];
+    /** The residual signal, length == (blocksize minus order) samples. */
+    private int[] residual;
 
     /**
      * The constructor.
@@ -84,12 +88,10 @@ public class ChannelFixed extends Channel {
         FixedPredictor.restoreSignal(residual, header.blockSize - order, order, channelData.getOutput(), order);
     }
     
-    /**
-     * @see java.lang.Object#toString()
-     */
+    @Override
     public String toString() {
-        StringBuffer sb = new StringBuffer("FLACSubframe_Fixed: Order=" + order + " PartitionOrder=" + ((EntropyPartitionedRice)entropyCodingMethod).order + " WastedBits=" + wastedBits);
-        for (int i = 0; i < order; i++) sb.append(" warmup[" + i + "]=" + warmup[i]);
+        StringBuilder sb = new StringBuilder("FLACSubframe_Fixed: Order=" + order + " PartitionOrder=" + entropyCodingMethod.order + " WastedBits=" + wastedBits);
+        for (int i = 0; i < order; i++) sb.append(" warmup[").append(i).append("]=").append(warmup[i]);
         return sb.toString();
     }
 }

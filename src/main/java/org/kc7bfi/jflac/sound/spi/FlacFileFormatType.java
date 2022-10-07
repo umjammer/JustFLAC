@@ -1,6 +1,4 @@
-package org.kc7bfi.jflac.sound.spi;
-
-/**
+/*
  * libFLAC - Free Lossless Audio Codec library
  * Copyright (C) 2001,2002,2003  Josh Coalson
  *
@@ -20,7 +18,10 @@ package org.kc7bfi.jflac.sound.spi;
  * Boston, MA  02111-1307, USA.
  */
 
+package org.kc7bfi.jflac.sound.spi;
+
 import javax.sound.sampled.AudioFileFormat;
+
 
 /**
  * FileFormatTypes used by the FLAC audio decoder.
@@ -34,11 +35,9 @@ public class FlacFileFormatType extends AudioFileFormat.Type {
 
     /**
      * Constructs a file type.
-     * 
-     * @param name -
-     *            the name of the Flac File Format.
-     * @param extension -
-     *            the file extension for this Flac File Format.
+     *
+     * @param name      the name of the Flac File Format.
+     * @param extension the file extension for this Flac File Format.
      */
     public FlacFileFormatType(String name, String extension) {
         super(name, extension);

@@ -19,7 +19,7 @@ import java.io.RandomAccessFile;
  */
 public class RandomFileInputStream extends InputStream {
     
-    protected RandomAccessFile randomFile = null;
+    protected RandomAccessFile randomFile;
 
     /**
      * Constructor.

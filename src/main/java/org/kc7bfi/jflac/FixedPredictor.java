@@ -1,6 +1,4 @@
-package org.kc7bfi.jflac;
-
-/**
+/*
  *  libFLAC - Free Lossless Audio Codec library
  * Copyright (C) 2000,2001,2002,2003  Josh Coalson
  *
@@ -19,6 +17,8 @@ package org.kc7bfi.jflac;
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA  02111-1307, USA.
  */
+
+package org.kc7bfi.jflac;
 
 /**
  * Fixed Predictor utility class.
@@ -79,11 +79,11 @@ public class FixedPredictor {
         // Estimate the expected number of bits per residual signal sample.
         // 'total_error*' is linearly related to the variance of the residual
         // signal, so we use it directly to compute E(|x|)
-        residualBitsPerSample[0] = (double) ((totalError0 > 0) ? Math.log(M_LN2 * (double) totalError0 / (double) dataLen) / M_LN2 : 0.0);
-        residualBitsPerSample[1] = (double) ((totalError1 > 0) ? Math.log(M_LN2 * (double) totalError1 / (double) dataLen) / M_LN2 : 0.0);
-        residualBitsPerSample[2] = (double) ((totalError2 > 0) ? Math.log(M_LN2 * (double) totalError2 / (double) dataLen) / M_LN2 : 0.0);
-        residualBitsPerSample[3] = (double) ((totalError3 > 0) ? Math.log(M_LN2 * (double) totalError3 / (double) dataLen) / M_LN2 : 0.0);
-        residualBitsPerSample[4] = (double) ((totalError4 > 0) ? Math.log(M_LN2 * (double) totalError4 / (double) dataLen) / M_LN2 : 0.0);
+        residualBitsPerSample[0] = (totalError0 > 0) ? Math.log(M_LN2 * (double) totalError0 / (double) dataLen) / M_LN2 : 0.0;
+        residualBitsPerSample[1] = (totalError1 > 0) ? Math.log(M_LN2 * (double) totalError1 / (double) dataLen) / M_LN2 : 0.0;
+        residualBitsPerSample[2] = (totalError2 > 0) ? Math.log(M_LN2 * (double) totalError2 / (double) dataLen) / M_LN2 : 0.0;
+        residualBitsPerSample[3] = (totalError3 > 0) ? Math.log(M_LN2 * (double) totalError3 / (double) dataLen) / M_LN2 : 0.0;
+        residualBitsPerSample[4] = (totalError4 > 0) ? Math.log(M_LN2 * (double) totalError4 / (double) dataLen) / M_LN2 : 0.0;
         
         return order;
     }
@@ -144,11 +144,11 @@ public class FixedPredictor {
         // 'total_error*' is linearly related to the variance of the residual
         // signal, so we use it directly to compute E(|x|)
         // with VC++ you have to spoon feed it the casting
-        residualBitsPerSample[0] = (double) ((totalError0 > 0) ? Math.log(M_LN2 * (double) (long) totalError0 / (double) dataLen) / M_LN2 : 0.0);
-        residualBitsPerSample[1] = (double) ((totalError1 > 0) ? Math.log(M_LN2 * (double) (long) totalError1 / (double) dataLen) / M_LN2 : 0.0);
-        residualBitsPerSample[2] = (double) ((totalError2 > 0) ? Math.log(M_LN2 * (double) (long) totalError2 / (double) dataLen) / M_LN2 : 0.0);
-        residualBitsPerSample[3] = (double) ((totalError3 > 0) ? Math.log(M_LN2 * (double) (long) totalError3 / (double) dataLen) / M_LN2 : 0.0);
-        residualBitsPerSample[4] = (double) ((totalError4 > 0) ? Math.log(M_LN2 * (double) (long) totalError4 / (double) dataLen) / M_LN2 : 0.0);
+        residualBitsPerSample[0] = (totalError0 > 0) ? Math.log(M_LN2 * (double) totalError0 / (double) dataLen) / M_LN2 : 0.0;
+        residualBitsPerSample[1] = (totalError1 > 0) ? Math.log(M_LN2 * (double) totalError1 / (double) dataLen) / M_LN2 : 0.0;
+        residualBitsPerSample[2] = (totalError2 > 0) ? Math.log(M_LN2 * (double) totalError2 / (double) dataLen) / M_LN2 : 0.0;
+        residualBitsPerSample[3] = (totalError3 > 0) ? Math.log(M_LN2 * (double) totalError3 / (double) dataLen) / M_LN2 : 0.0;
+        residualBitsPerSample[4] = (totalError4 > 0) ? Math.log(M_LN2 * (double) totalError4 / (double) dataLen) / M_LN2 : 0.0;
         
         return order;
     }
@@ -161,13 +161,11 @@ public class FixedPredictor {
      * @param residual
      */
     public static void computeResidual(int[] data, int dataLen, int order, int[] residual) {
-        int idataLen = (int) dataLen;
+        int idataLen = dataLen;
         
         switch (order) {
             case 0 :
-                for (int i = 0; i < idataLen; i++) {
-                    residual[i] = data[i];
-                }
+                if (idataLen >= 0) System.arraycopy(data, 0, residual, 0, idataLen);
                 break;
             case 1 :
                 for (int i = 0; i < idataLen; i++) {
@@ -205,13 +203,11 @@ public class FixedPredictor {
      * @param startAt   The starting position in the data array
      */
     public static void restoreSignal(int[] residual, int dataLen, int order, int[] data, int startAt) {
-        int idataLen = (int) dataLen;
+        int idataLen = dataLen;
         
         switch (order) {
             case 0 :
-                for (int i = 0; i < idataLen; i++) {
-                    data[i + startAt] = residual[i];
-                }
+                if (idataLen >= 0) System.arraycopy(residual, 0, data, startAt, idataLen);
                 break;
             case 1 :
                 for (int i = 0; i < idataLen; i++) {

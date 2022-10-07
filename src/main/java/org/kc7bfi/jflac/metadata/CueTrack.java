@@ -1,6 +1,4 @@
-package org.kc7bfi.jflac.metadata;
-
-/**
+/*
  * libFLAC - Free Lossless Audio Codec library
  * Copyright (C) 2001,2002,2003  Josh Coalson
  *
@@ -20,12 +18,16 @@ package org.kc7bfi.jflac.metadata;
  * Boston, MA  02111-1307, USA.
  */
 
+package org.kc7bfi.jflac.metadata;
+
 import java.io.IOException;
 
 import org.kc7bfi.jflac.io.BitInputStream;
 
+
 /**
  * An entry into the cue sheet.
+ *
  * @author kc7bfi
  */
 public class CueTrack {
@@ -38,18 +40,26 @@ public class CueTrack {
     private static final int CUESHEET_TRACK_RESERVED_LEN = 6 + 13 * 8; // bits
     private static final int CUESHEET_TRACK_NUM_INDICES_LEN = 8; // bits
 
-    protected long offset; // Track offset in samples, relative to the beginning of the FLAC audio stream.
-    protected byte number; // The track number.
-    protected byte[] isrc = new byte[13]; // Track ISRC.  This is a 12-digit alphanumeric code plus a trailing '\0'
-    protected int type; // The track type: 0 for audio, 1 for non-audio.
-    protected int preEmphasis; // The pre-emphasis flag: 0 for no pre-emphasis, 1 for pre-emphasis.
-    protected byte numIndices; // The number of track index points.
-    protected CueIndex[] indices; // NULL if num_indices == 0, else pointer to array of index points.
+    /** Track offset in samples, relative to the beginning of the FLAC audio stream. */
+    protected long offset;
+    /** The track number. */
+    protected byte number;
+    /** Track ISRC.  This is a 12-digit alphanumeric code plus a trailing '\0' */
+    protected byte[] isrc = new byte[13];
+    /** The track type: 0 for audio, 1 for non-audio. */
+    protected int type;
+    /** The pre-emphasis flag: 0 for no pre-emphasis, 1 for pre-emphasis. */
+    protected int preEmphasis;
+    /** The number of track index points. */
+    protected byte numIndices;
+    /** NULL if num_indices == 0, else pointer to array of index points. */
+    protected CueIndex[] indices;
 
     /**
      * The constructor.
-     * @param is                The InputBitStream
-     * @throws IOException      Thrown if error reading from InputBitStream
+     *
+     * @param is The InputBitStream
+     * @throws IOException Thrown if error reading from InputBitStream
      */
     public CueTrack(BitInputStream is) throws IOException {
         offset = is.readRawULong(CUESHEET_TRACK_OFFSET_LEN);
@@ -65,6 +75,5 @@ public class CueTrack {
                 indices[j] = new CueIndex(is);
             }
         }
-        
     }
 }

@@ -1,6 +1,4 @@
-package org.kc7bfi.jflac.util;
-
-/**
+/*
  * libFLAC - Free Lossless Audio Codec library
  * Copyright (C) 2001,2002,2003  Josh Coalson
  *
@@ -19,6 +17,8 @@ package org.kc7bfi.jflac.util;
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA  02111-1307, USA.
  */
+
+package org.kc7bfi.jflac.util;
 
 import java.io.DataOutput;
 import java.io.IOException;
@@ -110,7 +110,7 @@ public class LittleEndianDataOutput implements DataOutput {
      * @see java.io.DataOutput#writeBoolean(boolean)
      */
     public void writeBoolean(boolean arg0) throws IOException {
-        writeBoolean(arg0);
+        out.writeBoolean(arg0);
     }
     
     /**

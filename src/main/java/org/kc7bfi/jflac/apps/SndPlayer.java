@@ -54,8 +54,7 @@ public class SndPlayer {
         }
         
         // Process arguments.
-        for (int i = 0; i < args.length; i++) 
-            playAudioFile(args[ i ]);
+        for (String arg : args) playAudioFile(arg);
         
         // Must exit explicitly since audio creates non-daemon threads.
         System.exit(0);

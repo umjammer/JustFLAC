@@ -20,7 +20,6 @@ package org.kc7bfi.jflac.apps;
  */
 
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import javax.sound.sampled.AudioFormat;
@@ -106,7 +105,7 @@ public class SeekTablePlayer implements PCMProcessor, FrameListener {
     /**
      * Process the decoded PCM bytes.
      * @param pcm The decoded PCM data
-     * @see org.kc7bfi.jflac.PCMProcessor#processPCM(org.kc7bfi.jflac.util.ByteSpace)
+     * @see org.kc7bfi.jflac.PCMProcessor#processPCM(org.kc7bfi.jflac.util.ByteData)
      */
     public void processPCM(ByteData pcm) {
         line.write(pcm.getData(), 0, pcm.getLen());
@@ -148,14 +147,10 @@ public class SeekTablePlayer implements PCMProcessor, FrameListener {
         try {
             SeekTablePlayer player = new SeekTablePlayer();
             player.play(flacFile, fromSeekPoint, toSeekPoint);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (LineUnavailableException e) {
+        } catch (IOException | LineUnavailableException e) {
             e.printStackTrace();
         }
-        
+
         System.exit(0);
     }
 }

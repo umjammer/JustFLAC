@@ -1,6 +1,4 @@
-package org.kc7bfi.jflac.sound.spi;
-
-/**
+/*
  * libFLAC - Free Lossless Audio Codec library
  * Copyright (C) 2001,2002,2003  Josh Coalson
  *
@@ -19,6 +17,8 @@ package org.kc7bfi.jflac.sound.spi;
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA  02111-1307, USA.
  */
+
+package org.kc7bfi.jflac.sound.spi;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -48,21 +48,6 @@ public class FlacFormatConversionProvider extends FormatConversionProvider {
 	/** to disable encoding */
 	private static final boolean HAS_ENCODING = false;
 
-	/** */
-	// private static final AudioFormat.Encoding[] NO_ENCODING = {};
-	/** */
-	// private static final AudioFormat.Encoding[] PCM_ENCODING = {
-	// AudioFormat.Encoding.PCM_SIGNED };
-	/** */
-	// private static final AudioFormat.Encoding[] FLAC_ENCODING = {
-	// FlacEncoding.FLAC };
-	/** */
-	// private static final AudioFormat.Encoding[] BOTH_ENCODINGS = {
-	// FlacEncoding.FLAC,
-	// AudioFormat.Encoding.PCM_SIGNED
-	// };
-	/** */
-	// private static final AudioFormat[] NO_FORMAT = {};
 	/**
 	 * Obtains the set of source format encodings from which format conversion
 	 * services are provided by this provider.
@@ -72,12 +57,12 @@ public class FlacFormatConversionProvider extends FormatConversionProvider {
 	 */
 	public AudioFormat.Encoding[] getSourceEncodings() {
 		if (HAS_ENCODING) {
-			AudioFormat.Encoding[] encodings = {
+			final AudioFormat.Encoding[] encodings = {
 					FlacEncoding.FLAC, AudioFormat.Encoding.PCM_SIGNED
 			};
 			return encodings;
 		} else {
-			AudioFormat.Encoding[] encodings = {
+			final AudioFormat.Encoding[] encodings = {
 				FlacEncoding.FLAC
 			};
 			return encodings;
@@ -93,12 +78,12 @@ public class FlacFormatConversionProvider extends FormatConversionProvider {
 	 */
 	public AudioFormat.Encoding[] getTargetEncodings() {
 		if (HAS_ENCODING) {
-			AudioFormat.Encoding[] encodings = {
+			final AudioFormat.Encoding[] encodings = {
 					FlacEncoding.FLAC, AudioFormat.Encoding.PCM_SIGNED
 			};
 			return encodings;
 		} else {
-			AudioFormat.Encoding[] encodings = {
+			final AudioFormat.Encoding[] encodings = {
 				FlacEncoding.PCM_SIGNED
 			};
 			return encodings;
@@ -138,7 +123,7 @@ public class FlacFormatConversionProvider extends FormatConversionProvider {
 			if (DEBUG) {
 				System.out.println("FLAC converter: can encode to PCM: "+sourceFormat);
 			}
-			AudioFormat.Encoding[] encodings = {
+			final AudioFormat.Encoding[] encodings = {
 				FlacEncoding.FLAC
 			};
 			return encodings;
@@ -148,7 +133,7 @@ public class FlacFormatConversionProvider extends FormatConversionProvider {
 			if (DEBUG) {
 				System.out.println("FLAC converter: can decode to FLAC: "+sourceFormat);
 			}
-			AudioFormat.Encoding[] encodings = {
+			final AudioFormat.Encoding[] encodings = {
 				AudioFormat.Encoding.PCM_SIGNED
 			};
 			return encodings;
@@ -156,7 +141,7 @@ public class FlacFormatConversionProvider extends FormatConversionProvider {
 			if (DEBUG) {
 				System.out.println("FLAC converter: cannot de/encode: "+sourceFormat);
 			}
-			AudioFormat.Encoding[] encodings = {};
+			final AudioFormat.Encoding[] encodings = {};
 			return encodings;
 		}
 	}
@@ -199,7 +184,7 @@ public class FlacFormatConversionProvider extends FormatConversionProvider {
 			if (DEBUG) {
 				System.out.println("FLAC converter: can encode: "+sourceFormat+" to "+targetEncoding);
 			}
-			AudioFormat[] formats = { // 
+			final AudioFormat[] formats = { //
 				new AudioFormat(FlacEncoding.FLAC,
 						sourceFormat.getSampleRate(), // 
 						-1, // sample size in bits
@@ -217,7 +202,7 @@ public class FlacFormatConversionProvider extends FormatConversionProvider {
 			if (DEBUG) {
 				System.out.println("FLAC converter: can decode: "+sourceFormat+" to "+targetEncoding);
 			}
-			AudioFormat[] formats = {
+			final AudioFormat[] formats = {
 				new AudioFormat(sourceFormat.getSampleRate(), // 
 						sourceFormat.getSampleSizeInBits(), // sample size in
 						// bits
@@ -230,7 +215,7 @@ public class FlacFormatConversionProvider extends FormatConversionProvider {
 			if (DEBUG) {
 				System.out.println("FLAC converter: cannot de/encode: "+sourceFormat+" to "+targetEncoding);
 			}
-			AudioFormat[] formats = {};
+			final AudioFormat[] formats = {};
 			return formats;
 		}
 	}
@@ -290,14 +275,12 @@ public class FlacFormatConversionProvider extends FormatConversionProvider {
 					&& targetFormat.getEncoding().equals(FlacEncoding.FLAC)) {
 				// encoder
 
-				// return new Pcm2FlacAudioInputStream(sourceStream,
-				// targetFormat, -1);
 				throw new IllegalArgumentException(
 						"FLAC encoder not yet implemented");
 			} else {
 				throw new IllegalArgumentException("unable to convert "
-						+ sourceFormat.toString() + " to "
-						+ targetFormat.toString());
+						+ sourceFormat + " to "
+						+ targetFormat);
 			}
 		} else {
 			throw new IllegalArgumentException("conversion not supported");

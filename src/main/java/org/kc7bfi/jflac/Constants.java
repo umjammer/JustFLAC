@@ -1,6 +1,4 @@
-package org.kc7bfi.jflac;
-
-/**
+/*
  *  libFLAC - Free Lossless Audio Codec library
  * Copyright (C) 2000,2001,2002,2003  Josh Coalson
  *
@@ -19,6 +17,9 @@ package org.kc7bfi.jflac;
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA  02111-1307, USA.
  */
+
+package org.kc7bfi.jflac;
+
 
 public class Constants {
     
@@ -42,49 +43,4 @@ public class Constants {
 
     /** FLAC Stream Sync string. */
     public static final byte[] STREAM_SYNC_STRING = new byte[] { (byte)'f', (byte)'L', (byte)'a', (byte)'C' };
-
-
-        /*
-    boolean format_sample_rate_is_valid(int sample_rate) {
-        if (sample_rate == 0
-            || sample_rate > MAX_SAMPLE_RATE
-            || (sample_rate >= (1 << 16) && !(sample_rate % 1000 == 0 || sample_rate % 10 == 0))) {
-            return false;
-        } else
-            return true;
-    }
-    */
-
-    /*
-     * These routines are private to libFLAC
-     */
-        /*
-    int format_get_max_rice_partition_order(int blocksize, int predictor_order) {
-        return format_get_max_rice_partition_order_from_blocksize_limited_max_and_predictor_order(
-            format_get_max_rice_partition_order_from_blocksize(blocksize),
-            blocksize,
-            predictor_order);
-    }
-
-    int format_get_max_rice_partition_order_from_blocksize(int blocksize) {
-        int max_rice_partition_order = 0;
-        while ((blocksize & 1) == 0) {
-            max_rice_partition_order++;
-            blocksize >>= 1;
-        }
-        return Math.min(MAX_RICE_PARTITION_ORDER, max_rice_partition_order);
-    }
-
-    int format_get_max_rice_partition_order_from_blocksize_limited_max_and_predictor_order(
-        int limit,
-        int blocksize,
-        int predictor_order) {
-        int max_rice_partition_order = limit;
-
-        while (max_rice_partition_order > 0 && (blocksize >> max_rice_partition_order) <= predictor_order)
-            max_rice_partition_order--;
-
-        return max_rice_partition_order;
-    }
-    */
 }

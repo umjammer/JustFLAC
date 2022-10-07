@@ -4,6 +4,7 @@
  * To change the template for this generated file go to
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
+
 package org.kc7bfi.jflac;
 
 import org.kc7bfi.jflac.metadata.StreamInfo;
@@ -16,21 +17,16 @@ import org.kc7bfi.jflac.util.ByteData;
  * @author kc7bfi
  */
 public interface PCMProcessor {
+
     /**
      * Called when StreamInfo read.
      * @param streamInfo The FLAC stream info metadata block
      */
-    public void processStreamInfo(StreamInfo streamInfo);
+    void processStreamInfo(StreamInfo streamInfo);
     
     /**
      * Called when each data frame is decompressed.
      * @param pcm The decompressed PCM data
      */
-    public void processPCM(ByteData pcm);
-    
-    /** returns true if process has to be canceled
-     * 
-     * @return
-     */
-   // public boolean isCanceled();
+    void processPCM(ByteData pcm);
 }

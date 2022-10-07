@@ -1,6 +1,4 @@
-package org.kc7bfi.jflac.metadata;
-
-/**
+/*
  * libFLAC - Free Lossless Audio Codec library
  * Copyright (C) 2001,2002,2003  Josh Coalson
  *
@@ -20,8 +18,10 @@ package org.kc7bfi.jflac.metadata;
  * Boston, MA  02111-1307, USA.
  */
 
+package org.kc7bfi.jflac.metadata;
+
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 
 import org.kc7bfi.jflac.io.BitInputStream;
 
@@ -30,7 +30,6 @@ import org.kc7bfi.jflac.io.BitInputStream;
  * @author kc7bfi
  */
 public class VorbisString {
-    //private static final int VORBIS_COMMENT_ENTRY_LENGTH_LEN = 32; // bits
 
     protected byte[] entry;
 
@@ -51,11 +50,7 @@ public class VorbisString {
      */
     public String toString() {
         String s;
-        try {
-            s = new String(entry, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            s = new String("");
-        }
+        s = new String(entry, StandardCharsets.UTF_8);
         return s;
     }
 }

@@ -1,6 +1,4 @@
-package org.kc7bfi.jflac.metadata;
-
-/**
+/*
  * libFLAC - Free Lossless Audio Codec library
  * Copyright (C) 2001,2002,2003  Josh Coalson
  *
@@ -20,37 +18,42 @@ package org.kc7bfi.jflac.metadata;
  * Boston, MA  02111-1307, USA.
  */
 
+package org.kc7bfi.jflac.metadata;
+
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.kc7bfi.jflac.io.BitInputStream;
 
+
 /**
  * VorbisComment Metadata block.
+ *
  * @author kc7bfi
  */
 public class VorbisComment extends Metadata {
-    
-    //private static final int VORBIS_COMMENT_NUM_COMMENTS_LEN = 32; // bits
-    
-    protected byte[] vendorString = new byte[0];
-    protected int numComments = 0;
+
+    protected byte[] vendorString;
+    protected int numComments;
     protected VorbisString[] comments;
-    
+
     /**
      * The constructor.
-     * @param is                The InputBitStream
-     * @param length            Length of the record
-     * @param isLast            True if this is the last Metadata block in the chain
-     * @throws IOException      Thrown if error reading from InputBitStream
+     *
+     * @param is     The InputBitStream
+     * @param length Length of the record
+     * @param isLast True if this is the last Metadata block in the chain
+     * @throws IOException Thrown if error reading from InputBitStream
      */
     public VorbisComment(BitInputStream is, int length, boolean isLast) throws IOException {
         super(isLast, length);
-        
+
         // read vendor string
         int len = is.readRawIntLittleEndian();
         vendorString = new byte[len];
         is.readByteBlockAlignedNoCRC(vendorString, vendorString.length);
-        
+
         // read comments
         numComments = is.readRawIntLittleEndian();
         if (numComments > 0) comments = new VorbisString[numComments];
@@ -58,33 +61,31 @@ public class VorbisComment extends Metadata {
             comments[i] = new VorbisString(is);
         }
     }
-    
+
     /**
      * @see java.lang.Object#toString()
      */
     public String toString() {
-	StringBuffer sb = new StringBuffer("VendorString '" + new String(vendorString) + "'\n");
-	sb.append("VorbisComment (count=" + numComments + ")");
+        StringBuilder sb = new StringBuilder("VendorString '" + new String(vendorString) + "'\n");
+        sb.append("VorbisComment (count=").append(numComments).append(")");
 
         for (int i = 0; i < numComments; i++) {
-            sb.append("\n\t" + comments[i].toString());
+            sb.append("\n\t").append(comments[i].toString());
         }
-        
+
         return sb.toString();
-        
     }
-    
-    public String [] getCommentByName( String key )  {
-        if (numComments == 0 || key == null ) return null;
-        java.util.Vector sbuff = new java.util.Vector();
-        for( int i=0; i < comments.length; i++ )  {
-            String comment = comments[i].toString();
+
+    public String[] getCommentByName(String key) {
+        if (numComments == 0 || key == null) return null;
+        List<String> sbuff = new ArrayList<>();
+        for (VorbisString vorbisString : comments) {
+            String comment = vorbisString.toString();
             int eqpos = comment.indexOf(0x3D); //Find the equals
-            if (eqpos != -1 )
-                if( comment.substring(0, eqpos).equalsIgnoreCase(key) )
-                    sbuff.add( comment.substring(eqpos+1, comment.length()) );
+            if (eqpos != -1)
+                if (comment.substring(0, eqpos).equalsIgnoreCase(key))
+                    sbuff.add(comment.substring(eqpos + 1));
         }
-        return (String [])sbuff.toArray(new String[0]);
-        //return null;
+        return sbuff.toArray(new String[0]);
     }
 }

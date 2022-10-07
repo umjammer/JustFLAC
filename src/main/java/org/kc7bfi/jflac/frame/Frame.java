@@ -1,6 +1,4 @@
-package org.kc7bfi.jflac.frame;
-
-/**
+/*
  * libFLAC - Free Lossless Audio Codec library
  * Copyright (C) 2001,2002,2003  Josh Coalson
  *
@@ -20,6 +18,8 @@ package org.kc7bfi.jflac.frame;
  * Boston, MA  02111-1307, USA.
  */
 
+package org.kc7bfi.jflac.frame;
+
 import org.kc7bfi.jflac.Constants;
 
 /**
@@ -27,6 +27,7 @@ import org.kc7bfi.jflac.Constants;
  * @author kc7bfi
  */
 public class Frame {
+
     /** The frame header. */
     public Header header;
     
@@ -40,12 +41,12 @@ public class Frame {
      * @see java.lang.Object#toString()
      */
     public String toString() {
-        StringBuffer sb = new StringBuffer();
-        sb.append("Frame Header: " + header + "\n");
+        StringBuilder sb = new StringBuilder();
+        sb.append("Frame Header: ").append(header).append("\n");
         for (int i = 0; i < header.channels; i++) {
-            sb.append("\tFrame Data " + subframes[i].toString() + "\n");
+            sb.append("\tFrame Data ").append(subframes[i].toString()).append("\n");
         }
-        sb.append("\tFrame Footer: " + crc);
+        sb.append("\tFrame Footer: ").append(crc);
         
         return sb.toString();
         

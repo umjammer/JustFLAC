@@ -1,6 +1,4 @@
-package org.kc7bfi.jflac.util;
-
-/**
+/*
  * libFLAC - Free Lossless Audio Codec library
  * Copyright (C) 2001,2002,2003  Josh Coalson
  *
@@ -20,18 +18,20 @@ package org.kc7bfi.jflac.util;
  * Boston, MA  02111-1307, USA.
  */
 
+package org.kc7bfi.jflac.util;
+
 /**
  * RingBuffer class.
  * @author David R Robison
  */
 public class RingBuffer {
     protected static final int DEFAULT_BUFFER_SIZE = 2048;
-    protected volatile int bufferSize = 0;
-    protected byte[] buffer = null;
+    protected volatile int bufferSize;
+    protected byte[] buffer;
     protected volatile int putHere = 0;
     protected volatile int getHere = 0;
     protected volatile boolean eof = false;
-    protected Object signal = new Object();
+    protected final Object signal = new Object();
     
     /**
      * Constructor.
@@ -67,7 +67,6 @@ public class RingBuffer {
         System.arraycopy(buffer, 0, newBuffer, 0, buffer.length);
         buffer = newBuffer;
         bufferSize = newSize;
-        //signal.notifyAll();
     }
     
     /**
@@ -142,7 +141,7 @@ public class RingBuffer {
      */
     public int get(byte[] data, int offset, int len) {
         if (len == 0) return 0;
-        int dataLen = 0;
+        int dataLen;
         
         synchronized (signal) {
             // see if we have enough data
@@ -195,7 +194,7 @@ public class RingBuffer {
      */
     public static void main(String[] args) {
         RingBuffer r = new RingBuffer(9);
-        byte[] b = new String("ABCDEFG").getBytes();
+        byte[] b = "ABCDEFG".getBytes();
         byte[] g = new byte[2];
         System.out.println("Start");
         r.put(b, 0, 3);

@@ -1,6 +1,5 @@
-package org.kc7bfi.jflac.apps;
-
-/* libFLAC - Free Lossless Audio Codec library
+/*
+ * libFLAC - Free Lossless Audio Codec library
  * Copyright (C) 2000,2001,2002,2003  Josh Coalson
  *
  * This library is free software; you can redistribute it and/or
@@ -19,8 +18,9 @@ package org.kc7bfi.jflac.apps;
  * Boston, MA  02111-1307, USA.
  */
 
+package org.kc7bfi.jflac.apps;
+
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -70,7 +70,7 @@ public class Decoder implements PCMProcessor {
     /**
      * Process the decoded PCM bytes.
      * @param pcm The decoded PCM data
-     * @see org.kc7bfi.jflac.PCMProcessor#processPCM(org.kc7bfi.jflac.util.ByteSpace)
+     * @see org.kc7bfi.jflac.PCMProcessor#processPCM(org.kc7bfi.jflac.util.ByteData)
      */
     public void processPCM(ByteData pcm) {
         try {
@@ -91,8 +91,6 @@ public class Decoder implements PCMProcessor {
         try {
             Decoder decoder = new Decoder();
             decoder.decode(args[0], args[1]);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
