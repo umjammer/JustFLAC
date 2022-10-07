@@ -579,7 +579,7 @@ public class BitInputStream {
         
         long endBits = getByte * 8L + getBit;
         //System.out.println("SE1 "+startBits+" "+endBits);
-        totalBitsRead += endBits - startBits;
+        totalBitsRead += (int) (endBits - startBits);
         availBits -= endBits - startBits;
     }
     
