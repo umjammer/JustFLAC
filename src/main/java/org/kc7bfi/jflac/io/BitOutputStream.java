@@ -1,23 +1,23 @@
-package org.kc7bfi.jflac.io;
-
-/**
+/*
  * libFLAC - Free Lossless Audio Codec library Copyright (C) 2000,2001,2002,2003
  * Josh Coalson
- * 
+ *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Library General Public License as published by the Free
  * Software Foundation; either version 2 of the License, or (at your option) any
  * later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Library General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Library General Public License
  * along with this library; if not, write to the Free Software Foundation, Inc.,
  * 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
+
+package org.kc7bfi.jflac.io;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -31,11 +31,10 @@ import org.kc7bfi.jflac.util.CRC8;
  * @author kc7bfi
  */
 public class BitOutputStream {
+
     private static final int BITS_PER_BLURB = 8;
-    //private static final int BITS_PER_BLURB_LOG2 = 3;
-    //private static final int BYTES_PER_BLURB = 1;
-    //private static final byte BLURB_TOP_BIT_ONE = ((byte) 0x80);
-    private static final long[] MASK32 = new long[]{0, 0x0000000000000001, 0x0000000000000003, 0x0000000000000007, 0x000000000000000F,
+
+    private static final long[] MASK32 = new long[] {0, 0x0000000000000001, 0x0000000000000003, 0x0000000000000007, 0x000000000000000F,
             0x000000000000001F, 0x000000000000003F, 0x000000000000007F, 0x00000000000000FF, 0x00000000000001FF, 0x00000000000003FF,
             0x00000000000007FF, 0x0000000000000FFF, 0x0000000000001FFF, 0x0000000000003FFF, 0x0000000000007FFF, 0x000000000000FFFF,
             0x000000000001FFFF, 0x000000000003FFFF, 0x000000000007FFFF, 0x00000000000FFFFF, 0x00000000001FFFFF, 0x00000000003FFFFF,
@@ -61,7 +60,7 @@ public class BitOutputStream {
     private OutputStream os;
     
     /*
-     * WATCHOUT: The current implentation is not friendly to shrinking, i.e. it
+     * WATCHOUT: The current implementation is not friendly to shrinking, i.e. it
      * does not shift left what is consumed, it just chops off the end, whether
      * there is unconsumed data there or not. This is OK because currently we
      * never shrink the buffer, but if this ever changes, we'll have to do some
@@ -98,42 +97,6 @@ public class BitOutputStream {
         return true;
     }
     
-    /*
-    private int readFromStream() throws IOException {
-        // first shift the unconsumed buffer data toward the front as much as possible
-        if (totalConsumedBits >= BITS_PER_BLURB) {
-            int l = 0;
-            int r = consumedBlurbs;
-            int r_end = inBlurbs + ((inBits != 0) ? 1 : 0);
-            for (; r < r_end; l++, r++)
-                buffer[l] = buffer[r];
-            for (; l < r_end; l++)
-                buffer[l] = 0;
-            inBlurbs -= consumedBlurbs;
-            totalBits -= consumedBlurbs << 3;
-            consumedBlurbs = 0;
-            totalConsumedBits = consumedBits;
-        }
-        
-        // grow if we need to
-        if (capacity <= 1) resize(16);
-        
-        // set the target for reading, taking into account blurb alignment
-        // blurb == byte, so no gyrations necessary:
-        int bytes = capacity - inBlurbs;
-        
-        // finally, read in some data
-        bytes = is.read(buffer, inBlurbs, bytes);
-        if (bytes <= 0) throw new EOFException();
-        
-        // now we have to handle partial blurb cases:
-        // blurb == byte, so no gyrations necessary:
-        inBlurbs += bytes;
-        totalBits += bytes << 3;
-        return bytes;
-    }
-    */
-    
     /**
      * The constructor.
      * @param os    The InputStream to read bits from
@@ -147,12 +110,6 @@ public class BitOutputStream {
      */
     public BitOutputStream() {
     }
-    
-    /** TODO
-     */
-    //public void clear() {
-    //    
-    //}
     
     /**
      * Concatinate one InputBitStream to the end of this one.
@@ -330,7 +287,7 @@ public class BitOutputStream {
     }
     
     public void writeRawInt(int val, int bits) throws IOException {
-        writeRawUInt((int) val, bits);
+        writeRawUInt(val, bits);
     }
     
     public void writeRawULong(long val, int bits) throws IOException {
@@ -384,7 +341,7 @@ public class BitOutputStream {
     public void writeByteBlock(byte[] vals, int nvals) throws IOException {
         // this could be faster but currently we don't need it to be
         for (int i = 0; i < nvals; i++) {
-            writeRawUInt((int) (vals[i]), 8);
+            writeRawUInt(vals[i], 8);
         }
     }
     
@@ -404,50 +361,14 @@ public class BitOutputStream {
         // fold signed to unsigned
         if (val < 0) {
             // equivalent to (unsigned)(((--val) < < 1) - 1); but without the overflow problem at MININT
-            uval = (int) (((-(++val)) << 1) + 1);
+            uval = ((-(++val)) << 1) + 1;
         } else {
-            uval = (int) (val << 1);
+            uval = val << 1;
         }
         msbs = uval >> parameter;
         return 1 + parameter + msbs;
     }
-    /*
-     * DRR FIX # ifdef SYMMETRIC_RICE boolean
-     * write_symmetric_rice_signed(BitBuffer8 * bb, int val, unsigned parameter) {
-     * unsigned total_bits, interesting_bits, msbs; uint32 pattern;
-     * 
-     * ASSERT(0 != bb); ASSERT(0 != buffer); ASSERT(parameter <= 31); // init
-     * pattern with the unary end bit and the sign bit if (val < 0) { pattern =
-     * 3; val = -val; } else pattern = 2;
-     * 
-     * msbs = val >> parameter; interesting_bits = 2 + parameter; total_bits =
-     * interesting_bits + msbs; pattern < <= parameter; pattern |= (val & ((1 < <
-     * parameter) - 1)); // the binary LSBs
-     * 
-     * if (total_bits <= 32) { if (!write_raw_uint32(bb, pattern, total_bits))
-     * return false; } else { // write the unary MSBs if (!write_zeroes(bb,
-     * msbs)) return false; // write the unary end bit, the sign bit, and binary
-     * LSBs if (!write_raw_uint32(bb, pattern, interesting_bits)) return false; }
-     * return true; }
-     * 
-     * boolean write_symmetric_rice_signed_escape(BitBuffer8 * bb, int val,
-     * unsigned parameter) { unsigned total_bits, val_bits; uint32 pattern;
-     * 
-     * ASSERT(0 != bb); ASSERT(0 != buffer); ASSERT(parameter <= 31);
-     * 
-     * val_bits = bitmath_silog2(val); total_bits = 2 + parameter + 5 +
-     * val_bits;
-     * 
-     * if (total_bits <= 32) { pattern = 3; pattern < <= (parameter + 5);
-     * pattern |= val_bits; pattern < <= val_bits; pattern |= (val & ((1 < <
-     * val_bits) - 1)); if (!write_raw_uint32(bb, pattern, total_bits)) return
-     * false; } else { // write the '-0' escape code first if
-     * (!write_raw_uint32(bb, 3 u < < parameter, 2 + parameter)) return false; //
-     * write the length if (!write_raw_uint32(bb, val_bits, 5)) return false; //
-     * write the value if (!write_raw_int32(bb, val, val_bits)) return false; }
-     * return true; } # endif // ifdef SYMMETRIC_RICE
-     */
-    
+
     public void writeRiceSigned(int val, int parameter) throws IOException {
         int totalBits;
         int interestingBits;
@@ -458,9 +379,9 @@ public class BitOutputStream {
         // fold signed to unsigned
         if (val < 0) {
             // equivalent to (unsigned)(((--val) < < 1) - 1); but without the overflow problem at MININT
-            uval = (int) (((-(++val)) << 1) + 1);
+            uval = ((-(++val)) << 1) + 1;
         } else {
-            uval = (int) (val << 1);
+            uval = val << 1;
         }
         msbs = uval >> parameter;
         interestingBits = 1 + parameter;
@@ -566,48 +487,7 @@ public class BitOutputStream {
         os.write(buffer, 0, outBlurbs);
         outBlurbs = 0;
     }
-    
-    /*
-     * DRR FIX boolean peek_bit(unsigned * val, boolean(* read_callback) (byte
-     * buffer[], unsigned * bytes, void * client_data), void * client_data) {
-     * 
-     * while (1) { if (total_consumed_bits < total_bits) { val =
-     * (buffer[consumed_blurbs] & BLURB_BIT_TO_MASK(consumed_bits)) ? 1 : 0;
-     * return true; } else { if (!read_from_client_(bb, read_callback,
-     * client_data)) return false; } } }
-     */
-     
-    /*
-     * # ifdef SYMMETRIC_RICE boolean read_symmetric_rice_signed( BitBuffer8 *
-     * bb, int * val, unsigned parameter, boolean(* read_callback) (byte
-     * buffer[], unsigned * bytes, void * client_data), void * client_data) {
-     * uint32 sign = 0, lsbs = 0, msbs = 0;
-     * 
-     * ASSERT(0 != bb); ASSERT(0 != buffer); ASSERT(parameter <= 31); // read
-     * the unary MSBs and end bit if (!read_unary_unsigned(bb, & msbs,
-     * read_callback, client_data)) return false; // read the sign bit if
-     * (!read_bit_to_uint32(bb, & sign, read_callback, client_data)) return
-     * false; // read the binary LSBs if (!read_raw_uint32(bb, & lsbs,
-     * parameter, read_callback, client_data)) return false; // compose the
-     * value val = (msbs < < parameter) | lsbs; if (sign) val = - (* val);
-     * 
-     * return true; } # endif // ifdef SYMMETRIC_RICE
-     * 
-     * boolean read_rice_signed( BitBuffer8 * bb, int * val, unsigned parameter,
-     * boolean(* read_callback) (byte buffer[], unsigned * bytes, void *
-     * client_data), void * client_data) { uint32 lsbs = 0, msbs = 0; unsigned
-     * uval;
-     * 
-     * ASSERT(0 != bb); ASSERT(0 != buffer); ASSERT(parameter <= 31); // read
-     * the unary MSBs and end bit if (!read_unary_unsigned(bb, & msbs,
-     * read_callback, client_data)) return false; // read the binary LSBs if
-     * (!read_raw_uint32(bb, & lsbs, parameter, read_callback, client_data))
-     * return false; // compose the value uval = (msbs < < parameter) | lsbs; if
-     * (uval & 1) val = - ((int) (uval >> 1)) - 1; else val = (int) (uval >> 1);
-     * 
-     * return true; }
-     */
-    
+
     /**
      * Returns the totalBits.
      * @return Returns the totalBits.

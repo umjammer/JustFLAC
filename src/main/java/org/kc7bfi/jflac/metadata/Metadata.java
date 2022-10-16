@@ -1,6 +1,4 @@
-package org.kc7bfi.jflac.metadata;
-
-/**
+/*
  * libFLAC - Free Lossless Audio Codec library
  * Copyright (C) 2001,2002,2003  Josh Coalson
  * Modified 2007 Bruce MacNaughton (added PICTURE metadata type)
@@ -20,6 +18,8 @@ package org.kc7bfi.jflac.metadata;
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA  02111-1307, USA.
  */
+
+package org.kc7bfi.jflac.metadata;
 
 /**
  * Root class for all Metadata subclasses.
@@ -60,6 +60,7 @@ public abstract class Metadata {
     protected boolean isLast;
     
     protected int length;
+
     /**
      * Constructor.
      * @param isLast    True if last Metadata block
@@ -77,7 +78,8 @@ public abstract class Metadata {
         return isLast;
     }
     
-    /** returns length of metadata
+    /**
+     * returns length of metadata
      * 
      * @return length
      */

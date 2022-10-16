@@ -1,6 +1,4 @@
-package org.kc7bfi.jflac.frame;
-
-/**
+/*
  * libFLAC - Free Lossless Audio Codec library
  * Copyright (C) 2001,2002,2003  Josh Coalson
  *
@@ -19,6 +17,8 @@ package org.kc7bfi.jflac.frame;
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA  02111-1307, USA.
  */
+
+package org.kc7bfi.jflac.frame;
 
 import java.io.IOException;
 
@@ -54,7 +54,7 @@ public class Header {
     /**
      * The sample number for the first sample in the frame.
      */
-    public long sampleNumber = -1;
+    public long sampleNumber;
     
     /** 
      * CRC-8 (polynomial = x^8 + x^2 + x^1 + x^0, initialized with 0).
@@ -185,7 +185,7 @@ public class Header {
             default :
         }
         
-        int asgnType = (int) ((rawHeader.getData(3) >> 4) & 0x0f);
+        int asgnType = (rawHeader.getData(3) >> 4) & 0x0f;
         //System.out.println("AsgnType="+asgnType+" "+(rawHeader.space[3] >> 4));
         if ((asgnType & 8) != 0) {
             channels = 2;
@@ -203,11 +203,11 @@ public class Header {
                     throw new BadHeaderException("Bad Channel Assignment (" + asgnType + ")");
             }
         } else {
-            channels = (int) asgnType + 1;
+            channels = asgnType + 1;
             channelAssignment = Constants.CHANNEL_ASSIGNMENT_INDEPENDENT;
         }
         
-        int bpsType = (int) (rawHeader.getData(3) & 0x0e) >> 1;
+        int bpsType = (rawHeader.getData(3) & 0x0e) >> 1;
         switch (bpsType) {
             case 0 :
                 if (streamInfo != null)

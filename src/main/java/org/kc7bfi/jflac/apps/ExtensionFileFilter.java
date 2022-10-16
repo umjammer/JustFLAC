@@ -1,23 +1,21 @@
-package org.kc7bfi.jflac.apps;
-
-/**
+/*
  * Copyright (c) 2003 Sun Microsystems, Inc. All  Rights Reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * -Redistributions of source code must retain the above copyright
  *  notice, this list of conditions and the following disclaimer.
- * 
+ *
  * -Redistribution in binary form must reproduct the above copyright
  *  notice, this list of conditions and the following disclaimer in
  *  the documentation and/or other materials provided with the distribution.
- * 
+ *
  * Neither the name of Sun Microsystems, Inc. or the names of contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- * 
+ *
  * This software is provided "AS IS," without a warranty of any kind. ALL
  * EXPRESS OR IMPLIED CONDITIONS, REPRESENTATIONS AND WARRANTIES, INCLUDING
  * ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE
@@ -29,17 +27,20 @@ package org.kc7bfi.jflac.apps;
  * INCIDENTAL OR PUNITIVE DAMAGES, HOWEVER CAUSED AND REGARDLESS OF THE THEORY
  * OF LIABILITY, ARISING OUT OF THE USE OF OR INABILITY TO USE SOFTWARE, EVEN
  * IF SUN HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
- * 
+ *
  * You acknowledge that Software is not designed, licensed or intended for
  * use in the design, construction, operation or maintenance of any nuclear
  * facility.
- * 
+ *
  * @(#)ExampleFileFilter.java 1.6 03/01/23
  */
 
+package org.kc7bfi.jflac.apps;
+
+
 import java.io.File;
-import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.filechooser.FileFilter;
 
@@ -62,10 +63,9 @@ import javax.swing.filechooser.FileFilter;
  * @version 1.6 01/23/03
  * @author Jeff Dinkins
  */
-
 public class ExtensionFileFilter extends FileFilter {
     
-    private Hashtable filters = null;
+    private Map<String, FileFilter> filters;
     private String description = null;
     private String fullDescription = null;
     private boolean useExtensionsInDescription = true;
@@ -77,7 +77,7 @@ public class ExtensionFileFilter extends FileFilter {
      * @see #addExtension
      */
     public ExtensionFileFilter() {
-        this.filters = new Hashtable();
+        this.filters = new HashMap<>();
     }
     
     /**
@@ -128,9 +128,9 @@ public class ExtensionFileFilter extends FileFilter {
      */
     public ExtensionFileFilter(String[] filters, String description) {
         this();
-        for (int i = 0; i < filters.length; i++) {
+        for (String filter : filters) {
             // add filters one by one
-            addExtension(filters[i]);
+            addExtension(filter);
         }
         if (description != null) setDescription(description);
     }
@@ -144,7 +144,7 @@ public class ExtensionFileFilter extends FileFilter {
      * @param f The file to check
      * @return true if the file passes the filters
      * @see #getExtension
-     * @see FileFilter#accepts
+     * @see FileFilter#accept
      */
     public boolean accept(File f) {
         if (f != null) {
@@ -194,7 +194,7 @@ public class ExtensionFileFilter extends FileFilter {
      */
     public void addExtension(String extension) {
         if (filters == null) {
-            filters = new Hashtable(5);
+            filters = new HashMap<>(5);
         }
         filters.put(extension.toLowerCase(), this);
         fullDescription = null;
@@ -206,9 +206,9 @@ public class ExtensionFileFilter extends FileFilter {
      * example: "JPEG and GIF Image Files (*.jpg, *.gif)"
      *
      * @return the filter description
-     * @see setDescription
-     * @see setExtensionListInDescription
-     * @see isExtensionListInDescription
+     * @see #setDescription
+     * @see #setExtensionListInDescription
+     * @see #isExtensionListInDescription
      * @see FileFilter#getDescription
      */
     public String getDescription() {
@@ -216,13 +216,7 @@ public class ExtensionFileFilter extends FileFilter {
             if (description == null || isExtensionListInDescription()) {
                 fullDescription = description == null ? "(" : description + " (";
                 // build the description from the extension list
-                Enumeration extensions = filters.keys();
-                if (extensions != null) {
-                    fullDescription += "." + (String) extensions.nextElement();
-                    while (extensions.hasMoreElements()) {
-                        fullDescription += ", ." + (String) extensions.nextElement();
-                    }
-                }
+                fullDescription = "." + String.join(", .", filters.keySet());
                 fullDescription += ")";
             } else {
                 fullDescription = description;
@@ -236,9 +230,9 @@ public class ExtensionFileFilter extends FileFilter {
      * example: filter.setDescription("Gif and JPG Images");
      *
      * @param description   The description of the filter
-     * @see setDescription
-     * @see setExtensionListInDescription
-     * @see isExtensionListInDescription
+     * @see #setDescription
+     * @see #setExtensionListInDescription
+     * @see #isExtensionListInDescription
      */
     public void setDescription(String description) {
         this.description = description;
@@ -253,9 +247,9 @@ public class ExtensionFileFilter extends FileFilter {
      * or using setDescription();
      *
      * @param b The new state of useExtensionsInDescription
-     * @see getDescription
-     * @see setDescription
-     * @see isExtensionListInDescription
+     * @see #getDescription
+     * @see #setDescription
+     * @see #isExtensionListInDescription
      */
     public void setExtensionListInDescription(boolean b) {
         useExtensionsInDescription = b;
@@ -270,9 +264,9 @@ public class ExtensionFileFilter extends FileFilter {
      * or using setDescription();
      *
      * @return true if the extension list should show up in the description
-     * @see getDescription
-     * @see setDescription
-     * @see setExtensionListInDescription
+     * @see #getDescription
+     * @see #setDescription
+     * @see #setExtensionListInDescription
      */
     public boolean isExtensionListInDescription() {
         return useExtensionsInDescription;

@@ -1,6 +1,4 @@
-package org.kc7bfi.jflac.io;
-
-/**
+/*
  * libFLAC - Free Lossless Audio Codec library Copyright (C) 2000,2001,2002,2003
  * Josh Coalson
  * 
@@ -19,6 +17,8 @@ package org.kc7bfi.jflac.io;
  * 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+package org.kc7bfi.jflac.io;
+
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,20 +35,7 @@ public class BitInputStream {
     private static final int BITS_PER_BLURB = 8;
     private static final int BITS_PER_BLURB_LOG2 = 3;
     private static final byte BLURB_TOP_BIT_ONE = ((byte) 0x80);
-    //private static final long[] MASK32 = new long[]{0, 0x0000000000000001, 0x0000000000000003, 0x0000000000000007, 0x000000000000000F,
-    //        0x000000000000001F, 0x000000000000003F, 0x000000000000007F, 0x00000000000000FF, 0x00000000000001FF, 0x00000000000003FF,
-    //        0x00000000000007FF, 0x0000000000000FFF, 0x0000000000001FFF, 0x0000000000003FFF, 0x0000000000007FFF, 0x000000000000FFFF,
-    //        0x000000000001FFFF, 0x000000000003FFFF, 0x000000000007FFFF, 0x00000000000FFFFF, 0x00000000001FFFFF, 0x00000000003FFFFF,
-    //        0x00000000007FFFFF, 0x0000000000FFFFFF, 0x0000000001FFFFFF, 0x0000000003FFFFFF, 0x0000000007FFFFFF, 0x000000000FFFFFFF,
-    //        0x000000001FFFFFFF, 0x000000003FFFFFFF, 0x000000007FFFFFFF, 0x00000000FFFFFFFF, 0x00000001FFFFFFFFL,
-    //        0x00000003FFFFFFFFL, 0x00000007FFFFFFFFL, 0x0000000FFFFFFFFFL, 0x0000001FFFFFFFFFL, 0x0000003FFFFFFFFFL,
-    //        0x0000007FFFFFFFFFL, 0x000000FFFFFFFFFFL, 0x000001FFFFFFFFFFL, 0x000003FFFFFFFFFFL, 0x000007FFFFFFFFFFL,
-    //        0x00000FFFFFFFFFFFL, 0x00001FFFFFFFFFFFL, 0x00003FFFFFFFFFFFL, 0x00007FFFFFFFFFFFL, 0x0000FFFFFFFFFFFFL,
-    //        0x0001FFFFFFFFFFFFL, 0x0003FFFFFFFFFFFFL, 0x0007FFFFFFFFFFFFL, 0x000FFFFFFFFFFFFFL, 0x001FFFFFFFFFFFFFL,
-    //        0x003FFFFFFFFFFFFFL, 0x007FFFFFFFFFFFFFL, 0x00FFFFFFFFFFFFFFL, 0x01FFFFFFFFFFFFFFL, 0x03FFFFFFFFFFFFFFL,
-    //        0x07FFFFFFFFFFFFFFL, 0x0FFFFFFFFFFFFFFFL, 0x1FFFFFFFFFFFFFFFL, 0x3FFFFFFFFFFFFFFFL, 0x7FFFFFFFFFFFFFFFL,
-    //        0xFFFFFFFFFFFFFFFFL};
-    
+
     private static final int BUFFER_CHUNK_SIZE = 1024;
     private byte[] buffer = new byte[BUFFER_CHUNK_SIZE];
     private int putByte = 0;
@@ -68,26 +55,6 @@ public class BitInputStream {
     public BitInputStream(InputStream is) {
         this.inStream = is;
     }
-    
-    //private void resize(int newCapacity) {
-    //    if (buffer.length >= newCapacity) return;
-    //    System.out.println("RESIZE FROM " + buffer.length + " TO " + newCapacity);
-    //    byte[] newBuffer = new byte[newCapacity];
-    //    System.arraycopy(buffer, 0, newBuffer, 0, putByte);
-    //    buffer = newBuffer;
-    //    //return;
-    //}
-    
-    //private void grow(int minBlurbsToAdd) {
-    //    int newCapacity = (buffer.length + minBlurbsToAdd + BUFFER_CHUNK_SIZE - 1) / BUFFER_CHUNK_SIZE;
-    //    resize(newCapacity);
-    //}
-    
-    //private void ensureSize(int bitsToAdd) {
-    //    int blurbsToAdd = (bitsToAdd + 7) >> 3;
-    //    if (buffer.length < (putByte + blurbsToAdd))
-    //        grow(blurbsToAdd);
-    //}
     
     private int readFromStream() throws IOException {
         // first shift the unconsumed buffer data toward the front as much as possible
@@ -429,7 +396,7 @@ public class BitInputStream {
         if (nvals == 0) return;
         int i = getByte;
         
-        long startBits = getByte * 8 + getBit;
+        long startBits = getByte * 8L + getBit;
         
         // We unroll the main loop to take care of partially consumed blurbs here.
         if (getBit > 0) {
@@ -477,7 +444,7 @@ public class BitInputStream {
                             if ((uval & 1) != 0)
                                 vals[pos + valI++] = -((int) (uval >> 1)) - 1;
                             else
-                                vals[pos + valI++] = (int) (uval >> 1);
+                                vals[pos + valI++] = uval >> 1;
                             if (valI == nvals)
                                 break;
                             msbs = 0;
@@ -496,7 +463,7 @@ public class BitInputStream {
                         if ((uval & 1) != 0)
                             vals[pos + valI++] = -((int) (uval >> 1)) - 1;
                         else
-                            vals[pos + valI++] = (int) (uval >> 1);
+                            vals[pos + valI++] = uval >> 1;
                         if (valI == nvals) {
                             // back up one if we exited the for loop because we
                             // read all nvals but the end came in the middle of
@@ -560,7 +527,7 @@ public class BitInputStream {
                                 if ((uval & 1) != 0)
                                     vals[pos + valI++] = -((int) (uval >> 1)) - 1;
                                 else
-                                    vals[pos + valI++] = (int) (uval >> 1);
+                                    vals[pos + valI++] = uval >> 1;
                                 if (valI == nvals)
                                     break;
                                 msbs = 0;
@@ -579,7 +546,7 @@ public class BitInputStream {
                             if ((uval & 1) != 0)
                                 vals[pos + valI++] = -((int) (uval >> 1)) - 1;
                             else
-                                vals[pos + valI++] = (int) (uval >> 1);
+                                vals[pos + valI++] = uval >> 1;
                             if (valI == nvals) {
                                 // back up one if we exited the for loop because
                                 // we read all nvals but the end came in the
@@ -598,21 +565,21 @@ public class BitInputStream {
             //totalConsumedBits = (i << BITS_PER_BLURB_LOG2) | cbits;
             //totalBitsRead += (BITS_PER_BLURB) | cbits;
             if (valI < nvals) {
-                long endBits = getByte * 8 + getBit;
+                long endBits = getByte * 8L + getBit;
                 //System.out.println("SE0 "+startBits+" "+endBits);
-                totalBitsRead += endBits - startBits;
+                totalBitsRead += (int) (endBits - startBits);
                 availBits -=  endBits - startBits;
                 readFromStream();
                 // these must be zero because we can only get here if we got to
                 // the end of the buffer
                 i = 0;
-                startBits = getByte * 8 + getBit;
+                startBits = getByte * 8L + getBit;
             }
         }
         
-        long endBits = getByte * 8 + getBit;
+        long endBits = getByte * 8L + getBit;
         //System.out.println("SE1 "+startBits+" "+endBits);
-        totalBitsRead += endBits - startBits;
+        totalBitsRead += (int) (endBits - startBits);
         availBits -= endBits - startBits;
     }
     
@@ -626,7 +593,7 @@ public class BitInputStream {
      */
     public int readUTF8Int(ByteData raw) throws IOException {
  
-        int v = 0;
+        int v;
         int x;
         int i;
         x = readRawUInt(8);
@@ -675,7 +642,7 @@ public class BitInputStream {
      * @throws IOException  Thrown if error reading input stream
      */
     public long readUTF8Long(ByteData raw) throws IOException {
-        long v = 0;
+        long v;
         int x;
         int i;
         x = readRawUInt(8);

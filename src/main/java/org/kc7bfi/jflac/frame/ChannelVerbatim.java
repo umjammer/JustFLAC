@@ -1,6 +1,4 @@
-package org.kc7bfi.jflac.frame;
-
-/**
+/*
  * libFLAC - Free Lossless Audio Codec library
  * Copyright (C) 2001,2002,2003  Josh Coalson
  *
@@ -20,6 +18,8 @@ package org.kc7bfi.jflac.frame;
  * Boston, MA  02111-1307, USA.
  */
 
+package org.kc7bfi.jflac.frame;
+
 import java.io.IOException;
 
 import org.kc7bfi.jflac.ChannelData;
@@ -30,7 +30,9 @@ import org.kc7bfi.jflac.io.BitInputStream;
  * @author kc7bfi
  */
 public class ChannelVerbatim extends Channel {
-    private int[] data; // A pointer to verbatim signal.
+
+    /** A pointer to verbatim signal. */
+    private int[] data;
     
     /**
      * The constructor.
@@ -54,9 +56,7 @@ public class ChannelVerbatim extends Channel {
         System.arraycopy(data, 0, channelData.getOutput(), 0, header.blockSize);
     }
     
-    /**
-     * @see java.lang.Object#toString()
-     */
+    @Override
     public String toString() {
         return "ChannelVerbatim: WastedBits=" + wastedBits;
     }

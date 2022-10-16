@@ -1,8 +1,4 @@
-package org.kc7bfi.jflac.sound.spi;
-
-import java.io.BufferedInputStream;
-
-/**
+/*
  * libFLAC - Free Lossless Audio Codec library
  * Copyright (C) 2001,2002,2003  Josh Coalson
  *
@@ -22,14 +18,18 @@ import java.io.BufferedInputStream;
  * Boston, MA  02111-1307, USA.
  */
 
+package org.kc7bfi.jflac.sound.spi;
+
+import java.io.BufferedInputStream;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.SequenceInputStream;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.logging.Logger;
 
 import javax.sound.sampled.AudioFileFormat;
@@ -75,12 +75,8 @@ public class FlacAudioFileReader extends AudioFileReader {
      *                if an I/O exception occurs.
      */
     public AudioFileFormat getAudioFileFormat(File file) throws UnsupportedAudioFileException, IOException {
-        InputStream inputStream = null;
-        try {
-            inputStream = new FileInputStream(file);
+        try (InputStream inputStream = Files.newInputStream(file.toPath())) {
             return getAudioFileFormat(inputStream, (int) file.length());
-        } finally {
-            inputStream.close();
         }
     }
 
@@ -99,12 +95,8 @@ public class FlacAudioFileReader extends AudioFileReader {
      *                if an I/O exception occurs.
      */
     public AudioFileFormat getAudioFileFormat(URL url) throws UnsupportedAudioFileException, IOException {
-        InputStream inputStream = null;
-        try {
-            inputStream = url.openStream();
+        try (InputStream inputStream = url.openStream()) {
             return getAudioFileFormat(inputStream);
-        } finally {
-            inputStream.close();
         }
     }
 
@@ -130,7 +122,6 @@ public class FlacAudioFileReader extends AudioFileReader {
      * Return the AudioFileFormat from the given InputStream. Implementation.
      * 
      * @param bitStream
-     * @param baos
      * @param mediaLength
      * @return an AudioInputStream object based on the audio file data contained
      *         in the input stream.
@@ -186,13 +177,10 @@ logger.fine("finally available: " + bitStream.available());
      *                if an I/O exception occurs.
      */
     public AudioInputStream getAudioInputStream(File file) throws UnsupportedAudioFileException, IOException {
-        InputStream inputStream = new FileInputStream(file);
+        InputStream inputStream = Files.newInputStream(file.toPath());
         try {
             return getAudioInputStream(inputStream, (int) file.length());
-        } catch (UnsupportedAudioFileException e) {
-            inputStream.close();
-            throw e;
-        } catch (IOException e) {
+        } catch (UnsupportedAudioFileException | IOException e) {
             inputStream.close();
             throw e;
         }
@@ -216,10 +204,7 @@ logger.fine("finally available: " + bitStream.available());
         InputStream inputStream = url.openStream();
         try {
             return getAudioInputStream(inputStream);
-        } catch (UnsupportedAudioFileException e) {
-            inputStream.close();
-            throw e;
-        } catch (IOException e) {
+        } catch (UnsupportedAudioFileException | IOException e) {
             inputStream.close();
             throw e;
         }
@@ -267,7 +252,7 @@ logger.fine("finally available: " + bitStream.available());
         ByteArrayOutputStream byteOutStream = new ByteArrayOutputStream();
         BitOutputStream bitOutStream = new BitOutputStream(byteOutStream);
         bitOutStream.writeByteBlock(Constants.STREAM_SYNC_STRING, Constants.STREAM_SYNC_STRING.length);
-        /** TODO what if StreamInfo not last? */
+        // TODO what if StreamInfo not last?
         streamInfo.write(bitOutStream, false);
 
         // flush bit input stream

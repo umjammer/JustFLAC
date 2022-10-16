@@ -27,9 +27,16 @@ import vavi.util.Debug;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static vavi.sound.SoundUtil.volume;
+import static vavix.util.DelayedWorker.later;
+
 
 class FlacFormatConversionProviderTest {
 
+    static long time;
+
+    static {
+        time = System.getProperty("vavi.test", "").equals("ide") ? 10 * 1000 : 1000 * 1000;
+    }
 
     static final String inFile = "/test.flac";
 
@@ -62,7 +69,7 @@ Debug.println("OUT: " + outAudioFormat);
         volume(line, .2d);
 
         byte[] buf = new byte[1024];
-        while (true) {
+        while (!later(time).come()) {
             int r = pcmAis.read(buf, 0, 1024);
             if (r < 0) {
                 break;
@@ -103,7 +110,7 @@ Debug.println("OUT: " + outAudioFormat);
         volume(line, .2d);
 
         byte[] buf = new byte[1024];
-        while (true) {
+        while (!later(time).come()) {
             int r = pcmAis.read(buf, 0, 1024);
             if (r < 0) {
                 break;

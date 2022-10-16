@@ -1,6 +1,4 @@
-package org.kc7bfi.jflac.metadata;
-
-/**
+/*
  * libFLAC - Free Lossless Audio Codec library
  * Copyright (C) 2001,2002,2003  Josh Coalson
  *
@@ -19,6 +17,8 @@ package org.kc7bfi.jflac.metadata;
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA  02111-1307, USA.
  */
+
+package org.kc7bfi.jflac.metadata;
 
 /**
  * Meta data format violation exception.
@@ -57,5 +57,4 @@ public class Violation extends Exception {
     public Violation(String msg, Throwable err) {
         super(msg, err);
     }
-
 }

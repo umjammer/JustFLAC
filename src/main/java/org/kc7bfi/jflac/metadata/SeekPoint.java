@@ -1,6 +1,4 @@
-package org.kc7bfi.jflac.metadata;
-
-/**
+/*
  * libFLAC - Free Lossless Audio Codec library
  * Copyright (C) 2001,2002,2003  Josh Coalson
  *
@@ -20,6 +18,8 @@ package org.kc7bfi.jflac.metadata;
  * Boston, MA  02111-1307, USA.
  */
 
+package org.kc7bfi.jflac.metadata;
+
 import java.io.IOException;
 
 import org.kc7bfi.jflac.io.BitInputStream;
@@ -35,9 +35,12 @@ public class SeekPoint {
     private static final int SEEKPOINT_STREAM_OFFSET_LEN = 64; // bits
     private static final int SEEKPOINT_FRAME_SAMPLES_LEN = 16; // bits
 
-    protected long sampleNumber; // The sample number of the target frame.
-    protected long streamOffset; // The offset, in bytes, of the target frame with respect to beginning of the first frame.
-    protected int frameSamples; // The number of samples in the target frame.
+    /** The sample number of the target frame. */
+    protected long sampleNumber;
+    /** The offset, in bytes, of the target frame with respect to beginning of the first frame. */
+    protected long streamOffset;
+    /** The number of samples in the target frame. */
+    protected int frameSamples;
     
     /**
      * The constructor.
@@ -74,12 +77,11 @@ public class SeekPoint {
         os.writeRawUInt(frameSamples, SEEKPOINT_FRAME_SAMPLES_LEN);
     }
     
-    /**
-     * @see java.lang.Object#toString()
-     */
+    @Override
     public String toString() {
         return "sampleNumber=" + sampleNumber + " streamOffset=" + streamOffset + " frameSamples=" + frameSamples;
     }
+
     /**
      * Return the frame samples.
      * @return Returns the frameSamples.
@@ -87,6 +89,7 @@ public class SeekPoint {
     public int getFrameSamples() {
         return frameSamples;
     }
+
     /**
      * return the sample number.
      * @return Returns the sampleNumber.
@@ -94,6 +97,7 @@ public class SeekPoint {
     public long getSampleNumber() {
         return sampleNumber;
     }
+
     /**
      * return the stream offset.
      * @return Returns the streamOffset.
@@ -101,6 +105,7 @@ public class SeekPoint {
     public long getStreamOffset() {
         return streamOffset;
     }
+
     /**
      * Set the stream offset.
      * @param streamOffset The stream offset to set.

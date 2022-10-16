@@ -1,6 +1,4 @@
-package org.kc7bfi.jflac.util;
-
-/**
+/*
  * libFLAC - Free Lossless Audio Codec library
  * Copyright (C) 2001,2002,2003  Josh Coalson
  *
@@ -19,6 +17,8 @@ package org.kc7bfi.jflac.util;
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA  02111-1307, USA.
  */
+
+package org.kc7bfi.jflac.util;
 
 import java.io.DataOutput;
 import java.io.DataOutputStream;
@@ -42,8 +42,9 @@ public class WavWriter {
     private int channels;
     private int bps;
     private int sampleRate;
-    
-    private byte[] s8buffer = new byte[MAX_BLOCK_SIZE * Constants.MAX_CHANNELS * 4]; /* WATCHOUT: can be up to 2 megs */
+
+    /** WATCHOUT: can be up to 2 megs */
+    private byte[] s8buffer = new byte[MAX_BLOCK_SIZE * Constants.MAX_CHANNELS * 4];
     private int samplesProcessed = 0;
     private int frameCounter = 0;
     

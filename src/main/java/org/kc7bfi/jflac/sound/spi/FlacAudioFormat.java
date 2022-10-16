@@ -41,30 +41,31 @@ public class FlacAudioFormat extends AudioFormat {
 	 */
 	public static final String KEY_BLOCKSIZE_MAX = "blocksize_max";
 
-	private HashMap props;
+	private Map<String, Object> props;
 
 	public FlacAudioFormat(StreamInfo streamInfo) {
 		super(FlacEncoding.FLAC, streamInfo.getSampleRate(),
 				streamInfo.getBitsPerSample(), streamInfo.getChannels(),
 				/* streamInfo.maxFrameSize */AudioSystem.NOT_SPECIFIED,
 				AudioSystem.NOT_SPECIFIED, false);
-		props = new HashMap();
-		props.put(KEY_FRAMESIZE_MIN, new Integer(streamInfo.getMinFrameSize()));
-		props.put(KEY_FRAMESIZE_MAX, new Integer(streamInfo.getMaxFrameSize()));
-		props.put(KEY_BLOCKSIZE_MIN, new Integer(streamInfo.getMinBlockSize()));
-		props.put(KEY_BLOCKSIZE_MAX, new Integer(streamInfo.getMaxBlockSize()));
+		props = new HashMap<>();
+		props.put(KEY_FRAMESIZE_MIN, streamInfo.getMinFrameSize());
+		props.put(KEY_FRAMESIZE_MAX, streamInfo.getMaxFrameSize());
+		props.put(KEY_BLOCKSIZE_MIN, streamInfo.getMinBlockSize());
+		props.put(KEY_BLOCKSIZE_MAX, streamInfo.getMaxBlockSize());
 	}
 
 	/**
 	 * Java 5.0 compatible method to get the full map of properties. The
 	 * properties use the KEY_ keys defined in this class.
 	 */
-	public Map properties() {
-		Map ret;
+	@SuppressWarnings("unchecked")
+	public Map<String, Object> properties() {
+		Map<String, Object> ret;
 		if (props == null) {
-			ret = new HashMap(0);
+			ret = new HashMap<>(0);
 		} else {
-			ret = (HashMap) (props.clone());
+			ret = (Map<String,Object>) ((HashMap<String,Object>) props).clone();
 		}
 		return Collections.unmodifiableMap(ret);
 	}

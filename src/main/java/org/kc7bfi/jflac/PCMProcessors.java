@@ -7,7 +7,7 @@
 package org.kc7bfi.jflac;
 
 import java.util.HashSet;
-import java.util.Iterator;
+import java.util.Set;
 
 import org.kc7bfi.jflac.metadata.StreamInfo;
 import org.kc7bfi.jflac.util.ByteData;
@@ -18,7 +18,8 @@ import org.kc7bfi.jflac.util.ByteData;
  * @author kc7bfi
  */
 class PCMProcessors implements PCMProcessor {
-    private HashSet pcmProcessors = new HashSet();
+
+    private final Set<PCMProcessor> pcmProcessors = new HashSet<>();
     
     /**
      * Add a PCM processor.
@@ -47,9 +48,7 @@ class PCMProcessors implements PCMProcessor {
      */
     public void processStreamInfo(StreamInfo info) {
         synchronized (pcmProcessors) {
-            Iterator it = pcmProcessors.iterator();
-            while (it.hasNext()) {
-                PCMProcessor processor = (PCMProcessor)it.next();
+            for (PCMProcessor processor : pcmProcessors) {
                 processor.processStreamInfo(info);
             }
         }
@@ -58,13 +57,11 @@ class PCMProcessors implements PCMProcessor {
     /**
      * Process the decoded PCM bytes.
      * @param pcm The decoded PCM data
-     * @see org.kc7bfi.jflac.PCMProcessor#processPCM(org.kc7bfi.jflac.util.ByteSpace)
+     * @see org.kc7bfi.jflac.PCMProcessor#processPCM(org.kc7bfi.jflac.util.ByteData)
      */
     public void processPCM(ByteData pcm) {
         synchronized (pcmProcessors) {
-            Iterator it = pcmProcessors.iterator();
-            while (it.hasNext()) {
-                PCMProcessor processor = (PCMProcessor)it.next();
+            for (PCMProcessor processor : pcmProcessors) {
                 processor.processPCM(pcm);
             }
         }
@@ -73,5 +70,4 @@ class PCMProcessors implements PCMProcessor {
 	public boolean isCanceled() {
 		return pcmProcessors.size() == 0;
 	}
-
 }

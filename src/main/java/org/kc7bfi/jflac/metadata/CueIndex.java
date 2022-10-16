@@ -1,6 +1,4 @@
-package org.kc7bfi.jflac.metadata;
-
-/**
+/*
  * libFLAC - Free Lossless Audio Codec library
  * Copyright (C) 2001,2002,2003  Josh Coalson
  *
@@ -20,6 +18,8 @@ package org.kc7bfi.jflac.metadata;
  * Boston, MA  02111-1307, USA.
  */
 
+package org.kc7bfi.jflac.metadata;
+
 import java.io.IOException;
 
 import org.kc7bfi.jflac.io.BitInputStream;
@@ -30,12 +30,17 @@ import org.kc7bfi.jflac.io.BitInputStream;
  */
 public class CueIndex {
 
-    private static final int CUESHEET_INDEX_OFFSET_LEN = 64; // bits
-    private static final int CUESHEET_INDEX_NUMBER_LEN = 8; // bits
-    private static final int CUESHEET_INDEX_RESERVED_LEN = 3 * 8; // bits
+    /** bits */
+    private static final int CUESHEET_INDEX_OFFSET_LEN = 64;
+    /** bits */
+    private static final int CUESHEET_INDEX_NUMBER_LEN = 8;
+    /** bits */
+    private static final int CUESHEET_INDEX_RESERVED_LEN = 3 * 8;
 
-    protected long offset; // Offset in samples, relative to the track offset, of the index point.
-    protected byte number; // The index point number.
+    /** Offset in samples, relative to the track offset, of the index point. */
+    protected long offset;
+    /** The index point number. */
+    protected byte number;
     
     /**
      * The constructor.

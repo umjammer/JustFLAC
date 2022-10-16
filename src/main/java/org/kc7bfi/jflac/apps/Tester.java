@@ -60,7 +60,7 @@ public class Tester implements FrameListener {
     public void test2(String inFileName, long time) throws IOException {
     	RandomFileInputStream is = new RandomFileInputStream(inFileName);
         FLACDecoder decoder = new FLACDecoder(is);
-        decoder.readMetadata();;
+        decoder.readMetadata();
         StreamInfo si = decoder.getStreamInfo();
         long pos = time*si.getSampleRate();
         System.out.println("Seeking to "+pos+" sample");
@@ -75,7 +75,7 @@ public class Tester implements FrameListener {
     /**
      * Process metadata records.
      * @param metadata the metadata block
-     * @see org.kc7bfi.jflac.FrameListener#processMetadata(org.kc7bfi.jflac.metadata.MetadataBase)
+     * @see org.kc7bfi.jflac.FrameListener#processMetadata(org.kc7bfi.jflac.metadata.Metadata)
      */
     public void processMetadata(Metadata metadata) {
     }

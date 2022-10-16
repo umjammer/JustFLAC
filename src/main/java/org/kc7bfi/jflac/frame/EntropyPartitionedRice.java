@@ -1,6 +1,4 @@
-package org.kc7bfi.jflac.frame;
-
-/**
+/*
  * libFLAC - Free Lossless Audio Codec library
  * Copyright (C) 2001,2002,2003  Josh Coalson
  *
@@ -20,6 +18,8 @@ package org.kc7bfi.jflac.frame;
  * Boston, MA  02111-1307, USA.
  */
 
+package org.kc7bfi.jflac.frame;
+
 import java.io.IOException;
 
 import org.kc7bfi.jflac.io.BitInputStream;
@@ -29,6 +29,7 @@ import org.kc7bfi.jflac.io.BitInputStream;
  * @author kc7bfi
  */
 public class EntropyPartitionedRice extends EntropyCodingMethod {
+
     private static final int ENTROPY_CODING_METHOD_PARTITIONED_RICE_PARAMETER_LEN = 4; /* bits */
     private static final int ENTROPY_CODING_METHOD_PARTITIONED_RICE_RAW_LEN = 5; /* bits */
     private static final int ENTROPY_CODING_METHOD_PARTITIONED_RICE_ESCAPE_PARAMETER = 15;

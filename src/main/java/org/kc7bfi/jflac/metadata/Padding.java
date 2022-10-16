@@ -1,6 +1,4 @@
-package org.kc7bfi.jflac.metadata;
-
-/**
+/*
  * libFLAC - Free Lossless Audio Codec library
  * Copyright (C) 2001,2002,2003  Josh Coalson
  *
@@ -19,6 +17,8 @@ package org.kc7bfi.jflac.metadata;
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA  02111-1307, USA.
  */
+
+package org.kc7bfi.jflac.metadata;
 
 import java.io.IOException;
 
@@ -42,10 +42,7 @@ public class Padding extends Metadata {
         is.readByteBlockAlignedNoCRC(null, length);
     }
     
-    /**
-     * Convert to string.
-     * @see java.lang.Object#toString()
-     */
+    @Override
     public String toString() {
         return "Padding (Length=" + length + ") last ="+isLast;
     }

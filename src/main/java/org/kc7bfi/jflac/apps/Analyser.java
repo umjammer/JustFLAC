@@ -20,7 +20,6 @@ package org.kc7bfi.jflac.apps;
  */
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.kc7bfi.jflac.FrameListener;
@@ -52,7 +51,7 @@ public class Analyser implements FrameListener {
     /**
      * Process metadata records.
      * @param metadata the metadata block
-     * @see org.kc7bfi.jflac.FrameListener#processMetadata(org.kc7bfi.jflac.metadata.MetadataBase)
+     * @see org.kc7bfi.jflac.FrameListener#processMetadata(org.kc7bfi.jflac.metadata.Metadata)
      */
     public void processMetadata(Metadata metadata) {
         System.out.println(metadata.toString());
@@ -86,8 +85,6 @@ public class Analyser implements FrameListener {
         try {
             Analyser analyser = new Analyser();
             analyser.analyse(args[0]);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }

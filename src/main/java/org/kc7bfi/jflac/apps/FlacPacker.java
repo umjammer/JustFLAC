@@ -4,13 +4,12 @@
  * To change the template for this generated file go to
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
+
 package org.kc7bfi.jflac.apps;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.Panel;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
@@ -19,6 +18,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -44,8 +44,8 @@ public class FlacPacker extends JFrame {
     private JButton addButton = new JButton("Add Files");
     private JButton makeButton = new JButton("Pack FLAC");
     
-    private ArrayList flacFiles = new ArrayList();
-    private ArrayList albumFiles = new ArrayList();
+    private ArrayList<File> flacFiles = new ArrayList<>();
+    private ArrayList<PackerFile> albumFiles = new ArrayList<>();
     private StreamInfo masterStreamInfo = null;
     private byte[] buffer = new byte[64 * 1024];
     
@@ -73,20 +73,14 @@ public class FlacPacker extends JFrame {
         
         this.pack();
         
-        addButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
-                addFilesToList();
-            }
-        });
+        addButton.addActionListener(event -> addFilesToList());
         
-        makeButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
-                try {
-                    packFlac();
-                } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
+        makeButton.addActionListener(event -> {
+            try {
+                packFlac();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
             }
         });
     }
@@ -107,7 +101,7 @@ public class FlacPacker extends JFrame {
         int returnVal = chooser.showOpenDialog(this);
         if (returnVal != JFileChooser.APPROVE_OPTION) return;
         File[] files = chooser.getSelectedFiles();
-        for (int i = 0; i < files.length; i++) flacFiles.add(files[i]);
+        Collections.addAll(flacFiles, files);
     }
     
     private File getOutputFile() {
@@ -128,8 +122,8 @@ public class FlacPacker extends JFrame {
         long lastStreamOffset = 0;
         
         // process selected files
-        for (int i = 0; i < flacFiles.size(); i++) {
-            File file = (File)flacFiles.get(i);
+        for (File flacFile : flacFiles) {
+            File file = flacFile;
             try {
                 FileInputStream is = new FileInputStream(file);
                 FLACDecoder decoder = new FLACDecoder(is);
@@ -144,7 +138,7 @@ public class FlacPacker extends JFrame {
                     continue;
                 }
                 masterStreamInfo.addTotalSamples(info.getTotalSamples());
-                
+
                 SeekPoint seekPoint = new SeekPoint(lastSampleNumber, lastStreamOffset, 0);
                 //decoder.processMetadata();
                 long frameStartOffs = decoder.getTotalBytesRead();
@@ -161,8 +155,6 @@ public class FlacPacker extends JFrame {
                 //appendMsg(frameStartOffs + " " + frameEndOffs + " " + decoder.getSamplesDecoded());
                 lastSampleNumber += decoder.getSamplesDecoded();
                 lastStreamOffset += frameEndOffs - frameStartOffs;
-            } catch (FileNotFoundException e) {
-                appendMsg("File " + file + ": " + e);
             } catch (IOException e) {
                 appendMsg("File " + file + ": " + e);
             }
@@ -174,7 +166,7 @@ public class FlacPacker extends JFrame {
         int metadataHeader = (Metadata.STREAM_METADATA_IS_LAST_LEN + Metadata.STREAM_METADATA_TYPE_LEN + Metadata.STREAM_METADATA_LENGTH_LEN) / 8;
         int metadataOffset = Constants.STREAM_SYNC_STRING.length + masterStreamInfo.calcLength() + seekTable.calcLength() + metadataHeader * 2;
         for (int i = 0; i < albumFiles.size(); i++) {
-            PackerFile aFile = (PackerFile)albumFiles.get(i);
+            PackerFile aFile = albumFiles.get(i);
             appendMsg("SeekTable build " + i + " Offset=" + aFile.seekPoint.getStreamOffset() + " header=" + metadataOffset);
             aFile.seekPoint.setStreamOffset(aFile.seekPoint.getStreamOffset() + metadataOffset);
             points[i] = aFile.seekPoint;
@@ -187,7 +179,7 @@ public class FlacPacker extends JFrame {
         // get output file
         File outFile = getOutputFile();
         if (outFile == null) return;
-        BitOutputStream os = null;
+        BitOutputStream os;
         FileOutputStream fos;
         try {
             fos = new FileOutputStream(outFile);
@@ -212,17 +204,14 @@ public class FlacPacker extends JFrame {
         
         // generate output file
         for (int i = 0; i < albumFiles.size(); i++) {
-            PackerFile aFile = (PackerFile)albumFiles.get(i);
+            PackerFile aFile = albumFiles.get(i);
             appendMsg("Process file " + i + ": " + aFile.file);
-            try {
-                RandomAccessFile raf = new RandomAccessFile(aFile.file, "r");
+            try (RandomAccessFile raf = new RandomAccessFile(aFile.file, "r")) {
                 raf.seek(aFile.firstFrameOffset);
                 for (int bytes = raf.read(buffer); bytes > 0; bytes = raf.read(buffer)) {
                     fos.write(buffer, 0, bytes);
                 }
                 fos.flush();
-            } catch (FileNotFoundException e) {
-                appendMsg("File " + aFile.file + ": " + e);
             } catch (EOFException e) {
                 appendMsg("File " + aFile.file + ": Done!");
             } catch (IOException e) {
@@ -244,7 +233,7 @@ public class FlacPacker extends JFrame {
      * This class holds the fiels and their seek points.
      * @author kc7bfi
      */
-    private class PackerFile {
+    private static class PackerFile {
         protected File file;
         protected SeekPoint seekPoint;
         protected long firstFrameOffset;
