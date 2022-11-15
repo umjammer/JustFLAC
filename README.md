@@ -2,6 +2,7 @@
 [![Java CI with Maven](https://github.com/umjammer/JustFLAC/actions/workflows/maven.yml/badge.svg)](https://github.com/umjammer/JustFLAC/actions/workflows/maven.yml)
 [![CodeQL](https://github.com/umjammer/JustFLAC/actions/workflows/codeql.yml/badge.svg)](https://github.com/umjammer/JustFLAC/actions/workflows/codeql.yml)
 ![Java](https://img.shields.io/badge/Java-8-b07219)
+[![Parent](https://img.shields.io/badge/Parent-vavi--sound--sandbox-pink)](https://github.com/umjammer/vavi-sound-sandbox)
 
 Welcome to JustFLAC
 ===================
