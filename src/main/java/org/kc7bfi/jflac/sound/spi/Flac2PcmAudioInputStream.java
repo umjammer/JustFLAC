@@ -81,6 +81,7 @@ public class Flac2PcmAudioInputStream extends RingedAudioInputStream implements
     /**
      * called from the super class whenever more PCM data is needed.
      */
+    @Override
     protected void fill() throws IOException {
         if (decoder == null) {
             initDecoder();
@@ -113,6 +114,7 @@ public class Flac2PcmAudioInputStream extends RingedAudioInputStream implements
      * @param streamInfo the StreamInfo block
      * @see org.kc7bfi.jflac.PCMProcessor#processStreamInfo(org.kc7bfi.jflac.metadata.StreamInfo)
      */
+    @Override
     public void processStreamInfo(StreamInfo streamInfo) {
         this.streamInfo = streamInfo;
     }
@@ -124,6 +126,7 @@ public class Flac2PcmAudioInputStream extends RingedAudioInputStream implements
      * @param pcm The decoded PCM data
      * @see org.kc7bfi.jflac.PCMProcessor#processPCM(ByteData)
      */
+    @Override
     public void processPCM(ByteData pcm) {
         buffer.resize(pcm.getLen() * 2);
         buffer.put(pcm.getData(), 0, pcm.getLen());

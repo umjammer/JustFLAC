@@ -64,7 +64,7 @@ public class FlacPacker extends JFrame {
         textArea.setAutoscrolls(true);
         this.getContentPane().add(textArea, BorderLayout.CENTER);
         
-        // button pannel
+        // button panel
         Panel buttonPanel = new Panel();
         buttonPanel.setLayout(new FlowLayout());
         buttonPanel.add(addButton);
@@ -226,11 +226,11 @@ public class FlacPacker extends JFrame {
      */
     public static void main(String[] args) {
         FlacPacker app = new FlacPacker("FLAC Album Maker");
-        app.show(true);
+        app.setVisible(true);
     }
     
     /**
-     * This class holds the fiels and their seek points.
+     * This class holds the files and their seek points.
      * @author kc7bfi
      */
     private static class PackerFile {

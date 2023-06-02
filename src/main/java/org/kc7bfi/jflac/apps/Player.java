@@ -87,6 +87,7 @@ public class Player implements PCMProcessor {
      * @param streamInfo the StreamInfo block
      * @see org.kc7bfi.jflac.PCMProcessor#processStreamInfo(org.kc7bfi.jflac.metadata.StreamInfo)
      */
+    @Override
     public void processStreamInfo(StreamInfo streamInfo) {
         try {
             fmt = getAudioFormat(streamInfo);
@@ -111,6 +112,7 @@ public class Player implements PCMProcessor {
      * @param pcm The decoded PCM data
      * @see org.kc7bfi.jflac.PCMProcessor#processPCM(org.kc7bfi.jflac.util.ByteData)
      */
+    @Override
     public void processPCM(ByteData pcm) {
         line.write(pcm.getData(), 0, pcm.getLen());
     }

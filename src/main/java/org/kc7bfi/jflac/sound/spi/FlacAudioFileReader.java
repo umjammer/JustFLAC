@@ -74,9 +74,10 @@ public class FlacAudioFileReader extends AudioFileReader {
      * @exception IOException
      *                if an I/O exception occurs.
      */
+    @Override
     public AudioFileFormat getAudioFileFormat(File file) throws UnsupportedAudioFileException, IOException {
         try (InputStream inputStream = Files.newInputStream(file.toPath())) {
-            return getAudioFileFormat(inputStream, (int) file.length());
+            return getAudioFileFormat(new BufferedInputStream(inputStream), (int) file.length());
         }
     }
 
@@ -94,9 +95,10 @@ public class FlacAudioFileReader extends AudioFileReader {
      * @exception IOException
      *                if an I/O exception occurs.
      */
+    @Override
     public AudioFileFormat getAudioFileFormat(URL url) throws UnsupportedAudioFileException, IOException {
         try (InputStream inputStream = url.openStream()) {
-            return getAudioFileFormat(inputStream);
+            return getAudioFileFormat(inputStream instanceof BufferedInputStream ? inputStream : new BufferedInputStream(inputStream));
         }
     }
 
@@ -114,6 +116,7 @@ public class FlacAudioFileReader extends AudioFileReader {
      * @exception IOException
      *                if an I/O exception occurs.
      */
+    @Override
     public AudioFileFormat getAudioFileFormat(InputStream stream) throws UnsupportedAudioFileException, IOException {
         return getAudioFileFormat(stream, AudioSystem.NOT_SPECIFIED);
     }
@@ -134,7 +137,7 @@ public class FlacAudioFileReader extends AudioFileReader {
     protected AudioFileFormat getAudioFileFormat(InputStream bitStream, int mediaLength) throws UnsupportedAudioFileException, IOException {
 logger.fine("enter available: " + bitStream.available());
         if (!bitStream.markSupported()) {
-            bitStream = new BufferedInputStream(bitStream);
+            throw new IllegalArgumentException("must be mark supported");
         }
         AudioFormat format;
         try {
@@ -148,8 +151,12 @@ logger.fine("enter available: " + bitStream.available());
 
             format = new FlacAudioFormat(streamInfo);
         } catch (IOException ioe) {
-            logger.fine("FLAC file reader: not a FLAC stream");
-            throw (UnsupportedAudioFileException) new UnsupportedAudioFileException().initCause(ioe);
+            if (ioe.getMessage().equals("Could not find Stream Sync")) {
+                logger.fine("FLAC file reader: not a FLAC stream");
+                throw new UnsupportedAudioFileException(ioe.getMessage());
+            } else {
+                throw ioe;
+            }
         } finally {
             try {
                 bitStream.reset();
@@ -176,14 +183,10 @@ logger.fine("finally available: " + bitStream.available());
      * @exception IOException
      *                if an I/O exception occurs.
      */
+    @Override
     public AudioInputStream getAudioInputStream(File file) throws UnsupportedAudioFileException, IOException {
         InputStream inputStream = Files.newInputStream(file.toPath());
-        try {
-            return getAudioInputStream(inputStream, (int) file.length());
-        } catch (UnsupportedAudioFileException | IOException e) {
-            inputStream.close();
-            throw e;
-        }
+        return getAudioInputStream(new BufferedInputStream(inputStream), (int) file.length());
     }
 
     /**
@@ -200,14 +203,10 @@ logger.fine("finally available: " + bitStream.available());
      * @exception IOException
      *                if an I/O exception occurs.
      */
+    @Override
     public AudioInputStream getAudioInputStream(URL url) throws UnsupportedAudioFileException, IOException {
         InputStream inputStream = url.openStream();
-        try {
-            return getAudioInputStream(inputStream);
-        } catch (UnsupportedAudioFileException | IOException e) {
-            inputStream.close();
-            throw e;
-        }
+        return getAudioInputStream(inputStream instanceof BufferedInputStream ? inputStream : new BufferedInputStream(inputStream));
     }
 
     /**
@@ -225,6 +224,7 @@ logger.fine("finally available: " + bitStream.available());
      * @exception IOException
      *                if an I/O exception occurs.
      */
+    @Override
     public AudioInputStream getAudioInputStream(InputStream stream) throws UnsupportedAudioFileException, IOException {
         return getAudioInputStream(stream, AudioSystem.NOT_SPECIFIED);
     }
@@ -264,10 +264,9 @@ logger.fine("finally available: " + bitStream.available());
 
         ByteArrayInputStream byteInStream = new ByteArrayInputStream(byteOutStream.toByteArray());
 
-        //ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+//        ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
         SequenceInputStream sequenceInputStream = new SequenceInputStream(byteInStream, inputStream);
-        //return new AudioInputStream(sequenceInputStream, audioFileFormat
-        //        .getFormat(), audioFileFormat.getFrameLength());
+//        return new AudioInputStream(sequenceInputStream, audioFileFormat.getFormat(), audioFileFormat.getFrameLength());
         return new AudioInputStream(sequenceInputStream, audioFileFormat.getFormat(), audioFileFormat.getFrameLength());
     }
 }

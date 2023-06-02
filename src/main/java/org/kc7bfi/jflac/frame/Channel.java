@@ -26,7 +26,7 @@ package org.kc7bfi.jflac.frame;
  */
 public abstract class Channel {
 
-    /** Partisioned Rice Encoding Method. */
+    /** Partitioned Rice Encoding Method. */
     public static final int ENTROPY_CODING_METHOD_PARTITIONED_RICE = 0;
 
     /** partitioned Rice coding with 5-bit Rice parameter */

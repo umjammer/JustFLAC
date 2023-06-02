@@ -31,7 +31,7 @@ public class ChannelData {
     /** The output signal. */
     private int[] output;
     
-    /** the risidual signal. */
+    /** the residual signal. */
     private int[] residual;
     
     /** The Entropy signal. */

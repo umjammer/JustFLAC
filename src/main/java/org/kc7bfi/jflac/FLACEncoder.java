@@ -195,7 +195,7 @@ public class FLACEncoder {
         boolean needs_magic_hack;
         verify_input_fifo input_fifo;
         verify_output output;
-        private class error_stats {
+        private static class error_stats {
             long absolute_sample;
             int frame_number;
             int channel;
