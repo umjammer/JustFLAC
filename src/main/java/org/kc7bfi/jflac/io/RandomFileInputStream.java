@@ -55,6 +55,7 @@ public class RandomFileInputStream extends InputStream {
      * @throws IOException on IO error
      * @see java.io.InputStream#read()
      */
+    @Override
     public int read() throws IOException {
         return randomFile.read();
     }
@@ -62,6 +63,7 @@ public class RandomFileInputStream extends InputStream {
     /**
      * @see java.io.InputStream#reset()
      */
+    @Override
     public synchronized void reset() {
         throw new UnsupportedOperationException("reset");
     }
@@ -71,6 +73,7 @@ public class RandomFileInputStream extends InputStream {
      * @throws IOException on IO error
      * @see java.io.InputStream#close()
      */
+    @Override
     public void close() throws IOException {
         randomFile.close();
     }
@@ -89,6 +92,7 @@ public class RandomFileInputStream extends InputStream {
      * @return true if file marking is supported
      * @see java.io.InputStream#markSupported()
      */
+    @Override
     public boolean markSupported() {
         return false;
     }
@@ -96,6 +100,7 @@ public class RandomFileInputStream extends InputStream {
     /**
      * @see java.io.InputStream#mark(int)
      */
+    @Override
     public synchronized void mark(int pos) {
     	 throw new UnsupportedOperationException("mark");
     }
@@ -107,6 +112,7 @@ public class RandomFileInputStream extends InputStream {
      * @throws IOException on IO error
      * @see java.io.InputStream#skip(long)
      */
+    @Override
     public long skip(long bytes) throws IOException {
         long pos = randomFile.getFilePointer();
         randomFile.seek(pos + bytes);
@@ -120,6 +126,7 @@ public class RandomFileInputStream extends InputStream {
      * @throws IOException on IO error
      * @see java.io.InputStream#read(byte[])
      */
+    @Override
     public int read(byte[] buffer) throws IOException {
         return randomFile.read(buffer);
     }
@@ -133,6 +140,7 @@ public class RandomFileInputStream extends InputStream {
      * @throws IOException on IO error
      * @see java.io.InputStream#read(byte[], int, int)
      */
+    @Override
     public int read(byte[] buffer, int pos, int bytes) throws IOException {
         return randomFile.read(buffer, pos, bytes);
     }

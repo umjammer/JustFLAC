@@ -42,6 +42,7 @@ public class LittleEndianDataOutput implements DataOutput {
     /**
      * @see java.io.DataOutput#writeDouble(double)
      */
+    @Override
     public void writeDouble(double arg0) throws IOException {
         out.writeDouble(arg0);
     }
@@ -49,6 +50,7 @@ public class LittleEndianDataOutput implements DataOutput {
     /**
      * @see java.io.DataOutput#writeFloat(float)
      */
+    @Override
     public void writeFloat(float arg0) throws IOException {
         out.writeFloat(arg0);
     }
@@ -56,6 +58,7 @@ public class LittleEndianDataOutput implements DataOutput {
     /**
      * @see java.io.DataOutput#write(int)
      */
+    @Override
     public void write(int arg0) throws IOException {
         out.write(arg0);
     }
@@ -63,6 +66,7 @@ public class LittleEndianDataOutput implements DataOutput {
     /**
      * @see java.io.DataOutput#writeByte(int)
      */
+    @Override
     public void writeByte(int arg0) throws IOException {
         out.writeByte(arg0);
     }
@@ -70,6 +74,7 @@ public class LittleEndianDataOutput implements DataOutput {
     /**
      * @see java.io.DataOutput#writeChar(int)
      */
+    @Override
     public void writeChar(int arg0) throws IOException {
         out.writeChar(arg0);
     }
@@ -77,6 +82,7 @@ public class LittleEndianDataOutput implements DataOutput {
     /**
      * @see java.io.DataOutput#writeInt(int)
      */
+    @Override
     public void writeInt(int arg0) throws IOException {
         out.writeByte(arg0 & 0xff);
         out.writeByte((arg0 >> 8) & 0xff);
@@ -87,6 +93,7 @@ public class LittleEndianDataOutput implements DataOutput {
     /**
      * @see java.io.DataOutput#writeShort(int)
      */
+    @Override
     public void writeShort(int arg0) throws IOException {
         out.writeByte(arg0 & 0xff);
         out.writeByte((arg0 >> 8) & 0xff);
@@ -95,6 +102,7 @@ public class LittleEndianDataOutput implements DataOutput {
     /**
      * @see java.io.DataOutput#writeLong(long)
      */
+    @Override
     public void writeLong(long arg0) throws IOException {
         out.writeByte((int) arg0 & 0xff);
         out.writeByte((int) (arg0 >> 8) & 0xff);
@@ -109,6 +117,7 @@ public class LittleEndianDataOutput implements DataOutput {
     /**
      * @see java.io.DataOutput#writeBoolean(boolean)
      */
+    @Override
     public void writeBoolean(boolean arg0) throws IOException {
         out.writeBoolean(arg0);
     }
@@ -116,6 +125,7 @@ public class LittleEndianDataOutput implements DataOutput {
     /**
      * @see java.io.DataOutput#write(byte[])
      */
+    @Override
     public void write(byte[] arg0) throws IOException {
         out.write(arg0);
     }
@@ -123,6 +133,7 @@ public class LittleEndianDataOutput implements DataOutput {
     /**
      * @see java.io.DataOutput#write(byte[], int, int)
      */
+    @Override
     public void write(byte[] arg0, int arg1, int arg2) throws IOException {
         out.write(arg0, arg1, arg2);
     }
@@ -130,6 +141,7 @@ public class LittleEndianDataOutput implements DataOutput {
     /**
      * @see java.io.DataOutput#writeBytes(java.lang.String)
      */
+    @Override
     public void writeBytes(String arg0) throws IOException {
         out.writeBytes(arg0);
     }
@@ -137,6 +149,7 @@ public class LittleEndianDataOutput implements DataOutput {
     /**
      * @see java.io.DataOutput#writeChars(java.lang.String)
      */
+    @Override
     public void writeChars(String arg0) throws IOException {
         out.writeChars(arg0);
     }
@@ -144,6 +157,7 @@ public class LittleEndianDataOutput implements DataOutput {
     /**
      * @see java.io.DataOutput#writeUTF(java.lang.String)
      */
+    @Override
     public void writeUTF(String arg0) throws IOException {
         out.writeUTF(arg0);
     }

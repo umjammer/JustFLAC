@@ -55,6 +55,7 @@ public class FlacFormatConversionProvider extends FormatConversionProvider {
 	 * @return array of source format encodings. The array will always have a
 	 *         length of at least 1.
 	 */
+	@Override
 	public AudioFormat.Encoding[] getSourceEncodings() {
 		if (HAS_ENCODING) {
 			final AudioFormat.Encoding[] encodings = {
@@ -76,6 +77,7 @@ public class FlacFormatConversionProvider extends FormatConversionProvider {
 	 * @return array of target format encodings. The array will always have a
 	 *         length of at least 1.
 	 */
+	@Override
 	public AudioFormat.Encoding[] getTargetEncodings() {
 		if (HAS_ENCODING) {
 			final AudioFormat.Encoding[] encodings = {
@@ -110,6 +112,7 @@ public class FlacFormatConversionProvider extends FormatConversionProvider {
 	 * @param sourceFormat format of the incoming data.
 	 * @return array of supported target format encodings.
 	 */
+	@Override
 	public AudioFormat.Encoding[] getTargetEncodings(AudioFormat sourceFormat) {
 		boolean bitSizeOK = isBitSizeOK(sourceFormat, true);
 		boolean channelsOK = isChannelsOK(sourceFormat, true);
@@ -155,8 +158,9 @@ public class FlacFormatConversionProvider extends FormatConversionProvider {
 	 * @param sourceFormat format of the incoming data.
 	 * @return array of supported target formats.
 	 */
+	@Override
 	public AudioFormat[] getTargetFormats(AudioFormat.Encoding targetEncoding,
-			AudioFormat sourceFormat) {
+										  AudioFormat sourceFormat) {
 		return getTargetFormats(targetEncoding, sourceFormat, true);
 	}
 
@@ -230,6 +234,7 @@ public class FlacFormatConversionProvider extends FormatConversionProvider {
 	 * @return stream from which processed data with the specified target
 	 *         encoding may be read.
 	 */
+	@Override
 	public AudioInputStream getAudioInputStream(
 			AudioFormat.Encoding targetEncoding, AudioInputStream sourceStream) {
 		AudioFormat[] formats = getTargetFormats(targetEncoding,
@@ -251,8 +256,9 @@ public class FlacFormatConversionProvider extends FormatConversionProvider {
 	 * @return stream from which processed data with the specified format may be
 	 *         read.
 	 */
+	@Override
 	public AudioInputStream getAudioInputStream(AudioFormat targetFormat,
-			AudioInputStream sourceStream) {
+												AudioInputStream sourceStream) {
 		AudioFormat sourceFormat = sourceStream.getFormat();
 		AudioFormat[] formats = getTargetFormats(targetFormat.getEncoding(),
 				sourceFormat, false);

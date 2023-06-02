@@ -59,6 +59,7 @@ public class FlacAudioFormat extends AudioFormat {
 	 * Java 5.0 compatible method to get the full map of properties. The
 	 * properties use the KEY_ keys defined in this class.
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public Map<String, Object> properties() {
 		Map<String, Object> ret;
@@ -73,6 +74,7 @@ public class FlacAudioFormat extends AudioFormat {
 	/**
 	 * Java 5.0 compatible method to get a property. As key use the KEY_ constants defined in this class.
 	 */
+	@Override
 	public Object getProperty(String key) {
 		if (props == null) {
 			return null;

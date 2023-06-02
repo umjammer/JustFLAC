@@ -58,6 +58,7 @@ public class Decoder implements PCMProcessor {
      * @param info the StreamInfo block
      * @see org.kc7bfi.jflac.PCMProcessor#processStreamInfo(org.kc7bfi.jflac.metadata.StreamInfo)
      */
+    @Override
     public void processStreamInfo(StreamInfo info) {
         try {
             System.out.println("Write WAV header " + info);
@@ -72,6 +73,7 @@ public class Decoder implements PCMProcessor {
      * @param pcm The decoded PCM data
      * @see org.kc7bfi.jflac.PCMProcessor#processPCM(org.kc7bfi.jflac.util.ByteData)
      */
+    @Override
     public void processPCM(ByteData pcm) {
         try {
             System.out.println("Write PCM");

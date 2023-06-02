@@ -74,6 +74,7 @@ public class FlacAudioFileReader extends AudioFileReader {
      * @exception IOException
      *                if an I/O exception occurs.
      */
+    @Override
     public AudioFileFormat getAudioFileFormat(File file) throws UnsupportedAudioFileException, IOException {
         try (InputStream inputStream = Files.newInputStream(file.toPath())) {
             return getAudioFileFormat(inputStream, (int) file.length());
@@ -94,6 +95,7 @@ public class FlacAudioFileReader extends AudioFileReader {
      * @exception IOException
      *                if an I/O exception occurs.
      */
+    @Override
     public AudioFileFormat getAudioFileFormat(URL url) throws UnsupportedAudioFileException, IOException {
         try (InputStream inputStream = url.openStream()) {
             return getAudioFileFormat(inputStream);
@@ -114,6 +116,7 @@ public class FlacAudioFileReader extends AudioFileReader {
      * @exception IOException
      *                if an I/O exception occurs.
      */
+    @Override
     public AudioFileFormat getAudioFileFormat(InputStream stream) throws UnsupportedAudioFileException, IOException {
         return getAudioFileFormat(stream, AudioSystem.NOT_SPECIFIED);
     }

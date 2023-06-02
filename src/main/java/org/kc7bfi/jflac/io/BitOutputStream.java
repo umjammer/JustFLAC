@@ -112,7 +112,7 @@ public class BitOutputStream {
     }
     
     /**
-     * Concatinate one InputBitStream to the end of this one.
+     * Concatenate one InputBitStream to the end of this one.
      * @param src   The inputBitStream to copy
      * @return      True if copy was successful
      */
@@ -237,7 +237,7 @@ public class BitOutputStream {
     public void writeRawUInt(int val, int bits) throws IOException {
         if (bits == 0) return;
         
-        // inline the size check so we don't incure a function call unnecessarily
+        // inline the size check so we don't incur a function call unnecessarily
         if ((outCapacity << 3) < totalBits + bits) {
             if (!ensureSize(bits)) throw new IOException("Memory allocation error");
         }

@@ -8,7 +8,7 @@
  * -Redistributions of source code must retain the above copyright
  *  notice, this list of conditions and the following disclaimer.
  *
- * -Redistribution in binary form must reproduct the above copyright
+ * -Redistribution in binary form must reproduce the above copyright
  *  notice, this list of conditions and the following disclaimer in
  *  the documentation and/or other materials provided with the distribution.
  *
@@ -49,9 +49,9 @@ import javax.swing.filechooser.FileFilter;
  * all files except for those type extensions that it knows about.
  *
  * Extensions are of the type ".foo", which is typically found on
- * Windows and Unix boxes, but not on Macinthosh. Case is ignored.
+ * Windows and Unix boxes, but not on Macintosh. Case is ignored.
  *
- * Example - create a new filter that filerts out all files
+ * Example - create a new filter that filters out all files
  * but gif and jpg image files:
  *
  *     JFileChooser chooser = new JFileChooser();
@@ -146,6 +146,7 @@ public class ExtensionFileFilter extends FileFilter {
      * @see #getExtension
      * @see FileFilter#accept
      */
+    @Override
     public boolean accept(File f) {
         if (f != null) {
             if (f.isDirectory()) {
@@ -162,7 +163,7 @@ public class ExtensionFileFilter extends FileFilter {
     /**
      * Return the extension portion of the file's name .
      *
-     * @param f The file to return extionsion
+     * @param f The file to return extension
      * @return The file's extension
      * @see #getExtension
      * @see FileFilter#accept
@@ -211,6 +212,7 @@ public class ExtensionFileFilter extends FileFilter {
      * @see #isExtensionListInDescription
      * @see FileFilter#getDescription
      */
+    @Override
     public String getDescription() {
         if (fullDescription == null) {
             if (description == null || isExtensionListInDescription()) {
@@ -243,7 +245,7 @@ public class ExtensionFileFilter extends FileFilter {
      * Determines whether the extension list (.jpg, .gif, etc) should
      * show up in the human readable description.
      *
-     * Only relevent if a description was provided in the constructor
+     * Only relevant if a description was provided in the constructor
      * or using setDescription();
      *
      * @param b The new state of useExtensionsInDescription
@@ -260,7 +262,7 @@ public class ExtensionFileFilter extends FileFilter {
      * Returns whether the extension list (.jpg, .gif, etc) should
      * show up in the human readable description.
      *
-     * Only relevent if a description was provided in the constructor
+     * Only relevant if a description was provided in the constructor
      * or using setDescription();
      *
      * @return true if the extension list should show up in the description

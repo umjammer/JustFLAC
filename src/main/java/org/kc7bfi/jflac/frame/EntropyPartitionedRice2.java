@@ -25,9 +25,10 @@ public class EntropyPartitionedRice2 extends EntropyCodingMethod {
      * @param residual          The residual signal (output)
      * @throws IOException      On error reading from InputBitStream
      */
+    @Override
     void readResidual(BitInputStream is, int predictorOrder, int partitionOrder, Header header, int[] residual) throws IOException {
         // TODO add propagate resync exception
-    	//System.out.println("readREsidual Pred="+predictorOrder+" part="+partitionOrder);
+    	//System.out.println("readResidual Pred="+predictorOrder+" part="+partitionOrder);
         int sample = 0;
         int partitions = 1 << partitionOrder;
         int partitionSamples = partitionOrder > 0 ? header.blockSize >> partitionOrder : header.blockSize - predictorOrder;

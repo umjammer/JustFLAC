@@ -47,6 +47,7 @@ class FrameListeners implements FrameListener {
      * @param metadata the metadata block
      * @see org.kc7bfi.jflac.FrameListener#processMetadata(org.kc7bfi.jflac.metadata.Metadata)
      */
+    @Override
     public void processMetadata(Metadata metadata) {
         synchronized (frameListeners) {
             for (FrameListener listener : frameListeners) {
@@ -60,6 +61,7 @@ class FrameListeners implements FrameListener {
      * @param frame the data frame
      * @see org.kc7bfi.jflac.FrameListener#processFrame(org.kc7bfi.jflac.frame.Frame)
      */
+    @Override
     public void processFrame(Frame frame) {
         synchronized (frameListeners) {
             for (FrameListener listener : frameListeners) {
@@ -73,6 +75,7 @@ class FrameListeners implements FrameListener {
      * @param msg   The error message
      * @see org.kc7bfi.jflac.FrameListener#processError(java.lang.String)
      */
+    @Override
     public void processError(String msg) {
         synchronized (frameListeners) {
             for (FrameListener listener : frameListeners) {

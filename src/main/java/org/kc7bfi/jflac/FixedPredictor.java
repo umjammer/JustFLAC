@@ -198,7 +198,7 @@ public class FixedPredictor {
      * Restore the signal from the fixed predictor.
      * @param residual  The residual data
      * @param dataLen   The length of residual data
-     * @param order     The preicate order
+     * @param order     The predicate order
      * @param data      The restored signal (output)
      * @param startAt   The starting position in the data array
      */

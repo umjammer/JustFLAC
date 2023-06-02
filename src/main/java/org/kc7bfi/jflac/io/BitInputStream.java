@@ -479,8 +479,8 @@ public class BitInputStream {
             i++;
             getByte = i;
             getBit = cbits;
-            //totalConsumedBits = (i << BITS_PER_BLURB_LOG2) | cbits;
-            //totalBitsRead += (BITS_PER_BLURB) | cbits;
+//            totalConsumedBits = (i << BITS_PER_BLURB_LOG2) | cbits;
+//            totalBitsRead += (BITS_PER_BLURB) | cbits;
         }
         
         // Now that we are blurb-aligned the logic is slightly simpler
@@ -562,11 +562,11 @@ public class BitInputStream {
             }
             getByte = i;
             getBit = cbits;
-            //totalConsumedBits = (i << BITS_PER_BLURB_LOG2) | cbits;
-            //totalBitsRead += (BITS_PER_BLURB) | cbits;
+//            totalConsumedBits = (i << BITS_PER_BLURB_LOG2) | cbits;
+//            totalBitsRead += (BITS_PER_BLURB) | cbits;
             if (valI < nvals) {
                 long endBits = getByte * 8L + getBit;
-                //System.out.println("SE0 "+startBits+" "+endBits);
+//                System.out.println("SE0 " + startBits + " " + endBits);
                 totalBitsRead += (int) (endBits - startBits);
                 availBits -=  endBits - startBits;
                 readFromStream();
@@ -576,9 +576,9 @@ public class BitInputStream {
                 startBits = getByte * 8L + getBit;
             }
         }
-        
+
         long endBits = getByte * 8L + getBit;
-        //System.out.println("SE1 "+startBits+" "+endBits);
+//        System.out.println("SE1 " + startBits + " " + endBits);
         totalBitsRead += (int) (endBits - startBits);
         availBits -= endBits - startBits;
     }

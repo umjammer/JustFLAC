@@ -68,7 +68,7 @@ public class SeekTablePlayer implements PCMProcessor, FrameListener {
         decoder.addFrameListener(this);
         decoder.readMetadata();
         
-        // see if SeekTbale exists
+        // see if SeekTable exists
         if (seekTable == null) {
             System.out.println("Missing SeekTable!");
             return;
@@ -90,6 +90,7 @@ public class SeekTablePlayer implements PCMProcessor, FrameListener {
      * @param streamInfo the StreamInfo block
      * @see org.kc7bfi.jflac.PCMProcessor#processStreamInfo(org.kc7bfi.jflac.metadata.StreamInfo)
      */
+    @Override
     public void processStreamInfo(StreamInfo streamInfo) {
         try {
             fmt = Player.getAudioFormat(streamInfo);
@@ -107,6 +108,7 @@ public class SeekTablePlayer implements PCMProcessor, FrameListener {
      * @param pcm The decoded PCM data
      * @see org.kc7bfi.jflac.PCMProcessor#processPCM(org.kc7bfi.jflac.util.ByteData)
      */
+    @Override
     public void processPCM(ByteData pcm) {
         line.write(pcm.getData(), 0, pcm.getLen());
     }
@@ -115,6 +117,7 @@ public class SeekTablePlayer implements PCMProcessor, FrameListener {
      * Called for each Metadata frame read.
      * @param metadata The metadata frame read
      */
+    @Override
     public void processMetadata(Metadata metadata) {
         if (metadata instanceof SeekTable) seekTable = (SeekTable)metadata;
     }
@@ -123,6 +126,7 @@ public class SeekTablePlayer implements PCMProcessor, FrameListener {
      * Called for each data frame read.
      * @param frame The data frame read
      */
+    @Override
     public void processFrame(Frame frame) {
     }
 
@@ -131,6 +135,7 @@ public class SeekTablePlayer implements PCMProcessor, FrameListener {
      * @param msg   The error message
      * @see org.kc7bfi.jflac.FrameListener#processError(java.lang.String)
      */
+    @Override
     public void processError(String msg) {
         System.out.println("FLAC Error: " + msg);
    }

@@ -129,6 +129,7 @@ public abstract class RingedAudioInputStream extends AudioInputStream {
      * @throws IOException if an I/O error occurs.
      * @see #in
      */
+    @Override
     public synchronized int read() throws IOException {
         fill();
         if (buffer.get(single, 0, 1) == -1) {
@@ -177,6 +178,7 @@ public abstract class RingedAudioInputStream extends AudioInputStream {
      * stream has been reached.
      * @throws IOException if an I/O error occurs.
      */
+    @Override
     public synchronized int read(byte[] b, int off, int len) throws IOException {
         checkIfStillOpen();
         int frameSize = getFormat().getFrameSize();
@@ -222,6 +224,7 @@ public abstract class RingedAudioInputStream extends AudioInputStream {
      * @return the actual number of bytes skipped.
      * @throws IOException if an I/O error occurs.
      */
+    @Override
     public synchronized long skip(long n) throws IOException {
         checkIfStillOpen();
         throw new IOException("skip not supported");
@@ -232,7 +235,7 @@ public abstract class RingedAudioInputStream extends AudioInputStream {
      * without blocking.
      * <p>
      * The <code>available</code> method of
-     * <code>FilteredAudioInputStream</code> returns the sum of the the number
+     * <code>FilteredAudioInputStream</code> returns the sum of the number
      * of bytes remaining to be read in the buffer (<code>count - pos</code>).
      * The result of calling the <code>available</code> method of the
      * underlying inputstream is not used, as this data will have to be
@@ -245,6 +248,7 @@ public abstract class RingedAudioInputStream extends AudioInputStream {
      * @throws IOException if an I/O error occurs.
      * @see #in
      */
+    @Override
     public synchronized int available() throws IOException {
         checkIfStillOpen();
         if (buffer.getAvailable() < getFormat().getFrameSize()) {
@@ -261,6 +265,7 @@ public abstract class RingedAudioInputStream extends AudioInputStream {
      *                  position becomes invalid.
      * @see #reset()
      */
+    @Override
     public synchronized void mark(int readlimit) {
     }
 
@@ -276,6 +281,7 @@ public abstract class RingedAudioInputStream extends AudioInputStream {
      *                     invalidated.
      * @see #mark(int)
      */
+    @Override
     public synchronized void reset() throws IOException {
         checkIfStillOpen();
         throw new IOException("reset not supported");
@@ -291,6 +297,7 @@ public abstract class RingedAudioInputStream extends AudioInputStream {
      * @see #mark(int)
      * @see #reset()
      */
+    @Override
     public boolean markSupported() {
         return false;
     }
@@ -301,6 +308,7 @@ public abstract class RingedAudioInputStream extends AudioInputStream {
      *
      * @throws IOException if an I/O error occurs.
      */
+    @Override
     public synchronized void close() throws IOException {
         if (in == null) return;
         in.close();
