@@ -1,8 +1,34 @@
-[![Release](https://jitpack.io/v/umjammer/JustFLAC.svg)](https://jitpack.io/#umjammer/JustFLAC)
-[![Java CI with Maven](https://github.com/umjammer/JustFLAC/actions/workflows/maven.yml/badge.svg)](https://github.com/umjammer/JustFLAC/actions/workflows/maven.yml)
-[![CodeQL](https://github.com/umjammer/JustFLAC/actions/workflows/codeql.yml/badge.svg)](https://github.com/umjammer/JustFLAC/actions/workflows/codeql.yml)
+[![Release](https://jitpack.io/v/umjammer/vavi-sound-flac.svg)](https://jitpack.io/#umjammer/vavi-sound-flac)
+[![Java CI with Maven](https://github.com/umjammer/vavi-sound-flac/actions/workflows/maven.yml/badge.svg)](https://github.com/umjammer/vavi-sound-flac/actions/workflows/maven.yml)
+[![CodeQL](https://github.com/umjammer/vavi-sound-flac/actions/workflows/codeql.yml/badge.svg)](https://github.com/umjammer/vavi-sound-flac/actions/workflows/codeql.yml)
 ![Java](https://img.shields.io/badge/Java-8-b07219)
 [![Parent](https://img.shields.io/badge/Parent-vavi--sound--sandbox-pink)](https://github.com/umjammer/vavi-sound-sandbox)
+
+# vavi-sound-flac
+
+Pure Java FLAC decoder (Java Sound SPI)
+
+<img src="https://github.com/umjammer/vavi-image-avif/assets/493908/b3c1389e-e50e-402b-921c-1264f8adb117" width="200" alt="FLAC logo"/><sub><a href="https://wiki.xiph.org/XiphWiki:Copyrights">CC BY 3.0 and revised BSD</a></sub>
+
+## Install
+
+ * https://jitpack.io/#umjammer/vavi-sound-flac
+
+## Usage
+
+```java
+    AudioInputStream ais = AudioSystem.getAudioInputStream(Files.newInputStream(Paths.get(flac)));
+    Clip clip = AudioSystem.getClip();
+    clip.open(AudioSystem.getAudioInputStream(new AudioFormat(44100, 16, 2, true, false), ais));
+    clip.loop(Clip.LOOP_CONTINUOUSLY);
+```
+
+## TODO
+
+ * rename project into vavi-sound-flac
+
+---
+## Original
 
 Welcome to JustFLAC
 ===================
