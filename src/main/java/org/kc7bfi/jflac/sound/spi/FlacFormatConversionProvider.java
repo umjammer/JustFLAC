@@ -49,35 +49,15 @@ public class FlacFormatConversionProvider extends FormatConversionProvider {
     /** to disable encoding */
     private static final boolean HAS_ENCODING = false;
 
-    /**
-     * Obtains the set of source format encodings from which format conversion
-     * services are provided by this provider.
-     *
-     * @return array of source format encodings. The array will always have a
-     * length of at least 1.
-     */
     @Override
     public AudioFormat.Encoding[] getSourceEncodings() {
         if (HAS_ENCODING) {
-            final AudioFormat.Encoding[] encodings = {
-                    FlacEncoding.FLAC, AudioFormat.Encoding.PCM_SIGNED
-            };
-            return encodings;
+            return new AudioFormat.Encoding[] { FlacEncoding.FLAC, AudioFormat.Encoding.PCM_SIGNED };
         } else {
-            final AudioFormat.Encoding[] encodings = {
-                    FlacEncoding.FLAC
-            };
-            return encodings;
+            return new AudioFormat.Encoding[] { FlacEncoding.FLAC };
         }
     }
 
-    /**
-     * Obtains the set of target format encodings to which format conversion
-     * services are provided by this provider.
-     *
-     * @return array of target format encodings. The array will always have a
-     * length of at least 1.
-     */
     @Override
     public AudioFormat.Encoding[] getTargetEncodings() {
         if (HAS_ENCODING) {
@@ -99,14 +79,6 @@ public class FlacFormatConversionProvider extends FormatConversionProvider {
                 || (channels == 1) || (channels == 2);
     }
 
-    /**
-     * Obtains the set of target format encodings supported by the format
-     * converter given a particular source format. If no target format encodings
-     * are supported for this source format, an array of length 0 is returned.
-     *
-     * @param sourceFormat format of the incoming data.
-     * @return array of supported target format encodings.
-     */
     @Override
     public AudioFormat.Encoding[] getTargetEncodings(AudioFormat sourceFormat) {
         boolean bitSizeOK = isBitSizeOK(sourceFormat, true);
@@ -130,15 +102,6 @@ logger.finer("FLAC converter: cannot de/encode: " + sourceFormat);
         }
     }
 
-    /**
-     * Obtains the set of target formats with the encoding specified supported
-     * by the format converter. If no target formats with the specified encoding
-     * are supported for this source format, an array of length 0 is returned.
-     *
-     * @param targetEncoding desired encoding of the outgoing data.
-     * @param sourceFormat   format of the incoming data.
-     * @return array of supported target formats.
-     */
     @Override
     public AudioFormat[] getTargetFormats(AudioFormat.Encoding targetEncoding, AudioFormat sourceFormat) {
         return getTargetFormats(targetEncoding, sourceFormat, true);
@@ -192,16 +155,6 @@ logger.finer("FLAC converter: cannot de/encode: " + sourceFormat + " to " + targ
         }
     }
 
-    /**
-     * Obtains an audio input stream with the specified encoding from the given
-     * audio input stream.
-     *
-     * @param targetEncoding - desired encoding of the stream after processing.
-     * @param sourceStream   - stream from which data to be processed should be
-     *                       read.
-     * @return stream from which processed data with the specified target
-     * encoding may be read.
-     */
     @Override
     public AudioInputStream getAudioInputStream(AudioFormat.Encoding targetEncoding, AudioInputStream sourceStream) {
         AudioFormat[] formats = getTargetFormats(targetEncoding, sourceStream.getFormat(), false);
@@ -212,16 +165,6 @@ logger.finer("FLAC converter: cannot de/encode: " + sourceFormat + " to " + targ
         }
     }
 
-    /**
-     * Obtains an audio input stream with the specified format from the given
-     * audio input stream.
-     *
-     * @param targetFormat - desired data format of the stream after processing.
-     * @param sourceStream - stream from which data to be processed should be
-     *                     read.
-     * @return stream from which processed data with the specified format may be
-     * read.
-     */
     @Override
     public AudioInputStream getAudioInputStream(AudioFormat targetFormat, AudioInputStream sourceStream) {
         AudioFormat sourceFormat = sourceStream.getFormat();
@@ -244,7 +187,6 @@ logger.finer("FLAC converter: cannot de/encode: " + sourceFormat + " to " + targ
                     AudioFormat.Encoding.PCM_SIGNED)
                     && targetFormat.getEncoding().equals(FlacEncoding.FLAC)) {
                 // encoder
-
                 throw new IllegalArgumentException("FLAC encoder not yet implemented");
             } else {
                 throw new IllegalArgumentException("unable to convert " + sourceFormat + " to " + targetFormat);

@@ -39,8 +39,7 @@ import org.kc7bfi.jflac.util.ByteData;
  * @author Florian Bomers
  * @version $Revision: 1.6 $
  */
-public class Flac2PcmAudioInputStream extends RingedAudioInputStream implements
-        PCMProcessor {
+public class Flac2PcmAudioInputStream extends RingedAudioInputStream implements PCMProcessor {
 
     /** Flac Decoder. */
     private FLACDecoder decoder;
