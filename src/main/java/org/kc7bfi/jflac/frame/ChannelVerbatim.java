@@ -25,23 +25,26 @@ import java.io.IOException;
 import org.kc7bfi.jflac.ChannelData;
 import org.kc7bfi.jflac.io.BitInputStream;
 
+
 /**
  * Verbatim FLAC subframe (channel).
+ *
  * @author kc7bfi
  */
 public class ChannelVerbatim extends Channel {
 
     /** A pointer to verbatim signal. */
     private int[] data;
-    
+
     /**
      * The constructor.
-     * @param is            The InputBitStream
-     * @param header        The FLAC Frame Header
-     * @param channelData   The decoded channel data (output)
-     * @param bps           The bits-per-second
-     * @param wastedBits    The bits waisted in the frame
-     * @throws IOException  Thrown if error reading from the InputBitStream
+     *
+     * @param is          The InputBitStream
+     * @param header      The FLAC Frame Header
+     * @param channelData The decoded channel data (output)
+     * @param bps         The bits-per-second
+     * @param wastedBits  The bits waisted in the frame
+     * @throws IOException Thrown if error reading from the InputBitStream
      */
     public ChannelVerbatim(BitInputStream is, Header header, ChannelData channelData, int bps, int wastedBits) throws IOException {
         super(header, wastedBits);
@@ -55,7 +58,7 @@ public class ChannelVerbatim extends Channel {
         // decode the subframe
         System.arraycopy(data, 0, channelData.getOutput(), 0, header.blockSize);
     }
-    
+
     @Override
     public String toString() {
         return "ChannelVerbatim: WastedBits=" + wastedBits;

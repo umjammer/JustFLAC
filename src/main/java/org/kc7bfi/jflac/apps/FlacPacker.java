@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.Collections;
-
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -36,45 +35,47 @@ import org.kc7bfi.jflac.metadata.StreamInfo;
 
 /**
  * Assemble several FLAC files into one album.
+ *
  * @author kc7bfi
  */
 public class FlacPacker extends JFrame {
-    
+
     private JTextArea textArea = new JTextArea(16, 50);
     private JButton addButton = new JButton("Add Files");
     private JButton makeButton = new JButton("Pack FLAC");
-    
+
     private ArrayList<File> flacFiles = new ArrayList<>();
     private ArrayList<PackerFile> albumFiles = new ArrayList<>();
     private StreamInfo masterStreamInfo = null;
     private byte[] buffer = new byte[64 * 1024];
-    
+
     /**
      * Constructor.
-     * @param title     Frame title
+     *
+     * @param title Frame title
      */
     public FlacPacker(String title) {
         super(title);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
+
         this.getContentPane().setLayout(new BorderLayout());
-        
+
         // text area
         textArea.setText("");
         textArea.setAutoscrolls(true);
         this.getContentPane().add(textArea, BorderLayout.CENTER);
-        
+
         // button panel
         Panel buttonPanel = new Panel();
         buttonPanel.setLayout(new FlowLayout());
         buttonPanel.add(addButton);
         buttonPanel.add(makeButton);
         this.getContentPane().add(buttonPanel, BorderLayout.SOUTH);
-        
+
         this.pack();
-        
+
         addButton.addActionListener(event -> addFilesToList());
-        
+
         makeButton.addActionListener(event -> {
             try {
                 packFlac();
@@ -84,12 +85,12 @@ public class FlacPacker extends JFrame {
             }
         });
     }
-    
+
     private void appendMsg(String msg) {
         textArea.setText(textArea.getText() + msg + "\n");
         textArea.repaint();
     }
-    
+
     private void addFilesToList() {
         JFileChooser chooser = new JFileChooser();
         ExtensionFileFilter filter = new ExtensionFileFilter();
@@ -103,7 +104,7 @@ public class FlacPacker extends JFrame {
         File[] files = chooser.getSelectedFiles();
         Collections.addAll(flacFiles, files);
     }
-    
+
     private File getOutputFile() {
         JFileChooser chooser = new JFileChooser();
         ExtensionFileFilter filter = new ExtensionFileFilter();
@@ -116,11 +117,11 @@ public class FlacPacker extends JFrame {
         File file = chooser.getSelectedFile();
         return file;
     }
-    
+
     private SeekTable makeSeekTable() {
         long lastSampleNumber = 0;
         long lastStreamOffset = 0;
-        
+
         // process selected files
         for (File flacFile : flacFiles) {
             File file = flacFile;
@@ -159,7 +160,7 @@ public class FlacPacker extends JFrame {
                 appendMsg("File " + file + ": " + e);
             }
         }
-        
+
         // make Seek Table
         SeekPoint[] points = new SeekPoint[albumFiles.size()];
         SeekTable seekTable = new SeekTable(points, true);
@@ -171,10 +172,10 @@ public class FlacPacker extends JFrame {
             aFile.seekPoint.setStreamOffset(aFile.seekPoint.getStreamOffset() + metadataOffset);
             points[i] = aFile.seekPoint;
         }
-        
+
         return seekTable;
     }
-    
+
     private void packFlac() throws IOException {
         // get output file
         File outFile = getOutputFile();
@@ -188,20 +189,20 @@ public class FlacPacker extends JFrame {
             e1.printStackTrace();
             return;
         }
-        
+
         // get seek table
         SeekTable seekTable = makeSeekTable();
         if (masterStreamInfo == null) return;
-        
+
         // write FLAC marker
         os.writeByteBlock(Constants.STREAM_SYNC_STRING, Constants.STREAM_SYNC_STRING.length);
-        
+
         // output StreamInfo
         masterStreamInfo.write(os, false);
-        
+
         // output SeekTable
         seekTable.write(os, true);
-        
+
         // generate output file
         for (int i = 0; i < albumFiles.size(); i++) {
             PackerFile aFile = albumFiles.get(i);
@@ -219,27 +220,31 @@ public class FlacPacker extends JFrame {
             }
         }
     }
-    
+
     /**
      * Main routine.
-     * @param args  Command line arguments
+     *
+     * @param args Command line arguments
      */
     public static void main(String[] args) {
         FlacPacker app = new FlacPacker("FLAC Album Maker");
         app.setVisible(true);
     }
-    
+
     /**
      * This class holds the files and their seek points.
+     *
      * @author kc7bfi
      */
     private static class PackerFile {
+
         protected File file;
         protected SeekPoint seekPoint;
         protected long firstFrameOffset;
-        
+
         /**
          * The constructor.
+         *
          * @param file      The file
          * @param seekPoint The SeekPoint
          */

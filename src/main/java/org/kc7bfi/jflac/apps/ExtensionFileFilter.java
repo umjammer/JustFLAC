@@ -37,39 +37,38 @@
 
 package org.kc7bfi.jflac.apps;
 
-
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.swing.filechooser.FileFilter;
+
 
 /**
  * A convenience implementation of FileFilter that filters out
  * all files except for those type extensions that it knows about.
- *
+ * <p>
  * Extensions are of the type ".foo", which is typically found on
  * Windows and Unix boxes, but not on Macintosh. Case is ignored.
- *
+ * <p>
  * Example - create a new filter that filters out all files
  * but gif and jpg image files:
+ * <p>
+ * JFileChooser chooser = new JFileChooser();
+ * ExampleFileFilter filter = new ExampleFileFilter(
+ * new String{"gif", "jpg"}, "JPEG & GIF Images")
+ * chooser.addChoosableFileFilter(filter);
+ * chooser.showOpenDialog(this);
  *
- *     JFileChooser chooser = new JFileChooser();
- *     ExampleFileFilter filter = new ExampleFileFilter(
- *                   new String{"gif", "jpg"}, "JPEG & GIF Images")
- *     chooser.addChoosableFileFilter(filter);
- *     chooser.showOpenDialog(this);
- *
- * @version 1.6 01/23/03
  * @author Jeff Dinkins
+ * @version 1.6 01/23/03
  */
 public class ExtensionFileFilter extends FileFilter {
-    
+
     private Map<String, FileFilter> filters;
     private String description = null;
     private String fullDescription = null;
     private boolean useExtensionsInDescription = true;
-    
+
     /**
      * Creates a file filter. If no filters are added, then all
      * files are accepted.
@@ -79,7 +78,7 @@ public class ExtensionFileFilter extends FileFilter {
     public ExtensionFileFilter() {
         this.filters = new HashMap<>();
     }
-    
+
     /**
      * Creates a file filter that accepts files with the given extension.
      * Example: new ExampleFileFilter("jpg");
@@ -89,11 +88,11 @@ public class ExtensionFileFilter extends FileFilter {
     public ExtensionFileFilter(String extension) {
         this(extension, null);
     }
-    
+
     /**
      * Creates a file filter that accepts the given file type.
      * Example: new ExampleFileFilter("jpg", "JPEG Image Images");
-     *
+     * <p>
      * Note that the "." before the extension is not needed. If
      * provided, it will be ignored.
      *
@@ -104,11 +103,11 @@ public class ExtensionFileFilter extends FileFilter {
         if (extension != null) addExtension(extension);
         if (description != null) setDescription(description);
     }
-    
+
     /**
      * Creates a file filter from the given string array.
      * Example: new ExampleFileFilter(String {"gif", "jpg"});
-     *
+     * <p>
      * Note that the "." before the extension is not needed adn
      * will be ignored.
      *
@@ -117,11 +116,11 @@ public class ExtensionFileFilter extends FileFilter {
     public ExtensionFileFilter(String[] filters) {
         this(filters, null);
     }
-    
+
     /**
      * Creates a file filter from the given string array and description.
      * Example: new ExampleFileFilter(String {"gif", "jpg"}, "Gif and JPG Images");
-     *
+     * <p>
      * Note that the "." before the extension is not needed and will be ignored.
      *
      * @see #addExtension
@@ -134,11 +133,11 @@ public class ExtensionFileFilter extends FileFilter {
         }
         if (description != null) setDescription(description);
     }
-    
+
     /**
      * Return true if this file should be shown in the directory pane,
      * false if it shouldn't.
-     *
+     * <p>
      * Files that begin with "." are ignored.
      *
      * @param f The file to check
@@ -159,7 +158,7 @@ public class ExtensionFileFilter extends FileFilter {
         }
         return false;
     }
-    
+
     /**
      * Return the extension portion of the file's name .
      *
@@ -178,19 +177,19 @@ public class ExtensionFileFilter extends FileFilter {
         }
         return null;
     }
-    
+
     /**
      * Adds a filetype "dot" extension to filter against.
-     *
+     * <p>
      * For example: the following code will create a filter that filters
      * out all files except those that end in ".jpg" and ".tif":
-     *
-     *   ExampleFileFilter filter = new ExampleFileFilter();
-     *   filter.addExtension("jpg");
-     *   filter.addExtension("tif");
-     *
+     * <p>
+     * ExampleFileFilter filter = new ExampleFileFilter();
+     * filter.addExtension("jpg");
+     * filter.addExtension("tif");
+     * <p>
      * Note that the "." before the extension is not needed and will be ignored.
-     * 
+     *
      * @param extension The extension to add
      */
     public void addExtension(String extension) {
@@ -200,8 +199,8 @@ public class ExtensionFileFilter extends FileFilter {
         filters.put(extension.toLowerCase(), this);
         fullDescription = null;
     }
-    
-    
+
+
     /**
      * Returns the human readable description of this filter. For
      * example: "JPEG and GIF Image Files (*.jpg, *.gif)"
@@ -226,12 +225,12 @@ public class ExtensionFileFilter extends FileFilter {
         }
         return fullDescription;
     }
-    
+
     /**
      * Sets the human readable description of this filter. For
      * example: filter.setDescription("Gif and JPG Images");
      *
-     * @param description   The description of the filter
+     * @param description The description of the filter
      * @see #setDescription
      * @see #setExtensionListInDescription
      * @see #isExtensionListInDescription
@@ -240,11 +239,11 @@ public class ExtensionFileFilter extends FileFilter {
         this.description = description;
         fullDescription = null;
     }
-    
+
     /**
      * Determines whether the extension list (.jpg, .gif, etc) should
      * show up in the human readable description.
-     *
+     * <p>
      * Only relevant if a description was provided in the constructor
      * or using setDescription();
      *
@@ -257,11 +256,11 @@ public class ExtensionFileFilter extends FileFilter {
         useExtensionsInDescription = b;
         fullDescription = null;
     }
-    
+
     /**
      * Returns whether the extension list (.jpg, .gif, etc) should
      * show up in the human readable description.
-     *
+     * <p>
      * Only relevant if a description was provided in the constructor
      * or using setDescription();
      *

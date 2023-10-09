@@ -24,8 +24,10 @@ import java.io.IOException;
 
 import org.kc7bfi.jflac.io.BitInputStream;
 
+
 /**
  * An entry into the cue track.
+ *
  * @author kc7bfi
  */
 public class CueIndex {
@@ -41,11 +43,12 @@ public class CueIndex {
     protected long offset;
     /** The index point number. */
     protected byte number;
-    
+
     /**
      * The constructor.
-     * @param is                The InputBitStream
-     * @throws IOException      Thrown if error reading from InputBitStream
+     *
+     * @param is The InputBitStream
+     * @throws IOException Thrown if error reading from InputBitStream
      */
     public CueIndex(BitInputStream is) throws IOException {
         offset = is.readRawULong(CUESHEET_INDEX_OFFSET_LEN);

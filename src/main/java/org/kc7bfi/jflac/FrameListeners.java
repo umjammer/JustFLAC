@@ -16,34 +16,38 @@ import org.kc7bfi.jflac.metadata.Metadata;
 
 /**
  * Class to handle frame listeners.
+ *
  * @author kc7bfi
  */
 class FrameListeners implements FrameListener {
 
     private final Set<FrameListener> frameListeners = new HashSet<>();
-    
+
     /**
      * Add a frame listener.
-     * @param listener  The frame listener to add
+     *
+     * @param listener The frame listener to add
      */
     public void addFrameListener(FrameListener listener) {
         synchronized (frameListeners) {
             frameListeners.add(listener);
         }
     }
-    
+
     /**
      * Remove a frame listener.
-     * @param listener  The frame listener to remove
+     *
+     * @param listener The frame listener to remove
      */
     public void removeFrameListener(FrameListener listener) {
         synchronized (frameListeners) {
             frameListeners.remove(listener);
         }
     }
-    
+
     /**
      * Process metadata records.
+     *
      * @param metadata the metadata block
      * @see org.kc7bfi.jflac.FrameListener#processMetadata(org.kc7bfi.jflac.metadata.Metadata)
      */
@@ -55,9 +59,10 @@ class FrameListeners implements FrameListener {
             }
         }
     }
-    
+
     /**
      * Process data frames.
+     *
      * @param frame the data frame
      * @see org.kc7bfi.jflac.FrameListener#processFrame(org.kc7bfi.jflac.frame.Frame)
      */
@@ -69,10 +74,11 @@ class FrameListeners implements FrameListener {
             }
         }
     }
-   
+
     /**
      * Called for each frame error detected.
-     * @param msg   The error message
+     *
+     * @param msg The error message
      * @see org.kc7bfi.jflac.FrameListener#processError(java.lang.String)
      */
     @Override

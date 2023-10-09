@@ -24,25 +24,29 @@ import java.io.IOException;
 
 import org.kc7bfi.jflac.io.BitInputStream;
 
+
 /**
  * Unknown Metadata block.
+ *
  * @author kc7bfi
  */
 public class Unknown extends Metadata {
+
     protected byte[] data;
-    
+
     /**
      * The constructor.
-     * @param is                The InputBitStream
-     * @param length            Length of the record
-     * @param isLast            True if this is the last Metadata block in the chain
-     * @throws IOException      Thrown if error reading from InputBitStream
+     *
+     * @param is     The InputBitStream
+     * @param length Length of the record
+     * @param isLast True if this is the last Metadata block in the chain
+     * @throws IOException Thrown if error reading from InputBitStream
      */
     public Unknown(BitInputStream is, int length, boolean isLast) throws IOException {
         super(isLast, length);
         if (length > 0) {
             data = new byte[length];
             is.readByteBlockAlignedNoCRC(data, length);
-        }    
+        }
     }
 }

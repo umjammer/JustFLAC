@@ -22,6 +22,7 @@ package org.kc7bfi.jflac.frame;
 
 /**
  * Base class for FLAC subframe (channel) classes.
+ *
  * @author kc7bfi
  */
 public abstract class Channel {
@@ -31,10 +32,10 @@ public abstract class Channel {
 
     /** partitioned Rice coding with 5-bit Rice parameter */
     public static final int RESIDUAL_CODING_METHOD_PARTITIONED_RICE2 = 1;
-    
+
     /** The size of the encoding method field (in bits). */
     public static final int ENTROPY_CODING_METHOD_TYPE_LEN = 2;
-    
+
     /** The size of the Rice Order field (in bits). */
     public static final int ENTROPY_CODING_METHOD_PARTITIONED_RICE_ORDER_LEN = 4;
 
@@ -42,22 +43,24 @@ public abstract class Channel {
 
     /** The FLAC Frame Header. */
     protected Header header;
-    
+
     /** The number of waisted bits in the frame. */
     protected int wastedBits;
- 
+
     /**
      * The constructor.
-     * @param header        The FLAC Frame Header
-     * @param wastedBits    The number of waisted bits in the frame
+     *
+     * @param header     The FLAC Frame Header
+     * @param wastedBits The number of waisted bits in the frame
      */
     protected Channel(Header header, int wastedBits) {
         this.header = header;
         this.wastedBits = wastedBits;
     }
-    
+
     /**
      * Return he number of waisted bits in the frame.
+     *
      * @return The number of waisted bits in the frame
      */
     public int getWastedBits() {

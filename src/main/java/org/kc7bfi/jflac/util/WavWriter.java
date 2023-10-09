@@ -31,13 +31,16 @@ import org.kc7bfi.jflac.Constants;
 import org.kc7bfi.jflac.frame.Frame;
 import org.kc7bfi.jflac.metadata.StreamInfo;
 
+
 /**
  * Utility class for writing WAV files.
+ *
  * @author kc7bfi
  */
 public class WavWriter {
+
     private static final int MAX_BLOCK_SIZE = 65535;
-    
+
     private long totalSamples;
     private int channels;
     private int bps;
@@ -47,18 +50,19 @@ public class WavWriter {
     private byte[] s8buffer = new byte[MAX_BLOCK_SIZE * Constants.MAX_CHANNELS * 4];
     private int samplesProcessed = 0;
     private int frameCounter = 0;
-    
+
     private boolean needsFixup = false;
     private long riffOffset;
     private long dataOffset;
-    
+
     private DataOutput os;
     private LittleEndianDataOutput osLE;
-    
+
     /**
      * The constructor.
-     * @param os            The output sream
-     * @param streamInfo    The FLAC stream info
+     *
+     * @param os         The output sream
+     * @param streamInfo The FLAC stream info
      */
     public WavWriter(DataOutput os, StreamInfo streamInfo) {
         this.os = os;
@@ -68,20 +72,22 @@ public class WavWriter {
         this.bps = streamInfo.getBitsPerSample();
         this.sampleRate = streamInfo.getSampleRate();
     }
-    
+
     /**
      * The constructor.
-     * @param os            The output sream
+     *
+     * @param os The output sream
      */
     public WavWriter(DataOutput os) {
         this.os = os;
         this.osLE = new LittleEndianDataOutput(os);
     }
-    
+
     /**
      * The constructor.
-     * @param os            The output sream
-     * @param streamInfo    The FLAC stream info
+     *
+     * @param os         The output sream
+     * @param streamInfo The FLAC stream info
      */
     public WavWriter(OutputStream os, StreamInfo streamInfo) {
         this.os = new DataOutputStream(os);
@@ -91,19 +97,21 @@ public class WavWriter {
         this.bps = streamInfo.getBitsPerSample();
         this.sampleRate = streamInfo.getSampleRate();
     }
-    
+
     /**
      * The constructor.
-     * @param os            The output sream
+     *
+     * @param os The output sream
      */
     public WavWriter(OutputStream os) {
         this.os = new DataOutputStream(os);
         this.osLE = new LittleEndianDataOutput(this.os);
     }
-    
+
     /**
      * Write a WAV file header.
-     * @throws IOException  Thrown if error writing to output string.
+     *
+     * @throws IOException Thrown if error writing to output string.
      */
     public void writeHeader() throws IOException {
         long dataSize = totalSamples * channels * ((bps + 7) / 8);
@@ -112,10 +120,10 @@ public class WavWriter {
             needsFixup = true;
         }
         //if (dataSize >= 0xFFFFFFDC) throw new IOException("ERROR: stream is too big to fit in a single file chunk (Datasize="+dataSize+")");
-        
+
         os.write("RIFF".getBytes());
         if (needsFixup) riffOffset = ((RandomAccessFile) os).getFilePointer();
-        
+
         osLE.writeInt((int) dataSize + 36); // filesize-8
         os.write("WAVEfmt ".getBytes());
         os.write(new byte[] {0x10, 0x00, 0x00, 0x00}); // chunk size = 16
@@ -127,15 +135,16 @@ public class WavWriter {
         osLE.writeShort(bps); // bits per sample
         os.write("data".getBytes());
         if (needsFixup) dataOffset = ((RandomAccessFile) os).getFilePointer();
-        
+
         osLE.writeInt((int) dataSize); // data size
     }
-    
+
     /**
      * Write a WAV file header.
-     * @param streamInfo    The FLAC stream info
-     * @throws IOException  Thrown if error writing to output string.
-     */    
+     *
+     * @param streamInfo The FLAC stream info
+     * @throws IOException Thrown if error writing to output string.
+     */
     public void writeHeader(StreamInfo streamInfo) throws IOException {
         this.totalSamples = streamInfo.getTotalSamples();
         this.channels = streamInfo.getChannels();
@@ -143,12 +152,13 @@ public class WavWriter {
         this.sampleRate = streamInfo.getSampleRate();
         writeHeader();
     }
-    
+
     /**
      * Write a WAV frame record.
-     * @param frame         The FLAC frame
-     * @param channelData   The decoded channel data
-     * @throws IOException  Thrown if error writing to output channel
+     *
+     * @param frame       The FLAC frame
+     * @param channelData The decoded channel data
+     * @throws IOException Thrown if error writing to output channel
      */
     public void writeFrame(Frame frame, ChannelData[] channelData) throws IOException {
         boolean isUnsignedSamples = (bps <= 8);
@@ -156,7 +166,7 @@ public class WavWriter {
         int wideSample;
         int sample;
         int channel;
-        
+
         if (wideSamples > 0) {
             samplesProcessed += wideSamples;
             frameCounter++;
@@ -212,11 +222,12 @@ public class WavWriter {
             }
         }
     }
-    
+
     /**
      * Write the PCM data.
+     *
      * @param space The PCM data
-     * @throws IOException  Thrown if error writing to file
+     * @throws IOException Thrown if error writing to file
      */
     public void writePCM(ByteData space) throws IOException {
         os.write(space.getData(), 0, space.getLen());

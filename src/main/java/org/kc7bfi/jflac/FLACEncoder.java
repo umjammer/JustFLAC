@@ -25,15 +25,18 @@ import java.io.File;
 import org.kc7bfi.jflac.frame.EntropyPartitionedRiceContents;
 import org.kc7bfi.jflac.io.BitOutputStream;
 
+
 public class FLACEncoder {
 
     private static class verify_input_fifo {
+
         int[][] data = new int[Constants.MAX_CHANNELS][Constants.MAX_BLOCK_SIZE];
         int size; /* of each data[] in samples */
         int tail;
     }
 
     private static class verify_output {
+
         byte[] data;
         int capacity;
         int bytes;
@@ -48,12 +51,14 @@ public class FLACEncoder {
     /** The encoder is in the normal OK state. */
     private static final int STREAM_ENCODER_OK = 0;
 
-    /** An error occurred in the underlying verify stream decoder;
+    /**
+     * An error occurred in the underlying verify stream decoder;
      * check stream_encoder_get_verify_decoder_state().
      */
     private static final int STREAM_ENCODER_VERIFY_DECODER_ERROR = 1;
 
-    /** The verify decoder detected a mismatch between the original
+    /**
+     * The verify decoder detected a mismatch between the original
      * audio signal and the decoded audio signal.
      */
     private static final int STREAM_ENCODER_VERIFY_MISMATCH_IN_AUDIO_DATA = 2;
@@ -64,7 +69,8 @@ public class FLACEncoder {
     /** The encoder has an invalid setting for number of channels. */
     private static final int STREAM_ENCODER_INVALID_NUMBER_OF_CHANNELS = 4;
 
-    /** The encoder has an invalid setting for bits-per-sample.
+    /**
+     * The encoder has an invalid setting for bits-per-sample.
      * FLAC supports 4-32 bps but the reference encoder currently supports
      * only up to 24 bps.
      */
@@ -85,7 +91,7 @@ public class FLACEncoder {
     /** Mid/side coding was specified but the number of channels is not equal to 2. */
     private static final int STREAM_ENCODER_MID_SIDE_CHANNELS_MISMATCH = 10;
 
-    /** @deprecated */
+    /** @deprecated  */
     private static final int STREAM_ENCODER_MID_SIDE_SAMPLE_SIZE_MISMATCH = 11;
 
     /** Loose mid/side coding was specified but mid/side coding was not. */
@@ -100,7 +106,8 @@ public class FLACEncoder {
     /** An error occurred while writing the stream; usually, the write_callback returned an error. */
     private static final int STREAM_ENCODER_FRAMING_ERROR = 15;
 
-    /** The metadata input to the encoder is invalid, in one of the following ways:
+    /**
+     * The metadata input to the encoder is invalid, in one of the following ways:
      * - stream_encoder_set_metadata() was called with a null pointer but a block count > 0
      * - One of the metadata blocks contains an undefined type
      * - It contains an illegal CUESHEET as checked by format_cuesheet_is_legal()
@@ -109,16 +116,17 @@ public class FLACEncoder {
      */
     private static final int STREAM_ENCODER_INVALID_METADATA = 16;
 
-    /**< An error occurred while writing the stream; usually, the write_callback returned an error. */
+    /** < An error occurred while writing the stream; usually, the write_callback returned an error. */
     private static final int STREAM_ENCODER_FATAL_ERROR_WHILE_ENCODING = 17;
 
-    /**< The write_callback returned an error. */
+    /** < The write_callback returned an error. */
     private static final int STREAM_ENCODER_FATAL_ERROR_WHILE_WRITING = 18;
 
-    /**< Memory allocation failed. */
+    /** < Memory allocation failed. */
     private static final int STREAM_ENCODER_MEMORY_ALLOCATION_ERROR = 19;
 
-    /** stream_encoder_init() was called when the encoder was
+    /**
+     * stream_encoder_init() was called when the encoder was
      * already initialized, usually because
      * stream_encoder_finish() was not called.
      */
@@ -186,16 +194,20 @@ public class FLACEncoder {
     int[][] residual_workspace_mid_side_unaligned = new int[2][2];
     /** from find_best_partition_order_() */
     EntropyPartitionedRiceContents[] partitioned_rice_contents_extra = new EntropyPartitionedRiceContents[2];
+
     /**
      * The data for the verify section
      */
     private static class VerifyData {
+
         FLACDecoder decoder;
         int state_hint;
         boolean needs_magic_hack;
         verify_input_fifo input_fifo;
         verify_output output;
+
         private static class error_stats {
+
             long absolute_sample;
             int frame_number;
             int channel;
@@ -204,6 +216,7 @@ public class FLACEncoder {
             int got;
         }
     }
+
     private VerifyData verifyData = new VerifyData();
     boolean is_being_deleted; /* if true, call to ..._finish() from ..._delete() will not call the callbacks */
 
@@ -269,14 +282,14 @@ public class FLACEncoder {
         setDefaults();
 
         is_being_deleted = false;
-        
+
         state = STREAM_ENCODER_UNINITIALIZED;
     }
 
     public void encode(File inputFile, File outputFile) {
-    	 throw new UnsupportedOperationException("encode");
+        throw new UnsupportedOperationException("encode");
     }
-    
+
     public void setVerify(boolean value) {
         if (state != STREAM_ENCODER_UNINITIALIZED) return;
         verify = value;

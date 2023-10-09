@@ -28,11 +28,14 @@ import org.kc7bfi.jflac.LPCPredictor;
 import org.kc7bfi.jflac.io.BitInputStream;
 import org.kc7bfi.jflac.util.BitMath;
 
+
 /**
  * LPC FLAC subframe (channel).
+ *
  * @author kc7bfi
  */
 public class ChannelLPC extends Channel {
+
     /* bits */
     private static final int SUBFRAME_LPC_QLP_COEFF_PRECISION_LEN = 4;
     /* bits */
@@ -56,14 +59,15 @@ public class ChannelLPC extends Channel {
 
     /**
      * The constructor.
-     * @param is            The InputBitStream
-     * @param header        The FLAC Frame Header
-     * @param channelData   The decoded channel data (output)
-     * @param bps           The bits-per-second
-     * @param wastedBits    The bits waisted in the frame
-     * @param order         The predicate order
-     * @throws IOException  Thrown if error reading from the InputBitStream
-     * @throws FrameDecodeException 
+     *
+     * @param is          The InputBitStream
+     * @param header      The FLAC Frame Header
+     * @param channelData The decoded channel data (output)
+     * @param bps         The bits-per-second
+     * @param wastedBits  The bits waisted in the frame
+     * @param order       The predicate order
+     * @throws IOException          Thrown if error reading from the InputBitStream
+     * @throws FrameDecodeException
      */
     public ChannelLPC(BitInputStream is, Header header, ChannelData channelData, int bps, int wastedBits, int order) throws IOException, FrameDecodeException {
         super(header, wastedBits);
@@ -99,22 +103,22 @@ public class ChannelLPC extends Channel {
         int codingType = is.readRawUInt(ENTROPY_CODING_METHOD_TYPE_LEN);
         //System.out.println("codingType="+codingType);
         switch (codingType) {
-            case ENTROPY_CODING_METHOD_PARTITIONED_RICE :
-            	 entropyCodingMethod = new EntropyPartitionedRice();
-                break;
-            case RESIDUAL_CODING_METHOD_PARTITIONED_RICE2 : 
-            	 entropyCodingMethod = new EntropyPartitionedRice2();
-                break;
-            default :
-               throw new FrameDecodeException("STREAM_DECODER_UNPARSEABLE_STREAM, "+codingType);
+        case ENTROPY_CODING_METHOD_PARTITIONED_RICE:
+            entropyCodingMethod = new EntropyPartitionedRice();
+            break;
+        case RESIDUAL_CODING_METHOD_PARTITIONED_RICE2:
+            entropyCodingMethod = new EntropyPartitionedRice2();
+            break;
+        default:
+            throw new FrameDecodeException("STREAM_DECODER_UNPARSEABLE_STREAM, " + codingType);
         }
         entropyCodingMethod.order = is.readRawUInt(ENTROPY_CODING_METHOD_PARTITIONED_RICE_ORDER_LEN);
-   	    entropyCodingMethod.contents = channelData.getPartitionedRiceContents();
+        entropyCodingMethod.contents = channelData.getPartitionedRiceContents();
 
         // read residual
-		entropyCodingMethod.readResidual(is, order, entropyCodingMethod.order, header,
-				channelData.getResidual());
-        
+        entropyCodingMethod.readResidual(is, order, entropyCodingMethod.order, header,
+                channelData.getResidual());
+
         //System.out.println();
         //for (int i = 0; i < header.blockSize; i++) {System.out.print(channelData.residual[i]+" ");
         //if (i%200==0)System.out.println();
@@ -132,17 +136,18 @@ public class ChannelLPC extends Channel {
             LPCPredictor.restoreSignalWide(channelData.getResidual(), header.blockSize - order, qlpCoeff, order, quantizationLevel, channelData.getOutput(), order);
         }
     }
-    
+
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder("ChannelLPC: Order=" + order +  " WastedBits=" + wastedBits);
+        StringBuilder sb = new StringBuilder("ChannelLPC: Order=" + order + " WastedBits=" + wastedBits);
         sb.append(" qlpCoeffPrecision=").append(qlpCoeffPrecision).append(" quantizationLevel=").append(quantizationLevel);
         sb.append("\n\t\tqlpCoeff: ");
         for (int i = 0; i < order; i++) sb.append(qlpCoeff[i]).append(" ");
         sb.append("\n\t\tWarmup: ");
         for (int i = 0; i < order; i++) sb.append(warmup[i]).append(" ");
         sb.append("\n\t\tParameter: ");
-        for (int i = 0; i < (1 << entropyCodingMethod.order); i++) sb.append(entropyCodingMethod.contents.parameters[i]).append(" ");
+        for (int i = 0; i < (1 << entropyCodingMethod.order); i++)
+            sb.append(entropyCodingMethod.contents.parameters[i]).append(" ");
         return sb.toString();
     }
 }

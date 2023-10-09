@@ -25,24 +25,27 @@ import java.io.IOException;
 import org.kc7bfi.jflac.ChannelData;
 import org.kc7bfi.jflac.io.BitInputStream;
 
+
 /**
  * FLAC Constant Subframe (Channel) data.
  * This class represents a FLAC subframe (channel) for a Constant data
+ *
  * @author kc7bfi
  */
 public class ChannelConstant extends Channel {
-    
+
     /** The constant signal value. */
     private int value;
 
     /**
      * The constructor.
-     * @param is            The InputBitStream
-     * @param header        The FLAC Frame Header
-     * @param channelData   The decoded channel data (output)
-     * @param bps           The bits-per-second
-     * @param wastedBits    The bits waisted in the frame
-     * @throws IOException  Thrown if error reading from the InputBitStream
+     *
+     * @param is          The InputBitStream
+     * @param header      The FLAC Frame Header
+     * @param channelData The decoded channel data (output)
+     * @param bps         The bits-per-second
+     * @param wastedBits  The bits waisted in the frame
+     * @throws IOException Thrown if error reading from the InputBitStream
      */
     public ChannelConstant(BitInputStream is, Header header, ChannelData channelData, int bps, int wastedBits) throws IOException {
         super(header, wastedBits);
@@ -52,9 +55,10 @@ public class ChannelConstant extends Channel {
         // decode the subframe
         for (int i = 0; i < header.blockSize; i++) channelData.getOutput()[i] = value;
     }
-    
+
     /**
      * toString conversion.
+     *
      * @see java.lang.Object#toString()
      */
     public String toString() {

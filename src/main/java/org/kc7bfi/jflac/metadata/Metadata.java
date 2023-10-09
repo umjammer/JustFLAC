@@ -23,67 +23,70 @@ package org.kc7bfi.jflac.metadata;
 
 /**
  * Root class for all Metadata subclasses.
+ *
  * @author kc7bfi
  */
 public abstract class Metadata {
-    
+
     /** StreamInfo Metatdata type. */
     public static final int METADATA_TYPE_STREAMINFO = 0;
-    
+
     /** Padding Metatdata type. */
     public static final int METADATA_TYPE_PADDING = 1;
-    
+
     /** Application Metatdata type. */
     public static final int METADATA_TYPE_APPLICATION = 2;
-    
+
     /** SeekTable Metatdata type. */
     public static final int METADATA_TYPE_SEEKTABLE = 3;
-    
+
     /** VorbisComment Metatdata type. */
     public static final int METADATA_TYPE_VORBIS_COMMENT = 4;
-    
+
     /** CueSheet Metatdata type. */
     public static final int METADATA_TYPE_CUESHEET = 5;
-    
+
     /** Picture Metatdata type. */
     public static final int METADATA_TYPE_PICTURE = 6;
-    
+
     /** Metadata IsLast field length. */
     public static final int STREAM_METADATA_IS_LAST_LEN = 1; // bits
-    
+
     /** Metadata type field length. */
     public static final int STREAM_METADATA_TYPE_LEN = 7; // bits
-    
+
     /** Metadata length field length. */
     public static final int STREAM_METADATA_LENGTH_LEN = 24; // bits
-    
+
     protected boolean isLast;
-    
+
     protected int length;
 
     /**
      * Constructor.
-     * @param isLast    True if last Metadata block
+     *
+     * @param isLast True if last Metadata block
      */
     public Metadata(boolean isLast, int length) {
         this.isLast = isLast;
         this.length = length;
     }
-    
+
     /**
      * Test if this is the last metadata block.
+     *
      * @return True if last metadata block in chain
      */
     public boolean isLast() {
         return isLast;
     }
-    
+
     /**
      * returns length of metadata
-     * 
+     *
      * @return length
      */
     public int getLength() {
-    	return length + (STREAM_METADATA_IS_LAST_LEN+STREAM_METADATA_TYPE_LEN+STREAM_METADATA_LENGTH_LEN+7)/8;
+        return length + (STREAM_METADATA_IS_LAST_LEN + STREAM_METADATA_TYPE_LEN + STREAM_METADATA_LENGTH_LEN + 7) / 8;
     }
 }

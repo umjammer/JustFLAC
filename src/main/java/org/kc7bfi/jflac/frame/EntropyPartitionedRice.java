@@ -24,8 +24,10 @@ import java.io.IOException;
 
 import org.kc7bfi.jflac.io.BitInputStream;
 
+
 /**
  * This class holds the Entropy Partitioned Rice contents.
+ *
  * @author kc7bfi
  */
 public class EntropyPartitionedRice extends EntropyCodingMethod {
@@ -36,13 +38,13 @@ public class EntropyPartitionedRice extends EntropyCodingMethod {
 
     /**
      * Read compressed signal residual data.
-     * 
-     * @param is                The InputBitStream
-     * @param predictorOrder    The predicate order
-     * @param partitionOrder    The partition order
-     * @param header            The FLAC Frame Header
-     * @param residual          The residual signal (output)
-     * @throws IOException      On error reading from InputBitStream
+     *
+     * @param is             The InputBitStream
+     * @param predictorOrder The predicate order
+     * @param partitionOrder The partition order
+     * @param header         The FLAC Frame Header
+     * @param residual       The residual signal (output)
+     * @throws IOException On error reading from InputBitStream
      */
     @Override
     void readResidual(BitInputStream is, int predictorOrder, int partitionOrder, Header header, int[] residual) throws IOException {
@@ -51,15 +53,15 @@ public class EntropyPartitionedRice extends EntropyCodingMethod {
         int partitions = 1 << partitionOrder;
         int partitionSamples = partitionOrder > 0 ? header.blockSize >> partitionOrder : header.blockSize - predictorOrder;
         if (predictorOrder == 0) {
-        	if (header.blockSize < predictorOrder) {
-        		//System.err.printf("NEED RESYNC  %d - %d%n", header.blockSize, predictorOrder);
-        		return;
-        	}
+            if (header.blockSize < predictorOrder) {
+                //System.err.printf("NEED RESYNC  %d - %d%n", header.blockSize, predictorOrder);
+                return;
+            }
         } else {
-        	if (partitionSamples < predictorOrder) {
-        		//System.err.printf("NEED RESYNC2  %d - %d%n", partitionSamples , predictorOrder);
-        		return;
-        	}
+            if (partitionSamples < predictorOrder) {
+                //System.err.printf("NEED RESYNC2  %d - %d%n", partitionSamples , predictorOrder);
+                return;
+            }
         }
         contents.ensureSize(Math.max(6, partitionOrder));
         //contents.parameters = new int[partitions];
