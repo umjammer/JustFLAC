@@ -591,7 +591,7 @@ public class BitInputStream {
                 long endBits = getByte * 8L + getBit;
 //                System.out.println("SE0 " + startBits + " " + endBits);
                 totalBitsRead += (int) (endBits - startBits);
-                availBits -= endBits - startBits;
+                availBits -= (int) (endBits - startBits);
                 readFromStream();
                 // these must be zero because we can only get here if we got to
                 // the end of the buffer
@@ -603,7 +603,7 @@ public class BitInputStream {
         long endBits = getByte * 8L + getBit;
 //        System.out.println("SE1 " + startBits + " " + endBits);
         totalBitsRead += (int) (endBits - startBits);
-        availBits -= endBits - startBits;
+        availBits -= (int) (endBits - startBits);
     }
 
     /**

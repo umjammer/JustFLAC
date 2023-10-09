@@ -63,8 +63,7 @@ public class FlacAudioFileReader extends AudioFileReader {
      * Obtains the audio file format of the File provided. The File must point
      * to valid audio file data.
      *
-     * @param file the File from which file format information should be
-     *             extracted.
+     * @param file the File from which file format information should be extracted.
      * @return an AudioFileFormat object describing the audio file format.
      * @throws UnsupportedAudioFileException if the File does not point to a valid audio file data
      *                                       recognized by the system.
@@ -98,8 +97,7 @@ public class FlacAudioFileReader extends AudioFileReader {
     /**
      * Obtains an audio input stream from the input stream provided.
      *
-     * @param stream the input stream from which the AudioInputStream should be
-     *               constructed.
+     * @param stream the input stream from which the AudioInputStream should be constructed.
      * @return an AudioInputStream object based on the audio file data contained
      * in the input stream.
      * @throws UnsupportedAudioFileException if the File does not point to a valid audio file data
@@ -240,9 +238,7 @@ public class FlacAudioFileReader extends AudioFileReader {
 
         ByteArrayInputStream byteInStream = new ByteArrayInputStream(byteOutStream.toByteArray());
 
-//        ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
         SequenceInputStream sequenceInputStream = new SequenceInputStream(byteInStream, inputStream);
-//        return new AudioInputStream(sequenceInputStream, audioFileFormat.getFormat(), audioFileFormat.getFrameLength());
         return new AudioInputStream(sequenceInputStream, audioFileFormat.getFormat(), audioFileFormat.getFrameLength());
     }
 }
