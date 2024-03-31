@@ -22,16 +22,16 @@ package org.kc7bfi.jflac;
 
 
 public class Constants {
-    
+
     /** The maximum number of audio channels. */
     public static final int MAX_CHANNELS = 8;
-    
+
     /** The maximum frame block size. */
     public static final int MAX_BLOCK_SIZE = 65535;
 
     /** The maximum Rice partition order permitted by the format. */
     public static final int MAX_RICE_PARTITION_ORDER = 15;
-    
+
     /** independent channels. */
     public static final int CHANNEL_ASSIGNMENT_INDEPENDENT = 0;
     /** left+side stereo. */
@@ -42,5 +42,5 @@ public class Constants {
     public static final int CHANNEL_ASSIGNMENT_MID_SIDE = 3;
 
     /** FLAC Stream Sync string. */
-    public static final byte[] STREAM_SYNC_STRING = new byte[] { (byte)'f', (byte)'L', (byte)'a', (byte)'C' };
+    public static final byte[] STREAM_SYNC_STRING = new byte[] {(byte) 'f', (byte) 'L', (byte) 'a', (byte) 'C'};
 }

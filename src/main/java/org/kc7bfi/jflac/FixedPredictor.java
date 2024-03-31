@@ -22,14 +22,16 @@ package org.kc7bfi.jflac;
 
 /**
  * Fixed Predictor utility class.
+ *
  * @author kc7bfi
  */
 public class FixedPredictor {
-    
+
     private static final double M_LN2 = 0.69314718055994530942;
-    
+
     /**
      * Compute the best predictor order.
+     *
      * @param data
      * @param dataLen
      * @param residualBitsPerSample
@@ -43,7 +45,7 @@ public class FixedPredictor {
         int error, save;
         int totalError0 = 0, totalError1 = 0, totalError2 = 0, totalError3 = 0, totalError4 = 0;
         int i, order;
-        
+
         for (i = 0; i < dataLen; i++) {
             error = data[i];
             totalError0 += Math.abs(error);
@@ -64,7 +66,7 @@ public class FixedPredictor {
             totalError4 += Math.abs(error);
             lastError3 = save;
         }
-        
+
         if (totalError0 < Math.min(Math.min(Math.min(totalError1, totalError2), totalError3), totalError4))
             order = 0;
         else if (totalError1 < Math.min(Math.min(totalError2, totalError3), totalError4))
@@ -75,7 +77,7 @@ public class FixedPredictor {
             order = 3;
         else
             order = 4;
-        
+
         // Estimate the expected number of bits per residual signal sample.
         // 'total_error*' is linearly related to the variance of the residual
         // signal, so we use it directly to compute E(|x|)
@@ -84,12 +86,13 @@ public class FixedPredictor {
         residualBitsPerSample[2] = (totalError2 > 0) ? Math.log(M_LN2 * (double) totalError2 / (double) dataLen) / M_LN2 : 0.0;
         residualBitsPerSample[3] = (totalError3 > 0) ? Math.log(M_LN2 * (double) totalError3 / (double) dataLen) / M_LN2 : 0.0;
         residualBitsPerSample[4] = (totalError4 > 0) ? Math.log(M_LN2 * (double) totalError4 / (double) dataLen) / M_LN2 : 0.0;
-        
+
         return order;
     }
-    
+
     /**
      * Compute the best predictor order.
+     *
      * @param data
      * @param dataLen
      * @param residualBitsPerSample
@@ -101,13 +104,13 @@ public class FixedPredictor {
         int lastError2 = lastError1 - (data[-2] - data[-3]);
         int lastError3 = lastError2 - (data[-2] - 2 * data[-3] + data[-4]);
         int error, save;
-        
+
         // totalError* are 64-bits to avoid overflow when encoding
         // erratic signals when the bits-per-sample and blocksize are
         // large.
         long totalError0 = 0, totalError1 = 0, totalError2 = 0, totalError3 = 0, totalError4 = 0;
         int i, order;
-        
+
         for (i = 0; i < dataLen; i++) {
             error = data[i];
             totalError0 += Math.abs(error);
@@ -128,7 +131,7 @@ public class FixedPredictor {
             totalError4 += Math.abs(error);
             lastError3 = save;
         }
-        
+
         if (totalError0 < Math.min(Math.min(Math.min(totalError1, totalError2), totalError3), totalError4))
             order = 0;
         else if (totalError1 < Math.min(Math.min(totalError2, totalError3), totalError4))
@@ -139,7 +142,7 @@ public class FixedPredictor {
             order = 3;
         else
             order = 4;
-        
+
         // Estimate the expected number of bits per residual signal sample.
         // 'total_error*' is linearly related to the variance of the residual
         // signal, so we use it directly to compute E(|x|)
@@ -149,12 +152,13 @@ public class FixedPredictor {
         residualBitsPerSample[2] = (totalError2 > 0) ? Math.log(M_LN2 * (double) totalError2 / (double) dataLen) / M_LN2 : 0.0;
         residualBitsPerSample[3] = (totalError3 > 0) ? Math.log(M_LN2 * (double) totalError3 / (double) dataLen) / M_LN2 : 0.0;
         residualBitsPerSample[4] = (totalError4 > 0) ? Math.log(M_LN2 * (double) totalError4 / (double) dataLen) / M_LN2 : 0.0;
-        
+
         return order;
     }
-    
+
     /**
      * Compute the residual from the compressed signal.
+     *
      * @param data
      * @param dataLen
      * @param order
@@ -162,77 +166,78 @@ public class FixedPredictor {
      */
     public static void computeResidual(int[] data, int dataLen, int order, int[] residual) {
         int idataLen = dataLen;
-        
+
         switch (order) {
-            case 0 :
-                if (idataLen >= 0) System.arraycopy(data, 0, residual, 0, idataLen);
-                break;
-            case 1 :
-                for (int i = 0; i < idataLen; i++) {
-                    residual[i] = data[i] - data[i - 1];
-                }
-                break;
-            case 2 :
-                for (int i = 0; i < idataLen; i++) {
-                    /* == data[i] - 2*data[i-1] + data[i-2] */
-                    residual[i] = data[i] - (data[i - 1] << 1) + data[i - 2];
-                }
-                break;
-            case 3 :
-                for (int i = 0; i < idataLen; i++) {
-                    /* == data[i] - 3*data[i-1] + 3*data[i-2] - data[i-3] */
-                    residual[i] = data[i] - (((data[i - 1] - data[i - 2]) << 1) + (data[i - 1] - data[i - 2])) - data[i - 3];
-                }
-                break;
-            case 4 :
-                for (int i = 0; i < idataLen; i++) {
-                    /* == data[i] - 4*data[i-1] + 6*data[i-2] - 4*data[i-3] + data[i-4] */
-                    residual[i] = data[i] - ((data[i - 1] + data[i - 3]) << 2) + ((data[i - 2] << 2) + (data[i - 2] << 1)) + data[i - 4];
-                }
-                break;
-            default :
+        case 0:
+            if (idataLen >= 0) System.arraycopy(data, 0, residual, 0, idataLen);
+            break;
+        case 1:
+            for (int i = 0; i < idataLen; i++) {
+                residual[i] = data[i] - data[i - 1];
+            }
+            break;
+        case 2:
+            for (int i = 0; i < idataLen; i++) {
+                /* == data[i] - 2*data[i-1] + data[i-2] */
+                residual[i] = data[i] - (data[i - 1] << 1) + data[i - 2];
+            }
+            break;
+        case 3:
+            for (int i = 0; i < idataLen; i++) {
+                /* == data[i] - 3*data[i-1] + 3*data[i-2] - data[i-3] */
+                residual[i] = data[i] - (((data[i - 1] - data[i - 2]) << 1) + (data[i - 1] - data[i - 2])) - data[i - 3];
+            }
+            break;
+        case 4:
+            for (int i = 0; i < idataLen; i++) {
+                /* == data[i] - 4*data[i-1] + 6*data[i-2] - 4*data[i-3] + data[i-4] */
+                residual[i] = data[i] - ((data[i - 1] + data[i - 3]) << 2) + ((data[i - 2] << 2) + (data[i - 2] << 1)) + data[i - 4];
+            }
+            break;
+        default:
         }
     }
-    
+
     /**
      * Restore the signal from the fixed predictor.
-     * @param residual  The residual data
-     * @param dataLen   The length of residual data
-     * @param order     The predicate order
-     * @param data      The restored signal (output)
-     * @param startAt   The starting position in the data array
+     *
+     * @param residual The residual data
+     * @param dataLen  The length of residual data
+     * @param order    The predicate order
+     * @param data     The restored signal (output)
+     * @param startAt  The starting position in the data array
      */
     public static void restoreSignal(int[] residual, int dataLen, int order, int[] data, int startAt) {
         int idataLen = dataLen;
-        
+
         switch (order) {
-            case 0 :
-                if (idataLen >= 0) System.arraycopy(residual, 0, data, startAt, idataLen);
-                break;
-            case 1 :
-                for (int i = 0; i < idataLen; i++) {
-                    data[i + startAt] = residual[i] + data[i + startAt - 1];
-                }
-                break;
-            case 2 :
-                for (int i = 0; i < idataLen; i++) {
-                    /* == residual[i] + 2*data[i-1] - data[i-2] */
-                    data[i + startAt] = residual[i] + (data[i + startAt - 1] << 1) - data[i + startAt - 2];
-                }
-                break;
-            case 3 :
-                for (int i = 0; i < idataLen; i++) {
-                    /* residual[i] + 3*data[i-1] - 3*data[i-2]) + data[i-3] */
-                    data[i + startAt] = residual[i] + (((data[i + startAt - 1] - data[i + startAt - 2]) << 1) + (data[i + startAt - 1] - data[i + startAt - 2])) + data[i + startAt - 3];
-                }
-                break;
-            case 4 :
-                for (int i = 0; i < idataLen; i++) {
-                    /* == residual[i] + 4*data[i-1] - 6*data[i-2] + 4*data[i-3] - data[i-4] */
-                    data[i + startAt] = residual[i] + ((data[i + startAt - 1] + data[i + startAt - 3]) << 2) - ((data[i + startAt - 2] << 2) + (data[i + startAt - 2] << 1)) - data[i + startAt - 4];
-                }
-                break;
-            default :
+        case 0:
+            if (idataLen >= 0) System.arraycopy(residual, 0, data, startAt, idataLen);
+            break;
+        case 1:
+            for (int i = 0; i < idataLen; i++) {
+                data[i + startAt] = residual[i] + data[i + startAt - 1];
+            }
+            break;
+        case 2:
+            for (int i = 0; i < idataLen; i++) {
+                /* == residual[i] + 2*data[i-1] - data[i-2] */
+                data[i + startAt] = residual[i] + (data[i + startAt - 1] << 1) - data[i + startAt - 2];
+            }
+            break;
+        case 3:
+            for (int i = 0; i < idataLen; i++) {
+                /* residual[i] + 3*data[i-1] - 3*data[i-2]) + data[i-3] */
+                data[i + startAt] = residual[i] + (((data[i + startAt - 1] - data[i + startAt - 2]) << 1) + (data[i + startAt - 1] - data[i + startAt - 2])) + data[i + startAt - 3];
+            }
+            break;
+        case 4:
+            for (int i = 0; i < idataLen; i++) {
+                /* == residual[i] + 4*data[i-1] - 6*data[i-2] + 4*data[i-3] - data[i-4] */
+                data[i + startAt] = residual[i] + ((data[i + startAt - 1] + data[i + startAt - 3]) << 2) - ((data[i + startAt - 2] << 2) + (data[i + startAt - 2] << 1)) - data[i + startAt - 4];
+            }
+            break;
+        default:
         }
     }
 }

@@ -24,26 +24,29 @@ import java.io.IOException;
 
 import org.kc7bfi.jflac.io.BitInputStream;
 
+
 /**
  * Padding Metadata block.
+ *
  * @author kc7bfi
  */
 public class Padding extends Metadata {
-   
+
     /**
      * The constructor.
-     * @param is                The InputBitStream
-     * @param length            Length of the record
-     * @param isLast            True if this is the last Metadata block in the chain
-     * @throws IOException      Thrown if error reading from InputBitStream
+     *
+     * @param is     The InputBitStream
+     * @param length Length of the record
+     * @param isLast True if this is the last Metadata block in the chain
+     * @throws IOException Thrown if error reading from InputBitStream
      */
     public Padding(BitInputStream is, int length, boolean isLast) throws IOException {
         super(isLast, length);
         is.readByteBlockAlignedNoCRC(null, length);
     }
-    
+
     @Override
     public String toString() {
-        return "Padding (Length=" + length + ") last ="+isLast;
+        return "Padding (Length=" + length + ") last =" + isLast;
     }
 }

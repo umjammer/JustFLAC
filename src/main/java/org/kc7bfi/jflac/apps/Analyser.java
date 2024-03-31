@@ -1,6 +1,5 @@
-package org.kc7bfi.jflac.apps;
-
-/* libFLAC - Free Lossless Audio Codec library
+/*
+ * libFLAC - Free Lossless Audio Codec library
  * Copyright (C) 2000,2001,2002,2003  Josh Coalson
  *
  * This library is free software; you can redistribute it and/or
@@ -19,24 +18,30 @@ package org.kc7bfi.jflac.apps;
  * Boston, MA  02111-1307, USA.
  */
 
+package org.kc7bfi.jflac.apps;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 
-import org.kc7bfi.jflac.FrameListener;
 import org.kc7bfi.jflac.FLACDecoder;
+import org.kc7bfi.jflac.FrameListener;
 import org.kc7bfi.jflac.frame.Frame;
 import org.kc7bfi.jflac.metadata.Metadata;
+
 
 /**
  * Analyser reads all metadata and frame blocks in a FLAC file and outputs a text
  * representation of them.
+ *
  * @author kc7bfi
  */
 public class Analyser implements FrameListener {
+
     private int frameNum = 0;
-    
+
     /**
      * Analyse an input FLAC file.
+     *
      * @param inFileName The input file name
      * @throws IOException thrown if error reading file
      */
@@ -47,9 +52,10 @@ public class Analyser implements FrameListener {
         decoder.addFrameListener(this);
         decoder.decode();
     }
-    
+
     /**
      * Process metadata records.
+     *
      * @param metadata the metadata block
      * @see org.kc7bfi.jflac.FrameListener#processMetadata(org.kc7bfi.jflac.metadata.Metadata)
      */
@@ -57,9 +63,10 @@ public class Analyser implements FrameListener {
     public void processMetadata(Metadata metadata) {
         System.out.println(metadata.toString());
     }
-    
+
     /**
      * Process data frames.
+     *
      * @param frame the data frame
      * @see org.kc7bfi.jflac.FrameListener#processFrame(org.kc7bfi.jflac.frame.Frame)
      */
@@ -68,21 +75,23 @@ public class Analyser implements FrameListener {
         frameNum++;
         System.out.println(frameNum + " " + frame.toString());
     }
-   
+
     /**
      * Called for each frame error detected.
-     * @param msg   The error message
+     *
+     * @param msg The error message
      * @see org.kc7bfi.jflac.FrameListener#processError(java.lang.String)
      */
     @Override
     public void processError(String msg) {
         System.out.println("Frame Error: " + msg);
     }
-    
+
     /**
      * Main routine.
      * <p>args[0] is the FLAC file name to analyse
-     * @param args  Command arguments
+     *
+     * @param args Command arguments
      */
     public static void main(String[] args) {
         try {

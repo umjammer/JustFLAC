@@ -27,11 +27,14 @@ import org.kc7bfi.jflac.FixedPredictor;
 import org.kc7bfi.jflac.FrameDecodeException;
 import org.kc7bfi.jflac.io.BitInputStream;
 
+
 /**
  * Fixed FLAC subframe (channel).
+ *
  * @author kc7bfi
  */
 public class ChannelFixed extends Channel {
+
     private static final int MAX_FIXED_ORDER = 4;
 
     /** The residual coding method. */
@@ -45,18 +48,19 @@ public class ChannelFixed extends Channel {
 
     /**
      * The constructor.
-     * @param is            The InputBitStream
-     * @param header        The FLAC Frame Header
-     * @param channelData   The decoded channel data (output)
-     * @param bps           The bits-per-second
-     * @param wastedBits    The bits waisted in the frame
-     * @param order         The predicate order
-     * @throws IOException  Thrown if error reading from the InputBitStream
-     * @throws FrameDecodeException 
+     *
+     * @param is          The InputBitStream
+     * @param header      The FLAC Frame Header
+     * @param channelData The decoded channel data (output)
+     * @param bps         The bits-per-second
+     * @param wastedBits  The bits waisted in the frame
+     * @param order       The predicate order
+     * @throws IOException          Thrown if error reading from the InputBitStream
+     * @throws FrameDecodeException
      */
     public ChannelFixed(BitInputStream is, Header header, ChannelData channelData, int bps, int wastedBits, int order) throws IOException, FrameDecodeException {
         super(header, wastedBits);
-        
+
         this.residual = channelData.getResidual();
         this.order = order;
 
@@ -67,27 +71,21 @@ public class ChannelFixed extends Channel {
 
         // read entropy coding method info
         int type = is.readRawUInt(ENTROPY_CODING_METHOD_TYPE_LEN);
-        EntropyCodingMethod pr;
-        switch (type) {
-            case ENTROPY_CODING_METHOD_PARTITIONED_RICE :
-                pr = new EntropyPartitionedRice();
-                break;
-            case RESIDUAL_CODING_METHOD_PARTITIONED_RICE2 :
-                pr = new EntropyPartitionedRice2();
-                break;
-            default :
-                throw new FrameDecodeException("STREAM_DECODER_UNPARSEABLE_STREAM, type:"+type);
-        }
-		entropyCodingMethod = pr;
-		pr.order = is.readRawUInt(ENTROPY_CODING_METHOD_PARTITIONED_RICE_ORDER_LEN);
-		pr.contents = channelData.getPartitionedRiceContents();
-		pr.readResidual(is, order, pr.order, header, channelData.getResidual());
+        EntropyCodingMethod pr = switch (type) {
+            case ENTROPY_CODING_METHOD_PARTITIONED_RICE -> new EntropyPartitionedRice();
+            case RESIDUAL_CODING_METHOD_PARTITIONED_RICE2 -> new EntropyPartitionedRice2();
+            default -> throw new FrameDecodeException("STREAM_DECODER_UNPARSEABLE_STREAM, type:" + type);
+        };
+        entropyCodingMethod = pr;
+        pr.order = is.readRawUInt(ENTROPY_CODING_METHOD_PARTITIONED_RICE_ORDER_LEN);
+        pr.contents = channelData.getPartitionedRiceContents();
+        pr.readResidual(is, order, pr.order, header, channelData.getResidual());
 
         // decode the subframe
         System.arraycopy(warmup, 0, channelData.getOutput(), 0, order);
         FixedPredictor.restoreSignal(residual, header.blockSize - order, order, channelData.getOutput(), order);
     }
-    
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("FLACSubframe_Fixed: Order=" + order + " PartitionOrder=" + entropyCodingMethod.order + " WastedBits=" + wastedBits);

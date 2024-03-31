@@ -4,12 +4,13 @@
  * To change the template for this generated file go to
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
+
 package org.kc7bfi.jflac;
 
 
 /**
  * @author kc7bfi
- *
+ * <p>
  * To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
@@ -24,6 +25,7 @@ public class FrameDecodeException extends Exception {
 
     /**
      * Constructor.
+     *
      * @param msg Error message
      */
     public FrameDecodeException(String msg) {
@@ -32,6 +34,7 @@ public class FrameDecodeException extends Exception {
 
     /**
      * Constructor.
+     *
      * @param err The causing error
      */
     public FrameDecodeException(Throwable err) {
@@ -40,6 +43,7 @@ public class FrameDecodeException extends Exception {
 
     /**
      * Constructor.
+     *
      * @param msg The error message
      * @param err The causing error
      */

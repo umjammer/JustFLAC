@@ -48,13 +48,16 @@ import org.kc7bfi.jflac.metadata.VorbisComment;
 import org.kc7bfi.jflac.util.ByteData;
 import org.kc7bfi.jflac.util.CRC16;
 
+
 /**
  * A Java FLAC decoder.
+ *
  * @author kc7bfi
  */
 public class FLACDecoder {
+
     private static final int FRAME_FOOTER_CRC_LEN = 16; // bits
-    private static final byte[] ID3V2_TAG = new byte[] { 'I', 'D', '3' };
+    private static final byte[] ID3V2_TAG = new byte[] {'I', 'D', '3'};
 
     private BitInputStream bitStream;
     private ChannelData[] channelData = new ChannelData[Constants.MAX_CHANNELS];
@@ -81,7 +84,8 @@ public class FLACDecoder {
 
     /**
      * The constructor.
-     * @param inputStream    The input stream to read data from
+     *
+     * @param inputStream The input stream to read data from
      */
     public FLACDecoder(InputStream inputStream) {
         this.inputStream = inputStream;
@@ -93,7 +97,8 @@ public class FLACDecoder {
 
     /**
      * Return the parsed StreamInfo Metadata record.
-     * @return  The StreamInfo
+     *
+     * @return The StreamInfo
      */
     public StreamInfo getStreamInfo() {
         return streamInfo;
@@ -101,7 +106,8 @@ public class FLACDecoder {
 
     /**
      * Return the ChannelData object.
-     * @return  The ChannelData object
+     *
+     * @return The ChannelData object
      */
     public ChannelData[] getChannelData() {
         return channelData;
@@ -109,7 +115,8 @@ public class FLACDecoder {
 
     /**
      * Return the input bit stream.
-     * @return  The bit stream
+     *
+     * @return The bit stream
      */
     public BitInputStream getBitInputStream() {
         return bitStream;
@@ -117,7 +124,8 @@ public class FLACDecoder {
 
     /**
      * Return the input stream.
-     * @return  The input stream
+     *
+     * @return The input stream
      */
     public InputStream getInputStream() {
         return inputStream;
@@ -125,7 +133,8 @@ public class FLACDecoder {
 
     /**
      * Add a frame listener.
-     * @param listener  The frame listener to add
+     *
+     * @param listener The frame listener to add
      */
     public void addFrameListener(FrameListener listener) {
         frameListeners.addFrameListener(listener);
@@ -133,7 +142,8 @@ public class FLACDecoder {
 
     /**
      * Remove a frame listener.
-     * @param listener  The frame listener to remove
+     *
+     * @param listener The frame listener to remove
      */
     public void removeFrameListener(FrameListener listener) {
         frameListeners.removeFrameListener(listener);
@@ -141,7 +151,8 @@ public class FLACDecoder {
 
     /**
      * Add a PCM processor.
-     * @param processor  The processor listener to add
+     *
+     * @param processor The processor listener to add
      */
     public void addPCMProcessor(PCMProcessor processor) {
         pcmProcessors.addPCMProcessor(processor);
@@ -149,7 +160,8 @@ public class FLACDecoder {
 
     /**
      * Remove a PCM processor.
-     * @param processor  The processor listener to remove
+     *
+     * @param processor The processor listener to remove
      */
     public void removePCMProcessor(PCMProcessor processor) {
         pcmProcessors.removePCMProcessor(processor);
@@ -157,6 +169,7 @@ public class FLACDecoder {
 
     /**
      * return length of metadata, so can be considered as first frame offset
+     *
      * @return
      */
     public long getMetadataLength() {
@@ -172,14 +185,14 @@ public class FLACDecoder {
     /**
      * Fill the given ByteData object with PCM data from the frame.
      *
-     * @param frame the frame to send to the PCM processors
+     * @param frame   the frame to send to the PCM processors
      * @param pcmData the byte data to be filled, or null if it should be allocated
-     * @return the ByteData that was filled (may be a new instance from <code>space</code>) 
+     * @return the ByteData that was filled (may be a new instance from <code>space</code>)
      */
     public ByteData decodeFrame(Frame frame, ByteData pcmData) {
         // required size of the byte buffer
         int byteSize = frame.header.blockSize * channels * ((streamInfo.getBitsPerSample() + 7) / 2);
-        if (pcmData == null || pcmData.getData().length < byteSize ) {
+        if (pcmData == null || pcmData.getData().length < byteSize) {
             pcmData = new ByteData(byteSize);
         } else {
             pcmData.setLen(0);
@@ -213,7 +226,8 @@ public class FLACDecoder {
 
     /**
      * Read the FLAC stream info.
-     * @return  The FLAC Stream Info record
+     *
+     * @return The FLAC Stream Info record
      * @throws IOException On read error
      */
     public StreamInfo readStreamInfo() throws IOException {
@@ -225,8 +239,9 @@ public class FLACDecoder {
 
     /**
      * Read an array of metadata blocks.
-     * @return  The array of metadata blocks
-     * @throws IOException  On read error
+     *
+     * @return The array of metadata blocks
+     * @throws IOException On read error
      */
     public Metadata[] readMetadata() throws IOException {
         readStreamSync();
@@ -243,9 +258,10 @@ public class FLACDecoder {
 
     /**
      * Read an array of metadata blocks.
-     * @param streamInfo    The StreamInfo metadata block previously read
-     * @return  The array of metadata blocks
-     * @throws IOException  On read error
+     *
+     * @param streamInfo The StreamInfo metadata block previously read
+     * @return The array of metadata blocks
+     * @throws IOException On read error
      */
     public Metadata[] readMetadata(StreamInfo streamInfo) throws IOException {
         if (streamInfo.isLast()) return new Metadata[0];
@@ -261,7 +277,8 @@ public class FLACDecoder {
 
     /**
      * Decode the FLAC file.
-     * @throws IOException  On read error
+     *
+     * @throws IOException On read error
      */
     public void decode() throws IOException {
         readMetadata();
@@ -286,7 +303,8 @@ public class FLACDecoder {
 
     /**
      * Decode the data frames.
-     * @throws IOException  On read error
+     *
+     * @throws IOException On read error
      */
     public void decodeFrames() throws IOException {
         try {
@@ -306,7 +324,9 @@ public class FLACDecoder {
     }
 
     private final static boolean __SEEK_DEBUG = false;
-    /** Seeks for sample and provide seek data
+
+    /**
+     * Seeks for sample and provide seek data
      *
      * @param target_sample
      * @return SeekPoint of best match
@@ -314,9 +334,8 @@ public class FLACDecoder {
      */
     public SeekPoint seek(long target_sample) throws IOException {
         // Check if it can found using seek table first
-        if (!(inputStream instanceof RandomFileInputStream))
+        if (!(inputStream instanceof RandomFileInputStream rf))
             return null;
-        RandomFileInputStream rf = (RandomFileInputStream) inputStream;
         long stream_length = ((RandomFileInputStream) inputStream).getLength();
         int first_frame_offset = metadataLength;
         long total_samples = streamInfo.getTotalSamples();
@@ -537,7 +556,7 @@ public class FLACDecoder {
         if (!(inputStream instanceof RandomFileInputStream))
             return;
         try {
-            ((RandomFileInputStream)inputStream).seek(savedPos);
+            ((RandomFileInputStream) inputStream).seek(savedPos);
             bitStream = savedState;
             frame = savedFrame;
         } catch (IOException e) {
@@ -547,14 +566,16 @@ public class FLACDecoder {
 
     /**
      * Decode the data frames between two seek points.
-     * @param from  The starting seek point
-     * @param to    The ending seek point (non-inclusive)
-     * @throws IOException  On read error
+     *
+     * @param from The starting seek point
+     * @param to   The ending seek point (non-inclusive)
+     * @throws IOException On read error
      */
     public void decode(SeekPoint from, SeekPoint to) throws IOException {
         // position random access file
-        if (!(inputStream instanceof RandomFileInputStream)) throw new IOException("Not a RandomFileInputStream: " + inputStream.getClass().getName());
-        ((RandomFileInputStream)inputStream).seek(from.getStreamOffset());
+        if (!(inputStream instanceof RandomFileInputStream))
+            throw new IOException("Not a RandomFileInputStream: " + inputStream.getClass().getName());
+        ((RandomFileInputStream) inputStream).seek(from.getStreamOffset());
         bitStream.reset();
         samplesDecoded = from.getSampleNumber();
 
@@ -577,8 +598,9 @@ public class FLACDecoder {
 
     /**
      * Read the next data frame.
-     * @return  The next frame
-     * @throws IOException  on read error
+     *
+     * @return The next frame
+     * @throws IOException on read error
      */
     public Frame readNextFrame() throws IOException {
         try {
@@ -601,7 +623,8 @@ public class FLACDecoder {
 
     /**
      * Bytes read.
-     * @return  The number of bytes read
+     *
+     * @return The number of bytes read
      */
     public long getTotalBytesRead() {
         return bitStream.getTotalBytesRead();
@@ -622,11 +645,12 @@ public class FLACDecoder {
 
     /**
      * Read the stream sync string.
-     * @throws IOException  On read error
+     *
+     * @throws IOException On read error
      */
     private void readStreamSync() throws IOException {
         int id = 0;
-        for (int i = 0; i < 4;) {
+        for (int i = 0; i < 4; ) {
             int x = bitStream.readRawUInt(8);
             if (x == Constants.STREAM_SYNC_STRING[i]) {
                 i++;
@@ -646,8 +670,9 @@ public class FLACDecoder {
 
     /**
      * Read a single metadata record.
-     * @return  The next metadata record
-     * @throws IOException  on read error
+     *
+     * @return The next metadata record
+     * @throws IOException on read error
      */
     public Metadata readNextMetadata() throws IOException {
         Metadata metadata;
@@ -658,8 +683,8 @@ public class FLACDecoder {
 
         if (type == Metadata.METADATA_TYPE_STREAMINFO) {
             metadata = new StreamInfo(bitStream, length, isLast);
-            if (((StreamInfo)metadata).getTotalSamples() > 0) {
-                streamInfo = (StreamInfo)metadata;
+            if (((StreamInfo) metadata).getTotalSamples() > 0) {
+                streamInfo = (StreamInfo) metadata;
                 pcmProcessors.processStreamInfo(streamInfo);
             }
         } else if (type == Metadata.METADATA_TYPE_SEEKTABLE) {
@@ -749,7 +774,8 @@ public class FLACDecoder {
 
     /**
      * Read the next data frame.
-     * @throws IOException  On read error
+     *
+     * @throws IOException          On read error
      * @throws FrameDecodeException On frame decoding error
      */
     public void readFrame() throws IOException, FrameDecodeException {
@@ -777,22 +803,22 @@ public class FLACDecoder {
             // first figure the correct bits-per-sample of the subframe
             int bps = frame.header.bitsPerSample;
             switch (frame.header.channelAssignment) {
-            case Constants.CHANNEL_ASSIGNMENT_INDEPENDENT :
+            case Constants.CHANNEL_ASSIGNMENT_INDEPENDENT:
                 /* no adjustment needed */
                 break;
-            case Constants.CHANNEL_ASSIGNMENT_LEFT_SIDE :
+            case Constants.CHANNEL_ASSIGNMENT_LEFT_SIDE:
                 if (channel == 1)
                     bps++;
                 break;
-            case Constants.CHANNEL_ASSIGNMENT_RIGHT_SIDE :
+            case Constants.CHANNEL_ASSIGNMENT_RIGHT_SIDE:
                 if (channel == 0)
                     bps++;
                 break;
-            case Constants.CHANNEL_ASSIGNMENT_MID_SIDE :
+            case Constants.CHANNEL_ASSIGNMENT_MID_SIDE:
                 if (channel == 1)
                     bps++;
                 break;
-            default :
+            default:
             }
             // now read it
             try {
@@ -806,22 +832,22 @@ public class FLACDecoder {
 
         // Read the frame CRC-16 from the footer and check
         frameCRC = bitStream.getReadCRC16();
-        frame.setCRC((short)bitStream.readRawUInt(FRAME_FOOTER_CRC_LEN));
+        frame.setCRC((short) bitStream.readRawUInt(FRAME_FOOTER_CRC_LEN));
         if (frameCRC == frame.getCRC()) {
             /* Undo any special channel coding */
             switch (frame.header.channelAssignment) {
-            case Constants.CHANNEL_ASSIGNMENT_INDEPENDENT :
+            case Constants.CHANNEL_ASSIGNMENT_INDEPENDENT:
                 /* do nothing */
                 break;
-            case Constants.CHANNEL_ASSIGNMENT_LEFT_SIDE :
+            case Constants.CHANNEL_ASSIGNMENT_LEFT_SIDE:
                 for (i = 0; i < frame.header.blockSize; i++)
                     channelData[1].getOutput()[i] = channelData[0].getOutput()[i] - channelData[1].getOutput()[i];
                 break;
-            case Constants.CHANNEL_ASSIGNMENT_RIGHT_SIDE :
+            case Constants.CHANNEL_ASSIGNMENT_RIGHT_SIDE:
                 for (i = 0; i < frame.header.blockSize; i++)
                     channelData[0].getOutput()[i] += channelData[1].getOutput()[i];
                 break;
-            case Constants.CHANNEL_ASSIGNMENT_MID_SIDE :
+            case Constants.CHANNEL_ASSIGNMENT_MID_SIDE:
                 for (i = 0; i < frame.header.blockSize; i++) {
                     mid = channelData[0].getOutput()[i];
                     side = channelData[1].getOutput()[i];
@@ -835,7 +861,7 @@ public class FLACDecoder {
                 }
                 //System.exit(1);
                 break;
-            default :
+            default:
                 break;
             }
         } else {
@@ -915,6 +941,7 @@ public class FLACDecoder {
 
     /**
      * Get the number of samples decoded.
+     *
      * @return Returns the samples Decoded.
      */
     public long getSamplesDecoded() {
@@ -931,6 +958,7 @@ public class FLACDecoder {
     public int getBadFrames() {
         return badFrames;
     }
+
     /**
      * @return Returns true if end-of-file.
      */

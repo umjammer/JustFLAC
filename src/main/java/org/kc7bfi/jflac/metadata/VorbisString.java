@@ -25,8 +25,10 @@ import java.nio.charset.StandardCharsets;
 
 import org.kc7bfi.jflac.io.BitInputStream;
 
+
 /**
  * An entry into the Vorbis comment.
+ *
  * @author kc7bfi
  */
 public class VorbisString {
@@ -35,8 +37,9 @@ public class VorbisString {
 
     /**
      * The constructor.
-     * @param is                The InputBitStream
-     * @throws IOException      Thrown if error reading from InputBitStream
+     *
+     * @param is The InputBitStream
+     * @throws IOException Thrown if error reading from InputBitStream
      */
     public VorbisString(BitInputStream is) throws IOException {
         int elen = is.readRawIntLittleEndian();
@@ -44,7 +47,7 @@ public class VorbisString {
         entry = new byte[elen];
         is.readByteBlockAlignedNoCRC(entry, entry.length);
     }
-    
+
     /**
      * @see java.lang.Object#toString()
      */

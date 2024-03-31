@@ -24,24 +24,28 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import org.kc7bfi.jflac.PCMProcessor;
 import org.kc7bfi.jflac.FLACDecoder;
+import org.kc7bfi.jflac.PCMProcessor;
 import org.kc7bfi.jflac.metadata.StreamInfo;
 import org.kc7bfi.jflac.util.ByteData;
 import org.kc7bfi.jflac.util.WavWriter;
 
+
 /**
  * Decode FLAC file to WAV file application.
+ *
  * @author kc7bfi
  */
 public class Decoder implements PCMProcessor {
+
     private WavWriter wav;
-    
+
     /**
      * Decode a FLAC file to a WAV file.
-     * @param inFileName    The input FLAC file name
-     * @param outFileName   The output WAV file name
-     * @throws IOException  Thrown if error reading or writing files
+     *
+     * @param inFileName  The input FLAC file name
+     * @param outFileName The output WAV file name
+     * @throws IOException Thrown if error reading or writing files
      */
     public void decode(String inFileName, String outFileName) throws IOException {
         System.out.println("Decode [" + inFileName + "][" + outFileName + "]");
@@ -52,9 +56,10 @@ public class Decoder implements PCMProcessor {
         decoder.addPCMProcessor(this);
         decoder.decode();
     }
-    
+
     /**
      * Process the StreamInfo block.
+     *
      * @param info the StreamInfo block
      * @see org.kc7bfi.jflac.PCMProcessor#processStreamInfo(org.kc7bfi.jflac.metadata.StreamInfo)
      */
@@ -67,9 +72,10 @@ public class Decoder implements PCMProcessor {
             e.printStackTrace();
         }
     }
-    
+
     /**
      * Process the decoded PCM bytes.
+     *
      * @param pcm The decoded PCM data
      * @see org.kc7bfi.jflac.PCMProcessor#processPCM(org.kc7bfi.jflac.util.ByteData)
      */
@@ -82,12 +88,13 @@ public class Decoder implements PCMProcessor {
             e.printStackTrace();
         }
     }
-    
+
     /**
      * Main routine.
      * <p>args[0] is the input file name
      * <p>args[1] is the output file name
-     * @param args  Command line arguments
+     *
+     * @param args Command line arguments
      */
     public static void main(String[] args) {
         try {

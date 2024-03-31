@@ -28,6 +28,7 @@ import org.kc7bfi.jflac.util.CRC8;
 
 /**
  * Bit-wide output stream.
+ *
  * @author kc7bfi
  */
 public class BitOutputStream {
@@ -39,7 +40,7 @@ public class BitOutputStream {
             0x00000000000007FF, 0x0000000000000FFF, 0x0000000000001FFF, 0x0000000000003FFF, 0x0000000000007FFF, 0x000000000000FFFF,
             0x000000000001FFFF, 0x000000000003FFFF, 0x000000000007FFFF, 0x00000000000FFFFF, 0x00000000001FFFFF, 0x00000000003FFFFF,
             0x00000000007FFFFF, 0x0000000000FFFFFF, 0x0000000001FFFFFF, 0x0000000003FFFFFF, 0x0000000007FFFFFF, 0x000000000FFFFFFF,
-            0x000000001FFFFFFF, 0x000000003FFFFFFF, 0x000000007FFFFFFF, 0x00000000FFFFFFFF, 0x00000001FFFFFFFFL,
+            0x000000001FFFFFFF, 0x000000003FFFFFFF, 0x000000007FFFFFFF, 0x00000000FFFFFFFFL, 0x00000001FFFFFFFFL,
             0x00000003FFFFFFFFL, 0x00000007FFFFFFFFL, 0x0000000FFFFFFFFFL, 0x0000001FFFFFFFFFL, 0x0000003FFFFFFFFFL,
             0x0000007FFFFFFFFFL, 0x000000FFFFFFFFFFL, 0x000001FFFFFFFFFFL, 0x000003FFFFFFFFFFL, 0x000007FFFFFFFFFFL,
             0x00000FFFFFFFFFFFL, 0x00001FFFFFFFFFFFL, 0x00003FFFFFFFFFFFL, 0x00007FFFFFFFFFFFL, 0x0000FFFFFFFFFFFFL,
@@ -47,7 +48,7 @@ public class BitOutputStream {
             0x003FFFFFFFFFFFFFL, 0x007FFFFFFFFFFFFFL, 0x00FFFFFFFFFFFFFFL, 0x01FFFFFFFFFFFFFFL, 0x03FFFFFFFFFFFFFFL,
             0x07FFFFFFFFFFFFFFL, 0x0FFFFFFFFFFFFFFFL, 0x1FFFFFFFFFFFFFFFL, 0x3FFFFFFFFFFFFFFFL, 0x7FFFFFFFFFFFFFFFL,
             0xFFFFFFFFFFFFFFFFL};
-    
+
     private byte[] buffer = new byte[0];
     private int outCapacity = 0; // in blurbs
     private int outBlurbs = 0;
@@ -58,7 +59,7 @@ public class BitOutputStream {
     private int totalConsumedBits = 0;
     private short readCRC16 = 0;
     private OutputStream os;
-    
+
     /*
      * WATCHOUT: The current implementation is not friendly to shrinking, i.e. it
      * does not shift left what is consumed, it just chops off the end, whether
@@ -84,37 +85,39 @@ public class BitOutputStream {
         outCapacity = newCapacity;
         return true;
     }
-    
+
     private boolean grow(int minBlurbsToAdd) {
         int newCapacity = Math.max(outCapacity * 2, outCapacity + minBlurbsToAdd);
         return resize(newCapacity);
     }
-    
+
     private boolean ensureSize(int bitsToAdd) {
         if ((outCapacity << 3) < totalBits + bitsToAdd) {
             return grow((bitsToAdd >> 3) + 2);
         }
         return true;
     }
-    
+
     /**
      * The constructor.
-     * @param os    The InputStream to read bits from
+     *
+     * @param os The InputStream to read bits from
      */
     public BitOutputStream(OutputStream os) {
         this.os = os;
     }
-    
+
     /**
      * The constructor.
      */
     public BitOutputStream() {
     }
-    
+
     /**
      * Concatenate one InputBitStream to the end of this one.
-     * @param src   The inputBitStream to copy
-     * @return      True if copy was successful
+     *
+     * @param src The inputBitStream to copy
+     * @return True if copy was successful
      */
     public boolean concatenateAligned(BitOutputStream src) {
         int bitsToAdd = src.totalBits - src.totalConsumedBits;
@@ -122,7 +125,7 @@ public class BitOutputStream {
         if (outBits != src.consumedBits) return false;
         if (!ensureSize(bitsToAdd)) return false;
         if (outBits == 0) {
-            System.arraycopy(src.buffer, src.consumedBlurbs, buffer, outBlurbs, 
+            System.arraycopy(src.buffer, src.consumedBlurbs, buffer, outBlurbs,
                     (src.outBlurbs - src.consumedBlurbs + ((src.outBits != 0) ? 1 : 0)));
         } else if (outBits + bitsToAdd > BITS_PER_BLURB) {
             buffer[outBlurbs] <<= (BITS_PER_BLURB - outBits);
@@ -138,75 +141,84 @@ public class BitOutputStream {
         outBlurbs = totalBits / BITS_PER_BLURB;
         return true;
     }
-    
+
     /**
      * Reset the read CRC-16 value.
-     * @param seed  The initial CRC-16 value
+     *
+     * @param seed The initial CRC-16 value
      */
     public void resetReadCRC16(short seed) {
         readCRC16 = seed;
     }
-    
+
     /**
      * return the read CRC-16 value.
-     * @return  The read CRC-16 value
+     *
+     * @return The read CRC-16 value
      */
     public short getReadCRC16() {
         return readCRC16;
     }
-    
+
     /**
      * return the write CRC-16 value.
+     *
      * @return The write CRC-16 value
      */
     public short getWriteCRC16() {
         return CRC16.calc(buffer, outBlurbs);
     }
-    
+
     /**
      * return the write CRC-8 value.
-     * @return  The write CRC-8 value
+     *
+     * @return The write CRC-8 value
      */
     public byte getWriteCRC8() {
         return CRC8.calc(buffer, outBlurbs);
     }
-    
+
     /**
      * Test if the Bit Stream is byte aligned.
-     * @return  True of bit stream is byte aligned
+     *
+     * @return True of bit stream is byte aligned
      */
     public boolean isByteAligned() {
         return ((outBits & 7) == 0);
     }
-    
+
     /**
      * Test if the Bit Stream consumed bits is byte aligned.
-     * @return  True of bit stream consumed bits is byte aligned
+     *
+     * @return True of bit stream consumed bits is byte aligned
      */
     public boolean isConsumedByteAligned() {
         return ((consumedBits & 7) == 0);
     }
-    
+
     /**
      * return the number of bits to read to align the byte.
-     * @return  The number of bits to align the byte
+     *
+     * @return The number of bits to align the byte
      */
     public int bitsLeftForByteAlignment() {
         return 8 - (consumedBits & 7);
     }
-    
+
     /**
      * return the number of bytes left to read.
-     * @return  The number of bytes left to read
+     *
+     * @return The number of bytes left to read
      */
     public int getInputBytesUnconsumed() {
         return (totalBits - totalConsumedBits) >> 3;
     }
-    
+
     /**
      * Write zero bits.
-     * @param bits  The number of zero bits to write
-     * @throws IOException  On write error
+     *
+     * @param bits The number of zero bits to write
+     * @throws IOException On write error
      */
     public void writeZeroes(int bits) throws IOException {
         if (bits == 0) return;
@@ -226,22 +238,23 @@ public class BitOutputStream {
 
     /**
      * Write a true/false integer.
-     * @param val   The true/false value
-     * @param bits  The bit size to write
-     * @throws IOException  On write error
+     *
+     * @param val  The true/false value
+     * @param bits The bit size to write
+     * @throws IOException On write error
      */
     public void writeRawUInt(boolean val, int bits) throws IOException {
         writeRawUInt((val) ? 1 : 0, bits);
     }
-    
+
     public void writeRawUInt(int val, int bits) throws IOException {
         if (bits == 0) return;
-        
+
         // inline the size check so we don't incur a function call unnecessarily
         if ((outCapacity << 3) < totalBits + bits) {
             if (!ensureSize(bits)) throw new IOException("Memory allocation error");
         }
-        
+
         // zero-out unused bits; WATCHOUT: other code relies on this, so this needs to stay
         if (bits < 32) val &= (~(0xffffffff << bits)); // zero-out unused bits
         totalBits += bits;
@@ -258,7 +271,7 @@ public class BitOutputStream {
                 } else {
                     int k = bits - BITS_PER_BLURB;
                     buffer[outBlurbs++] = (byte) (val >> k);
-                    
+
                     // we know k < 32 so no need to protect against the gcc bug mentioned above
                     val &= (~(0xffffffff << k));
                     bits -= BITS_PER_BLURB;
@@ -276,7 +289,7 @@ public class BitOutputStream {
                 int k = bits - n;
                 buffer[outBlurbs] <<= n;
                 buffer[outBlurbs] |= (val >> k);
-                
+
                 // we know n > 0 so k < 32 so no need to protect against the gcc bug mentioned above
                 val &= (~(0xffffffff << k));
                 bits -= n;
@@ -285,11 +298,11 @@ public class BitOutputStream {
             }
         }
     }
-    
+
     public void writeRawInt(int val, int bits) throws IOException {
         writeRawUInt(val, bits);
     }
-    
+
     public void writeRawULong(long val, int bits) throws IOException {
         if (bits == 0) return;
         if (!ensureSize(bits)) throw new IOException("Memory Allocate Error");
@@ -307,7 +320,7 @@ public class BitOutputStream {
                 } else {
                     int k = bits - BITS_PER_BLURB;
                     buffer[outBlurbs++] = (byte) (val >> k);
-                    
+
                     // we know k < 64 so no need to protect against the gcc bug mentioned above
                     val &= (~(0xffffffffffffffffL << k));
                     bits -= BITS_PER_BLURB;
@@ -317,7 +330,7 @@ public class BitOutputStream {
                 int k = bits - n;
                 buffer[outBlurbs] <<= n;
                 buffer[outBlurbs] |= (val >> k);
-                
+
                 // we know n > 0 so k < 64 so no need to protect against the gcc bug mentioned above
                 val &= (~(0xffffffffffffffffL << k));
                 bits -= n;
@@ -329,7 +342,7 @@ public class BitOutputStream {
             }
         }
     }
-    
+
     public void writeRawUIntLittleEndian(int val) throws IOException {
         // NOTE: we rely on the fact that write_raw_uint32() masks out the unused bits
         writeRawUInt(val, 8);
@@ -337,14 +350,14 @@ public class BitOutputStream {
         writeRawUInt(val >> 16, 8);
         writeRawUInt(val >> 24, 8);
     }
-    
+
     public void writeByteBlock(byte[] vals, int nvals) throws IOException {
         // this could be faster but currently we don't need it to be
         for (int i = 0; i < nvals; i++) {
             writeRawUInt(vals[i], 8);
         }
     }
-    
+
     public void writeUnaryUnsigned(int val) throws IOException {
         if (val < 32)
             writeRawUInt(1, ++val);
@@ -355,7 +368,7 @@ public class BitOutputStream {
             writeRawUInt(1, 1);
         }
     }
-    
+
     public int riceBits(int val, int parameter) {
         int msbs, uval;
         // fold signed to unsigned
@@ -375,7 +388,7 @@ public class BitOutputStream {
         int msbs;
         int uval;
         int pattern;
-        
+
         // fold signed to unsigned
         if (val < 0) {
             // equivalent to (unsigned)(((--val) < < 1) - 1); but without the overflow problem at MININT
@@ -397,7 +410,7 @@ public class BitOutputStream {
             writeRawUInt(pattern, interestingBits);
         }
     }
-    
+
     public void writeUTF8UInt(int val) throws IOException {
         if (val < 0x80) {
             writeRawUInt(val, 8);
@@ -428,7 +441,7 @@ public class BitOutputStream {
             writeRawUInt(0x80 | (val & 0x3F), 8);
         }
     }
-    
+
     public void writeUTF8ULong(long val) throws IOException {
         if (val < 0x80) {
             writeRawUInt((int) val, 8);
@@ -450,7 +463,7 @@ public class BitOutputStream {
             writeRawUInt(0x80 | (int) ((val >> 12) & 0x3F), 8);
             writeRawUInt(0x80 | (int) ((val >> 6) & 0x3F), 8);
             writeRawUInt(0x80 | (int) (val & 0x3F), 8);
-        } else if (val < 0x80000000) {
+        } else if (val < 0x80000000L) {
             writeRawUInt(0xFC | (int) (val >> 30), 8);
             writeRawUInt(0x80 | (int) ((val >> 24) & 0x3F), 8);
             writeRawUInt(0x80 | (int) ((val >> 18) & 0x3F), 8);
@@ -467,19 +480,21 @@ public class BitOutputStream {
             writeRawUInt(0x80 | (int) (val & 0x3F), 8);
         }
     }
-    
+
     /**
      * Write zero bits to byte boundry.
-     * @throws IOException  On error writing to bit stream
+     *
+     * @throws IOException On error writing to bit stream
      */
     public void zeroPadToByteBoundary() throws IOException {
         // 0-pad to byte boundary
         if ((outBits & 7) != 0) writeZeroes(8 - (outBits & 7));
     }
-    
+
     /**
      * Flush bit stream after aligning byte boundry.
-     * @throws IOException  On error writing.
+     *
+     * @throws IOException On error writing.
      */
     public void flushByteAligned() throws IOException {
         zeroPadToByteBoundary();
@@ -490,14 +505,16 @@ public class BitOutputStream {
 
     /**
      * Returns the totalBits.
+     *
      * @return Returns the totalBits.
      */
     public int getTotalBits() {
         return totalBits;
     }
-    
+
     /**
      * Returns the totalBlurbs.
+     *
      * @return Returns the totalBlurbs.
      */
     public int getTotalBlurbs() {

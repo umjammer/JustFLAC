@@ -4,20 +4,23 @@
  * To change the template for this generated file go to
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
+
 package org.kc7bfi.jflac.util;
 
 
 /**
  * Utility class for handling Rice codes.
+ *
  * @author kc7bfi
  */
 public class RiceCodes {
-    
+
     /**
      * generate int from rice code.
-     * @param val   The rice code
+     *
+     * @param val       The rice code
      * @param parameter The rice parameter
-     * @return  The decoded value
+     * @return The decoded value
      */
     public int riceBits(int val, int parameter) {
         // fold signed to unsigned

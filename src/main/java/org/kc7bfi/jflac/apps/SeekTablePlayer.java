@@ -1,6 +1,5 @@
-package org.kc7bfi.jflac.apps;
-
-/* libFLAC - Free Lossless Audio Codec library
+/*
+ * libFLAC - Free Lossless Audio Codec library
  * Copyright (C) 2000,2001,2002,2003  Josh Coalson
  *
  * This library is free software; you can redistribute it and/or
@@ -19,18 +18,18 @@ package org.kc7bfi.jflac.apps;
  * Boston, MA  02111-1307, USA.
  */
 
+package org.kc7bfi.jflac.apps;
 
 import java.io.IOException;
-
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 
+import org.kc7bfi.jflac.FLACDecoder;
 import org.kc7bfi.jflac.FrameListener;
 import org.kc7bfi.jflac.PCMProcessor;
-import org.kc7bfi.jflac.FLACDecoder;
 import org.kc7bfi.jflac.frame.Frame;
 import org.kc7bfi.jflac.io.RandomFileInputStream;
 import org.kc7bfi.jflac.metadata.Metadata;
@@ -42,51 +41,55 @@ import org.kc7bfi.jflac.util.ByteData;
 
 /**
  * Play a FLAC file application.
+ *
  * @author kc7bfi
  */
 public class SeekTablePlayer implements PCMProcessor, FrameListener {
+
     private AudioFormat fmt;
     private DataLine.Info info;
     private SourceDataLine line;
-    
+
     private SeekTable seekTable;
-    
+
     /**
      * Decode and play an input FLAC file.
+     *
      * @param inFileName    The input FLAC file name
      * @param fromSeekPoint The starting Seek Point
      * @param toSeekPoint   The ending Seek Point (non-inclusive)
-     * @throws IOException  Thrown if error reading file
+     * @throws IOException              Thrown if error reading file
      * @throws LineUnavailableException Thrown if error playing file
      */
     public void play(String inFileName, int fromSeekPoint, int toSeekPoint) throws IOException, LineUnavailableException {
         System.out.println("Play [" + inFileName + "]");
         RandomFileInputStream is = new RandomFileInputStream(inFileName);
-        
+
         FLACDecoder decoder = new FLACDecoder(is);
         decoder.addPCMProcessor(this);
         decoder.addFrameListener(this);
         decoder.readMetadata();
-        
+
         // see if SeekTable exists
         if (seekTable == null) {
             System.out.println("Missing SeekTable!");
             return;
         }
-        
+
         SeekPoint from = seekTable.getSeekPoint(fromSeekPoint);
         SeekPoint to = null;
         if (toSeekPoint + 1 < seekTable.numberOfPoints()) to = seekTable.getSeekPoint(toSeekPoint + 1);
         System.out.println("Seek From: " + from);
         System.out.println("Seek To  : " + to);
         decoder.decode(from, to);
-        
+
         line.drain();
         line.close();
     }
-    
+
     /**
      * Process the StreamInfo block.
+     *
      * @param streamInfo the StreamInfo block
      * @see org.kc7bfi.jflac.PCMProcessor#processStreamInfo(org.kc7bfi.jflac.metadata.StreamInfo)
      */
@@ -102,9 +105,10 @@ public class SeekTablePlayer implements PCMProcessor, FrameListener {
             e.printStackTrace();
         }
     }
-    
+
     /**
      * Process the decoded PCM bytes.
+     *
      * @param pcm The decoded PCM data
      * @see org.kc7bfi.jflac.PCMProcessor#processPCM(org.kc7bfi.jflac.util.ByteData)
      */
@@ -115,15 +119,17 @@ public class SeekTablePlayer implements PCMProcessor, FrameListener {
 
     /**
      * Called for each Metadata frame read.
+     *
      * @param metadata The metadata frame read
      */
     @Override
     public void processMetadata(Metadata metadata) {
-        if (metadata instanceof SeekTable) seekTable = (SeekTable)metadata;
+        if (metadata instanceof SeekTable) seekTable = (SeekTable) metadata;
     }
 
     /**
      * Called for each data frame read.
+     *
      * @param frame The data frame read
      */
     @Override
@@ -132,18 +138,20 @@ public class SeekTablePlayer implements PCMProcessor, FrameListener {
 
     /**
      * Process a decoder error.
-     * @param msg   The error message
+     *
+     * @param msg The error message
      * @see org.kc7bfi.jflac.FrameListener#processError(java.lang.String)
      */
     @Override
     public void processError(String msg) {
         System.out.println("FLAC Error: " + msg);
-   }
-    
+    }
+
     /**
      * The main routine.
      * <p>args[0] is the input file name
-     * @param args  Command line arguments
+     *
+     * @param args Command line arguments
      */
     public static void main(String[] args) {
         String flacFile = args[0];

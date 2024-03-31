@@ -1,6 +1,5 @@
-package org.kc7bfi.jflac.apps;
-
-/* libFLAC - Free Lossless Audio Codec library
+/*
+ * libFLAC - Free Lossless Audio Codec library
  * Copyright (C) 2000,2001,2002,2003  Josh Coalson
  *
  * This library is free software; you can redistribute it and/or
@@ -19,6 +18,8 @@ package org.kc7bfi.jflac.apps;
  * Boston, MA  02111-1307, USA.
  */
 
+package org.kc7bfi.jflac.apps;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 
@@ -30,15 +31,19 @@ import org.kc7bfi.jflac.metadata.Metadata;
 import org.kc7bfi.jflac.metadata.SeekPoint;
 import org.kc7bfi.jflac.metadata.StreamInfo;
 
+
 /**
  * Test FLAC file application.
+ *
  * @author kc7bfi
  */
 public class Tester implements FrameListener {
+
     private int errors = 0;
-    
+
     /**
      * Analyze an input FLAC file.
+     *
      * @param inFileName The input file name
      * @throws IOException thrown if error reading file
      */
@@ -46,53 +51,58 @@ public class Tester implements FrameListener {
         FileInputStream is = new FileInputStream(inFileName);
         FLACDecoder decoder = new FLACDecoder(is);
         decoder.addFrameListener(this);
-        decoder.decode();        
+        decoder.decode();
         System.out.println(errors + " errors found!");
         is.close();
     }
+
     /**
-     * Seek testing 
+     * Seek testing
+     *
      * @param inFileName
      * @param time
      * @throws IOException
      */
     // bee test -- "E:\data\stories\Music\422C~1\A7D4~1\2011~1\-F073~1.FLA" 2 1320
     public void test2(String inFileName, long time) throws IOException {
-    	RandomFileInputStream is = new RandomFileInputStream(inFileName);
+        RandomFileInputStream is = new RandomFileInputStream(inFileName);
         FLACDecoder decoder = new FLACDecoder(is);
         decoder.readMetadata();
         StreamInfo si = decoder.getStreamInfo();
-        long pos = time*si.getSampleRate();
-        System.out.println("Seeking to "+pos+" sample");
+        long pos = time * si.getSampleRate();
+        System.out.println("Seeking to " + pos + " sample");
         SeekPoint sp = decoder.seek(pos);
-        System.out.println("Found point "+sp);
+        System.out.println("Found point " + sp);
         if (sp != null)
-        	decoder.decodeFrames();
+            decoder.decodeFrames();
         System.out.println(errors + " errors found!");
         is.close();
     }
-    
+
     /**
      * Process metadata records.
+     *
      * @param metadata the metadata block
      * @see org.kc7bfi.jflac.FrameListener#processMetadata(org.kc7bfi.jflac.metadata.Metadata)
      */
     @Override
     public void processMetadata(Metadata metadata) {
     }
-    
+
     /**
      * Process data frames.
+     *
      * @param frame the data frame
      * @see org.kc7bfi.jflac.FrameListener#processFrame(org.kc7bfi.jflac.frame.Frame)
      */
     @Override
     public void processFrame(Frame frame) {
     }
-   
+
     /**
      * Called for each frame error detected.
-     * @param msg   The error message
+     *
+     * @param msg The error message
      * @see org.kc7bfi.jflac.FrameListener#processError(java.lang.String)
      */
     @Override
@@ -100,21 +110,22 @@ public class Tester implements FrameListener {
         errors++;
         System.out.println(msg);
     }
-    
+
     /**
      * Main routine.
      * <p>args[0] is the FLAC file name to analyse
-     * @param args  Command arguments
+     *
+     * @param args Command arguments
      */
     public static void main(String[] args) {
         try {
             Tester tester = new Tester();
             System.out.println("FLAX Tester for " + args[0]);
             if (args.length > 1) {
-            	if ("2".equals(args[1]) && args.length > 2)
-            		tester.test2(args[0], Long.parseLong(args[2]));
+                if ("2".equals(args[1]) && args.length > 2)
+                    tester.test2(args[0], Long.parseLong(args[2]));
             } else
-            	tester.test(args[0]);
+                tester.test(args[0]);
         } catch (Exception e) {
             e.printStackTrace();
         }

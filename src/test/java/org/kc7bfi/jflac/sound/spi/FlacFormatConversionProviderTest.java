@@ -61,6 +61,8 @@ class FlacFormatConversionProviderTest {
 
     static long time;
 
+    static final double volume = Double.parseDouble(System.getProperty("vavi.test.volume",  "0.2"));
+
     static {
         System.setProperty("vavi.util.logging.VaviFormatter.extraClassMethod", "org\\.tritonus\\.share\\.TDebug#out");
 
@@ -96,7 +98,7 @@ Debug.println("OUT: " + outAudioFormat);
         line.addLineListener(ev -> Debug.println(ev.getType()));
         line.start();
 
-        volume(line, .1d);
+        volume(line, volume);
 
         byte[] buf = new byte[1024];
         while (!later(time).come()) {
@@ -137,7 +139,7 @@ Debug.println("OUT: " + outAudioFormat);
         line.addLineListener(ev -> Debug.println(ev.getType()));
         line.start();
 
-        volume(line, .1d);
+        volume(line, volume);
 
         byte[] buf = new byte[1024];
         while (!later(time).come()) {
@@ -196,7 +198,7 @@ clip.addLineListener(ev -> {
   cdl.countDown();
 });
         clip.open(AudioSystem.getAudioInputStream(new AudioFormat(44100, 16, 2, true, false), ais));
-SoundUtil.volume(clip, 0.1f);
+SoundUtil.volume(clip, volume);
         clip.start();
 if (!System.getProperty("vavi.test", "").equals("ide")) {
  Thread.sleep(10 * 1000);

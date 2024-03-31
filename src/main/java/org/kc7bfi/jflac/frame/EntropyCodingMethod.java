@@ -1,10 +1,4 @@
-package org.kc7bfi.jflac.frame;
-
-import java.io.IOException;
-
-import org.kc7bfi.jflac.io.BitInputStream;
-
-/**
+/*
  * libFLAC - Free Lossless Audio Codec library
  * Copyright (C) 2001,2002,2003  Josh Coalson
  *
@@ -24,19 +18,29 @@ import org.kc7bfi.jflac.io.BitInputStream;
  * Boston, MA  02111-1307, USA.
  */
 
+package org.kc7bfi.jflac.frame;
+
+import java.io.IOException;
+
+import org.kc7bfi.jflac.io.BitInputStream;
+
+
 public abstract class EntropyCodingMethod {
-	protected int order; // The partition order, i.e. # of contexts = 2 ^ order.
-    protected EntropyPartitionedRiceContents contents; // The context's Rice parameters and/or raw bits.
+
+    /** The partition order, i.e. # of contexts = 2 ^ order. */
+    protected int order;
+    /** The context's Rice parameters and/or raw bits. */
+    protected EntropyPartitionedRiceContents contents;
 
     /**
      * Read compressed signal residual data.
-     * 
-     * @param is                The InputBitStream
-     * @param predictorOrder    The predicate order
-     * @param partitionOrder    The partition order
-     * @param header            The FLAC Frame Header
-     * @param residual          The residual signal (output)
-     * @throws IOException      On error reading from InputBitStream
+     *
+     * @param is             The InputBitStream
+     * @param predictorOrder The predicate order
+     * @param partitionOrder The partition order
+     * @param header         The FLAC Frame Header
+     * @param residual       The residual signal (output)
+     * @throws IOException On error reading from InputBitStream
      */
-    abstract void readResidual(BitInputStream is, int predictorOrder, int partitionOrder, Header header, int[] residual) throws IOException; 
+    abstract void readResidual(BitInputStream is, int predictorOrder, int partitionOrder, Header header, int[] residual) throws IOException;
 }
