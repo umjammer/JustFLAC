@@ -29,6 +29,7 @@ import java.io.InputStream;
 import java.io.SequenceInputStream;
 import java.net.URL;
 import java.nio.file.Files;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
@@ -112,8 +113,8 @@ public class FlacAudioFileReader extends AudioFileReader {
     /**
      * Return the AudioFileFormat from the given InputStream. Implementation.
      *
-     * @param bitStream
-     * @param mediaLength
+     * @param bitStream input to decode
+     * @param mediaLength unused
      * @return an AudioInputStream object based on the audio file data contained
      * in the input stream.
      * @throws UnsupportedAudioFileException if the File does not point to a valid audio file data
@@ -138,11 +139,16 @@ logger.fine("FLAC file reader: no stream info found");
             format = new FlacAudioFormat(streamInfo);
         } catch (IOException ioe) {
             if (ioe.getMessage().equals("Could not find Stream Sync")) {
-logger.fine("FLAC file reader: not a FLAC stream");
-                throw new UnsupportedAudioFileException(ioe.getMessage());
+logger.finer("FLAC file reader: not a FLAC stream");
+logger.log(Level.FINEST, ioe.toString(), ioe);
+                throw (UnsupportedAudioFileException) new UnsupportedAudioFileException(ioe.getMessage()).initCause(ioe);
             } else {
                 throw ioe;
             }
+        } catch (Exception e) {
+logger.finer(e.toString());
+logger.log(Level.FINEST, e.toString(), e);
+            throw (UnsupportedAudioFileException) new UnsupportedAudioFileException(e.getMessage()).initCause(e);
         } finally {
             try {
                 bitStream.reset();
@@ -178,7 +184,7 @@ logger.fine("FLAC file reader: got stream with format " + format);
      *
      * @param inputStream the input stream from which the AudioInputStream should be
      *                    constructed.
-     * @param mediaLength
+     * @param mediaLength unused
      * @return an AudioInputStream object based on the audio file data contained
      * in the input stream.
      * @throws UnsupportedAudioFileException if the File does not point to a valid audio file data
