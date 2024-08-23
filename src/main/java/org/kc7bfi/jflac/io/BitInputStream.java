@@ -39,7 +39,7 @@ public class BitInputStream {
     private static final byte BLURB_TOP_BIT_ONE = ((byte) 0x80);
 
     private static final int BUFFER_CHUNK_SIZE = 1024;
-    private byte[] buffer = new byte[BUFFER_CHUNK_SIZE];
+    private final byte[] buffer = new byte[BUFFER_CHUNK_SIZE];
     private int putByte = 0;
     private int getByte = 0;
     private int getBit = 0;
@@ -48,7 +48,7 @@ public class BitInputStream {
 
     private short readCRC16 = 0;
 
-    private InputStream inStream;
+    private final InputStream inStream;
 
     /**
      * The constructor.
@@ -384,7 +384,7 @@ public class BitInputStream {
                 if (val != null) System.arraycopy(buffer, getByte, val, destlength - nvals, chunk);
                 nvals -= chunk;
                 getByte += chunk;
-                //totalConsumedBits = (getByte << BITS_PER_BLURB_LOG2);
+//                totalConsumedBits = (getByte << BITS_PER_BLURB_LOG2);
                 availBits -= (chunk << BITS_PER_BLURB_LOG2);
                 totalBitsRead += (chunk << BITS_PER_BLURB_LOG2);
             }
@@ -445,7 +445,7 @@ public class BitInputStream {
                         uval = 0;
                         lsbsLeft = parameter;
                         state++;
-                        //totalBitsRead += msbs;
+//                        totalBitsRead += msbs;
                         if (cbits == BITS_PER_BLURB) {
                             cbits = 0;
                             readCRC16 = CRC16.update(saveBlurb, readCRC16);
@@ -455,7 +455,7 @@ public class BitInputStream {
                         msbs += BITS_PER_BLURB - cbits;
                         cbits = 0;
                         readCRC16 = CRC16.update(saveBlurb, readCRC16);
-                        //totalBitsRead += msbs;
+//                        totalBitsRead += msbs;
                         break;
                     }
                 } else {
@@ -465,7 +465,7 @@ public class BitInputStream {
                         uval |= ((blurb & 0xff) >> cbits);
                         cbits = 0;
                         readCRC16 = CRC16.update(saveBlurb, readCRC16);
-                        //totalBitsRead += availableBits;
+//                        totalBitsRead += availableBits;
                         if (lsbsLeft == availableBits) {
                             // compose the value
                             uval |= (msbs << parameter);
@@ -485,7 +485,7 @@ public class BitInputStream {
                         uval |= ((blurb & 0xff) >> (BITS_PER_BLURB - lsbsLeft));
                         blurb <<= lsbsLeft;
                         cbits += lsbsLeft;
-                        //totalBitsRead += lsbsLeft;
+//                        totalBitsRead += lsbsLeft;
                         // compose the value
                         uval |= (msbs << parameter);
                         if ((uval & 1) != 0)
@@ -528,7 +528,7 @@ public class BitInputStream {
                             uval = 0;
                             lsbsLeft = parameter;
                             state++;
-                            //totalBitsRead += msbs;
+//                            totalBitsRead += msbs;
                             if (cbits == BITS_PER_BLURB) {
                                 cbits = 0;
                                 readCRC16 = CRC16.update(saveBlurb, readCRC16);
@@ -538,7 +538,7 @@ public class BitInputStream {
                             msbs += BITS_PER_BLURB - cbits;
                             cbits = 0;
                             readCRC16 = CRC16.update(saveBlurb, readCRC16);
-                            //totalBitsRead += msbs;
+//                            totalBitsRead += msbs;
                             break;
                         }
                     } else {
@@ -548,7 +548,7 @@ public class BitInputStream {
                             uval |= ((blurb & 0xff) >> cbits);
                             cbits = 0;
                             readCRC16 = CRC16.update(saveBlurb, readCRC16);
-                            //totalBitsRead += availableBits;
+//                            totalBitsRead += availableBits;
                             if (lsbsLeft == availableBits) {
                                 // compose the value
                                 uval |= (msbs << parameter);
@@ -568,7 +568,7 @@ public class BitInputStream {
                             uval |= ((blurb & 0xff) >> (BITS_PER_BLURB - lsbsLeft));
                             blurb <<= lsbsLeft;
                             cbits += lsbsLeft;
-                            //totalBitsRead += lsbsLeft;
+//                            totalBitsRead += lsbsLeft;
                             // compose the value
                             uval |= (msbs << parameter);
                             if ((uval & 1) != 0)
@@ -594,7 +594,7 @@ public class BitInputStream {
 //            totalBitsRead += (BITS_PER_BLURB) | cbits;
             if (valI < nvals) {
                 long endBits = getByte * 8L + getBit;
-//                System.out.println("SE0 " + startBits + " " + endBits);
+//                logger.log(Level.DEBUG, "SE0 " + startBits + " " + endBits);
                 totalBitsRead += (int) (endBits - startBits);
                 availBits -= (int) (endBits - startBits);
                 readFromStream();
@@ -606,14 +606,14 @@ public class BitInputStream {
         }
 
         long endBits = getByte * 8L + getBit;
-//        System.out.println("SE1 " + startBits + " " + endBits);
+//        logger.log(Level.DEBUG, "SE1 " + startBits + " " + endBits);
         totalBitsRead += (int) (endBits - startBits);
         availBits -= (int) (endBits - startBits);
     }
 
     /**
      * read UTF8 integer.
-     * on return, if *val == 0xffffffff then the utf-8 sequence was invalid, but
+     * on return, if *val == 0xffff_ffff then the utf-8 sequence was invalid, but
      * the return value will be true
      *
      * @param raw The raw bytes read (output). If null, no bytes are returned
@@ -646,12 +646,12 @@ public class BitInputStream {
             v = x & 0x01;
             i = 5;
         } else {
-            return 0xffffffff;
+            return 0xffff_ffff;
         }
         for (; i > 0; i--) {
             x = peekRawUInt(8);
             if (((x & 0x80) == 0) || ((x & 0x40) != 0)) { // 10xxxxxx
-                return 0xffffffff;
+                return 0xffff_ffff;
             }
             x = readRawUInt(8);
             if (raw != null)
@@ -664,7 +664,7 @@ public class BitInputStream {
 
     /**
      * read UTF long.
-     * on return, if *val == 0xffffffffffffffff then the utf-8 sequence was
+     * on return, if *val == 0xffff_ffff_ffff_ffff then the utf-8 sequence was
      * invalid, but the return value will be true
      *
      * @param raw The raw bytes read (output). If null, no bytes are returned
@@ -700,12 +700,12 @@ public class BitInputStream {
             v = 0;
             i = 6;
         } else {
-            return 0xffffffffffffffffL;
+            return 0xffff_ffff_ffff_ffffL;
         }
         for (; i > 0; i--) {
             x = peekRawUInt(8);
             if (((x & 0x80) == 0) || ((x & 0x40) != 0)) { // 10xxxxxx
-                return 0xffffffffffffffffL;
+                return 0xffff_ffff_ffff_ffffL;
             }
             x = readRawUInt(8);
             if (raw != null)

@@ -34,7 +34,7 @@ import org.kc7bfi.jflac.io.BitInputStream;
 public class ChannelVerbatim extends Channel {
 
     /** A pointer to verbatim signal. */
-    private int[] data;
+    private final int[] data;
 
     /**
      * The constructor.

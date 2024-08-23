@@ -45,7 +45,7 @@ public class CueTrack {
     /** The track number. */
     protected byte number;
     /** Track ISRC.  This is a 12-digit alphanumeric code plus a trailing '\0' */
-    protected byte[] isrc = new byte[13];
+    protected final byte[] isrc = new byte[13];
     /** The track type: 0 for audio, 1 for non-audio. */
     protected int type;
     /** The pre-emphasis flag: 0 for no pre-emphasis, 1 for pre-emphasis. */

@@ -47,7 +47,7 @@ public class WavWriter {
     private int sampleRate;
 
     /** WATCHOUT: can be up to 2 megs */
-    private byte[] s8buffer = new byte[MAX_BLOCK_SIZE * Constants.MAX_CHANNELS * 4];
+    private final byte[] s8buffer = new byte[MAX_BLOCK_SIZE * Constants.MAX_CHANNELS * 4];
     private int samplesProcessed = 0;
     private int frameCounter = 0;
 
@@ -55,8 +55,8 @@ public class WavWriter {
     private long riffOffset;
     private long dataOffset;
 
-    private DataOutput os;
-    private LittleEndianDataOutput osLE;
+    private final DataOutput os;
+    private final LittleEndianDataOutput osLE;
 
     /**
      * The constructor.

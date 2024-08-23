@@ -35,7 +35,7 @@ public class SeekTable extends Metadata {
 
     private static final int SEEKPOINT_LENGTH_BYTES = 18;
 
-    protected SeekPoint[] points;
+    protected final SeekPoint[] points;
 
     /**
      * The constructor.

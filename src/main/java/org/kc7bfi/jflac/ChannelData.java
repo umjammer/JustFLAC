@@ -32,13 +32,13 @@ import org.kc7bfi.jflac.frame.EntropyPartitionedRiceContents;
 public class ChannelData {
 
     /** The output signal. */
-    private int[] output;
+    private final int[] output;
 
     /** the residual signal. */
-    private int[] residual;
+    private final int[] residual;
 
     /** The Entropy signal. */
-    private EntropyPartitionedRiceContents partitionedRiceContents;
+    private final EntropyPartitionedRiceContents partitionedRiceContents;
 
     /**
      * The default constructor.

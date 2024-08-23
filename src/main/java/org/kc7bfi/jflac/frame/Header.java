@@ -136,7 +136,7 @@ public class Header {
         default:
             break;
         }
-        //System.out.println("BSType="+bsType+" BS="+blockSize);
+//        logger.log(Level.DEBUG, "BSType="+bsType+" BS="+blockSize);
 
         int srType = rawHeader.getData(2) & 0x0f;
         switch (srType) {
@@ -189,7 +189,7 @@ public class Header {
         }
 
         int asgnType = (rawHeader.getData(3) >> 4) & 0x0f;
-        //System.out.println("AsgnType="+asgnType+" "+(rawHeader.space[3] >> 4));
+//        logger.log(Level.DEBUG, "AsgnType="+asgnType+" "+(rawHeader.space[3] >> 4));
         if ((asgnType & 8) != 0) {
             channels = 2;
             switch (asgnType & 7) {
@@ -246,12 +246,12 @@ public class Header {
 
         if ((blocksizeHint != 0) && isKnownVariableBlockSizeStream) {
             sampleNumber = is.readUTF8Long(rawHeader);
-            if (sampleNumber == 0xffffffffffffffffL) { // i.e. non-UTF8 code...
+            if (sampleNumber == 0xffff_ffff_ffff_ffffL) { // i.e. non-UTF8 code...
                 throw new BadHeaderException("Bad Sample Number");
             }
         } else {
             frameNumber = is.readUTF8Int(rawHeader);
-            if (frameNumber == 0xffffffff) { // i.e. non-UTF8 code...
+            if (frameNumber == 0xffff_ffff) { // i.e. non-UTF8 code...
                 throw new BadHeaderException("Bad Last Frame");
             }
             sampleNumber = (long) streamInfo.getMinBlockSize() * (long) frameNumber;
@@ -292,12 +292,7 @@ public class Header {
         }
     }
 
-    /**
-     * Return a descriptive string for this object.
-     *
-     * @return the string description
-     * @see java.lang.Object#toString()
-     */
+    @Override
     public String toString() {
         return "FrameHeader:"
                 + " BlockSize=" + blockSize

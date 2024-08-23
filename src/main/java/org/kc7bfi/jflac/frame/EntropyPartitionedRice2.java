@@ -13,8 +13,8 @@ import org.kc7bfi.jflac.io.BitInputStream;
  */
 public class EntropyPartitionedRice2 extends EntropyCodingMethod {
 
-    private static final int ENTROPY_CODING_METHOD_PARTITIONED_RICE2_PARAMETER_LEN = 5; /* bits */
-    private static final int ENTROPY_CODING_METHOD_PARTITIONED_RICE2_RAW_LEN = 5; /* bits */
+    private static final int ENTROPY_CODING_METHOD_PARTITIONED_RICE2_PARAMETER_LEN = 5; // bits
+    private static final int ENTROPY_CODING_METHOD_PARTITIONED_RICE2_RAW_LEN = 5; // bits
     private static final int ENTROPY_CODING_METHOD_PARTITIONED_RICE2_ESCAPE_PARAMETER = 31;
 
     /**
@@ -30,19 +30,19 @@ public class EntropyPartitionedRice2 extends EntropyCodingMethod {
     @Override
     void readResidual(BitInputStream is, int predictorOrder, int partitionOrder, Header header, int[] residual) throws IOException {
         // TODO add propagate resync exception
-        //System.out.println("readResidual Pred="+predictorOrder+" part="+partitionOrder);
+//        logger.log(Level.DEBUG, "readResidual Pred="+predictorOrder+" part="+partitionOrder);
         int sample = 0;
         int partitions = 1 << partitionOrder;
         int partitionSamples = partitionOrder > 0 ? header.blockSize >> partitionOrder : header.blockSize - predictorOrder;
-        //System.err.printf("Allocating %d or %d  predict %d  bs: %d%n", partitionOrder, partitionSamples, predictorOrder, header.blockSize);
+//        logger.log(Level.DEBUG, String.format("Allocating %d or %d  predict %d  bs: %d%n", partitionOrder, partitionSamples, predictorOrder, header.blockSize));
         if (predictorOrder == 0) {
             if (header.blockSize < predictorOrder) {
-                //System.err.printf("NEED RESYNC  %d - %d%n", header.blockSize, predictorOrder);
+                //logger.log(Level.DEBUG, String.format("NEED RESYNC  %d - %d%n", header.blockSize, predictorOrder));
                 return;
             }
         } else {
             if (partitionSamples < predictorOrder) {
-                //System.err.printf("NEED RESYNC2  %d - %d%n", partitionSamples , predictorOrder);
+//                logger.log(Level.DEBUG, String.format("NEED RESYNC2  %d - %d%n", partitionSamples , predictorOrder));
                 return;
             }
         }
@@ -54,7 +54,7 @@ public class EntropyPartitionedRice2 extends EntropyCodingMethod {
             contents.parameters[partition] = riceParameter;
             if (riceParameter < ENTROPY_CODING_METHOD_PARTITIONED_RICE2_ESCAPE_PARAMETER) {
                 int u = (partitionOrder == 0 || partition > 0) ? partitionSamples : partitionSamples - predictorOrder;
-                //System.err.printf("Rice: %d n:%d%n", riceParameter, u);
+//                logger.log(Level.DEBUG, String.format("Rice: %d n:%d%n", riceParameter, u));
                 is.readRiceSignedBlock(residual, sample, u, riceParameter);
                 sample += u;
             } else {

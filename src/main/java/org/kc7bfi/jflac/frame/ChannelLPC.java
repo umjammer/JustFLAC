@@ -36,26 +36,24 @@ import org.kc7bfi.jflac.util.BitMath;
  */
 public class ChannelLPC extends Channel {
 
-    /* bits */
-    private static final int SUBFRAME_LPC_QLP_COEFF_PRECISION_LEN = 4;
-    /* bits */
-    private static final int SUBFRAME_LPC_QLP_SHIFT_LEN = 5;
+    private static final int SUBFRAME_LPC_QLP_COEFF_PRECISION_LEN = 4; // bits
+    private static final int SUBFRAME_LPC_QLP_SHIFT_LEN = 5; // bits
     private static final int MAX_LPC_ORDER = 32;
 
     /** The residual coding method. */
-    private EntropyCodingMethod entropyCodingMethod;
+    private final EntropyCodingMethod entropyCodingMethod;
     /** The FIR order. */
-    private int order;
+    private final int order;
     /** Quantized FIR filter coefficient precision in bits. */
-    private int qlpCoeffPrecision;
+    private final int qlpCoeffPrecision;
     /** The qlp coeff shift needed. */
-    private int quantizationLevel;
+    private final int quantizationLevel;
     /** FIR filter coefficients. */
-    private int[] qlpCoeff = new int[MAX_LPC_ORDER];
+    private final int[] qlpCoeff = new int[MAX_LPC_ORDER];
     /** Warmup samples to prime the predictor, length == order. */
-    private int[] warmup = new int[MAX_LPC_ORDER];
+    private final int[] warmup = new int[MAX_LPC_ORDER];
     /** The residual signal, length == (blocksize minus order) samples. */
-    private int[] residual;
+    private final int[] residual;
 
     /**
      * The constructor.
@@ -76,11 +74,11 @@ public class ChannelLPC extends Channel {
         this.order = order;
 
         // read warm-up samples
-        //System.out.println("Order="+order);
+        //logger.log(Level.DEBUG, "Order="+order);
         for (int u = 0; u < order; u++) {
             warmup[u] = is.readRawInt(bps);
         }
-        //for (int i = 0; i < order; i++) System.out.println("Warm "+i+" "+warmup[i]);
+        //for (int i = 0; i < order; i++) logger.log(Level.DEBUG, "Warm "+i+" "+warmup[i]);
 
         // read qlp coeff precision
         int u32 = is.readRawUInt(SUBFRAME_LPC_QLP_COEFF_PRECISION_LEN);
@@ -88,11 +86,11 @@ public class ChannelLPC extends Channel {
             throw new FrameDecodeException("STREAM_DECODER_ERROR_STATUS_LOST_SYNC");
         }
         qlpCoeffPrecision = u32 + 1;
-        //System.out.println("qlpCoeffPrecision="+qlpCoeffPrecision);
+        //logger.log(Level.DEBUG, "qlpCoeffPrecision="+qlpCoeffPrecision);
 
         // read qlp shift
         quantizationLevel = is.readRawInt(SUBFRAME_LPC_QLP_SHIFT_LEN);
-        //System.out.println("quantizationLevel="+quantizationLevel);
+        //logger.log(Level.DEBUG, "quantizationLevel="+quantizationLevel);
 
         // read quantized lp coefficiencts
         for (int u = 0; u < order; u++) {
@@ -101,7 +99,7 @@ public class ChannelLPC extends Channel {
 
         // read entropy coding method info
         int codingType = is.readRawUInt(ENTROPY_CODING_METHOD_TYPE_LEN);
-        //System.out.println("codingType="+codingType);
+        //logger.log(Level.DEBUG, "codingType="+codingType);
         switch (codingType) {
         case ENTROPY_CODING_METHOD_PARTITIONED_RICE:
             entropyCodingMethod = new EntropyPartitionedRice();
@@ -119,11 +117,14 @@ public class ChannelLPC extends Channel {
         entropyCodingMethod.readResidual(is, order, entropyCodingMethod.order, header,
                 channelData.getResidual());
 
-        //System.out.println();
-        //for (int i = 0; i < header.blockSize; i++) {System.out.print(channelData.residual[i]+" ");
-        //if (i%200==0)System.out.println();
-        //}
-        //System.out.println();
+//        if (logger.isLoggable(Level.DEBUG)) {
+//            System.out.println();
+//            for (int i = 0; i < header.blockSize; i++) {
+//                System.out.print(channelData.getResidual()[i] + " ");
+//                if (i % 200 == 0) System.out.println();
+//            }
+//            System.out.println();
+//        }
 
         // decode the subframe
         System.arraycopy(warmup, 0, channelData.getOutput(), 0, order);

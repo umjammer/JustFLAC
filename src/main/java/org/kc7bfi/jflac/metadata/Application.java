@@ -34,7 +34,7 @@ public class Application extends Metadata {
 
     private static final int APPLICATION_ID_LEN = 32; // bits
 
-    private byte[] id = new byte[4];
+    private final byte[] id = new byte[4];
     private byte[] data;
 
     /**

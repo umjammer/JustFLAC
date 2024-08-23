@@ -40,14 +40,14 @@ import org.kc7bfi.jflac.metadata.StreamInfo;
  */
 public class FlacPacker extends JFrame {
 
-    private JTextArea textArea = new JTextArea(16, 50);
-    private JButton addButton = new JButton("Add Files");
-    private JButton makeButton = new JButton("Pack FLAC");
+    private final JTextArea textArea = new JTextArea(16, 50);
+    private final JButton addButton = new JButton("Add Files");
+    private final JButton makeButton = new JButton("Pack FLAC");
 
-    private ArrayList<File> flacFiles = new ArrayList<>();
-    private ArrayList<PackerFile> albumFiles = new ArrayList<>();
+    private final ArrayList<File> flacFiles = new ArrayList<>();
+    private final ArrayList<PackerFile> albumFiles = new ArrayList<>();
     private StreamInfo masterStreamInfo = null;
-    private byte[] buffer = new byte[64 * 1024];
+    private final byte[] buffer = new byte[64 * 1024];
 
     /**
      * Constructor.
@@ -238,9 +238,9 @@ public class FlacPacker extends JFrame {
      */
     private static class PackerFile {
 
-        protected File file;
-        protected SeekPoint seekPoint;
-        protected long firstFrameOffset;
+        protected final File file;
+        protected final SeekPoint seekPoint;
+        protected final long firstFrameOffset;
 
         /**
          * The constructor.

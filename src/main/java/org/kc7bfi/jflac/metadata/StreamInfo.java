@@ -45,15 +45,15 @@ public class StreamInfo extends Metadata {
     private static final int STREAMINFO_TOTAL_SAMPLES_LEN = 36; // bits
     private static final int STREAMINFO_MD5SUM_LEN = 128; // bits
 
-    private byte[] md5sum = new byte[16];
+    private final byte[] md5sum = new byte[16];
 
-    private int minBlockSize;
-    private int maxBlockSize;
-    private int minFrameSize;
-    private int maxFrameSize;
-    private int sampleRate;
-    private int channels;
-    private int bitsPerSample;
+    private final int minBlockSize;
+    private final int maxBlockSize;
+    private final int minFrameSize;
+    private final int maxFrameSize;
+    private final int sampleRate;
+    private final int channels;
+    private final int bitsPerSample;
     private long totalSamples;
 
     /**

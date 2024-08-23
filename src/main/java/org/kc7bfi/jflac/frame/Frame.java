@@ -34,14 +34,12 @@ public class Frame {
     public Header header;
 
     /** The subframes - One per channel. */
-    public Channel[] subframes = new Channel[Constants.MAX_CHANNELS];
+    public final Channel[] subframes = new Channel[Constants.MAX_CHANNELS];
 
     /** The frame footer. */
     private short crc;
 
-    /**
-     * @see java.lang.Object#toString()
-     */
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Frame Header: ").append(header).append("\n");

@@ -38,13 +38,13 @@ public class ChannelFixed extends Channel {
     private static final int MAX_FIXED_ORDER = 4;
 
     /** The residual coding method. */
-    private EntropyCodingMethod entropyCodingMethod;
+    private final EntropyCodingMethod entropyCodingMethod;
     /** The polynomial order. */
-    private int order;
+    private final int order;
     /** Warmup samples to prime the predictor, length == order. */
-    private int[] warmup = new int[MAX_FIXED_ORDER];
+    private final int[] warmup = new int[MAX_FIXED_ORDER];
     /** The residual signal, length == (blocksize minus order) samples. */
-    private int[] residual;
+    private final int[] residual;
 
     /**
      * The constructor.

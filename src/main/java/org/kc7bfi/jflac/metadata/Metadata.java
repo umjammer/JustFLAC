@@ -58,9 +58,9 @@ public abstract class Metadata {
     /** Metadata length field length. */
     public static final int STREAM_METADATA_LENGTH_LEN = 24; // bits
 
-    protected boolean isLast;
+    protected final boolean isLast;
 
-    protected int length;
+    protected final int length;
 
     /**
      * Constructor.

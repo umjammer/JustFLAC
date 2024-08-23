@@ -31,7 +31,8 @@ public class FLACEncoder {
     private static class verify_input_fifo {
 
         int[][] data = new int[Constants.MAX_CHANNELS][Constants.MAX_BLOCK_SIZE];
-        int size; /* of each data[] in samples */
+        /** of each data[] in samples */
+        int size;
         int tail;
     }
 
@@ -217,11 +218,11 @@ public class FLACEncoder {
         }
     }
 
-    private VerifyData verifyData = new VerifyData();
-    boolean is_being_deleted; /* if true, call to ..._finish() from ..._delete() will not call the callbacks */
+    private final VerifyData verifyData = new VerifyData();
+    final boolean is_being_deleted; // if true, call to ..._finish() from ..._delete() will not call the callbacks
 
     // protected
-    int state;
+    final int state;
     boolean verify;
     boolean streamable_subset;
     boolean do_mid_side_stereo;
