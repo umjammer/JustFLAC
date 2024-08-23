@@ -34,6 +34,7 @@ import org.kc7bfi.jflac.io.BitInputStream;
  */
 public class VorbisComment extends Metadata {
 
+    static final String EMPTY_STRING = "";
     protected byte[] vendorString;
     protected int numComments;
     protected VorbisString[] comments;
@@ -87,5 +88,85 @@ public class VorbisComment extends Metadata {
                     sbuff.add(comment.substring(eqpos + 1));
         }
         return sbuff.toArray(new String[0]);
+    }
+
+    public String getComment() {
+        String[] v = getCommentByName("COMMENT");
+        if (v != null && v.length > 0 && v[0] != null)
+            return v[0];
+        else
+            return EMPTY_STRING;
+    }
+
+    public String getGenre() {
+        String[] v = getCommentByName("GENRE");
+        if (v != null && v.length > 0 && v[0] != null)
+            return v[0];
+        else
+            return EMPTY_STRING;
+    }
+
+    public String getDate() {
+        String[] v = getCommentByName("DATE");
+        if (v != null && v.length > 0 && v[0] != null)
+            return v[0];
+        else
+            return EMPTY_STRING;
+    }
+
+    public String getAlbum() {
+        String[] v = getCommentByName("ALBUM");
+        if (v != null && v.length > 0 && v[0] != null)
+            return v[0];
+        else
+            return EMPTY_STRING;
+    }
+
+    public String getTotalDiscs() {
+        String[] v = getCommentByName("TOTALDISCS");
+        if (v != null && v.length > 0 && v[0] != null)
+            return v[0];
+        else
+            return EMPTY_STRING;
+    }
+
+    public String getDiscNumber() {
+        String[] v = getCommentByName("DISCNUMBER");
+        if (v != null && v.length > 0 && v[0] != null)
+            return v[0];
+        else
+            return EMPTY_STRING;
+    }
+
+    public String getTotalTracks() {
+        String[] v = getCommentByName("TOTALTRACKS");
+        if (v != null && v.length > 0 && v[0] != null)
+            return v[0];
+        else
+            return EMPTY_STRING;
+    }
+
+    public String getTrackNumber() {
+        String[] v = getCommentByName("TRACKNUMBER");
+        if (v != null && v.length > 0 && v[0] != null)
+            return v[0];
+        else
+            return EMPTY_STRING;
+    }
+
+    public String getTitle() {
+        String[] v = getCommentByName("TITLE");
+        if (v != null && v.length > 0 && v[0] != null)
+            return v[0];
+        else
+            return EMPTY_STRING;
+    }
+
+    public String getArtist() {
+        String[] v = getCommentByName("ARTIST");
+        if (v != null && v.length > 0 && v[0] != null)
+            return v[0];
+        else
+            return EMPTY_STRING;
     }
 }

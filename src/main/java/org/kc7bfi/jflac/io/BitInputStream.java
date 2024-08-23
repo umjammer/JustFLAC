@@ -82,6 +82,11 @@ public class BitInputStream {
         return bytes;
     }
 
+    public void skip(long skip) throws IOException {
+        while (skip > 0) skip -= inStream.skip(skip);
+        reset();
+    }
+
     /**
      * Reset the bit stream.
      */

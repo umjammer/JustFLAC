@@ -51,7 +51,6 @@ public class Frame {
         sb.append("\tFrame Footer: ").append(crc);
 
         return sb.toString();
-
     }
 
     /**
@@ -85,5 +84,13 @@ public class Frame {
      */
     public void setCRC(short crc) {
         this.crc = crc;
+    }
+
+    /**
+     * return the frame's Header.
+     * @return Returns the header.
+     */
+    public Header getHeader() {
+        return header;
     }
 }
