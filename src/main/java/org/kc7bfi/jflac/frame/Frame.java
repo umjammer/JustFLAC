@@ -34,14 +34,12 @@ public class Frame {
     public Header header;
 
     /** The subframes - One per channel. */
-    public Channel[] subframes = new Channel[Constants.MAX_CHANNELS];
+    public final Channel[] subframes = new Channel[Constants.MAX_CHANNELS];
 
     /** The frame footer. */
     private short crc;
 
-    /**
-     * @see java.lang.Object#toString()
-     */
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Frame Header: ").append(header).append("\n");
@@ -51,7 +49,6 @@ public class Frame {
         sb.append("\tFrame Footer: ").append(crc);
 
         return sb.toString();
-
     }
 
     /**
@@ -85,5 +82,13 @@ public class Frame {
      */
     public void setCRC(short crc) {
         this.crc = crc;
+    }
+
+    /**
+     * return the frame's Header.
+     * @return Returns the header.
+     */
+    public Header getHeader() {
+        return header;
     }
 }

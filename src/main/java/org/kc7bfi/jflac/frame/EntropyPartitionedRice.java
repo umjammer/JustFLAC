@@ -32,8 +32,8 @@ import org.kc7bfi.jflac.io.BitInputStream;
  */
 public class EntropyPartitionedRice extends EntropyCodingMethod {
 
-    private static final int ENTROPY_CODING_METHOD_PARTITIONED_RICE_PARAMETER_LEN = 4; /* bits */
-    private static final int ENTROPY_CODING_METHOD_PARTITIONED_RICE_RAW_LEN = 5; /* bits */
+    private static final int ENTROPY_CODING_METHOD_PARTITIONED_RICE_PARAMETER_LEN = 4; // bits
+    private static final int ENTROPY_CODING_METHOD_PARTITIONED_RICE_RAW_LEN = 5; // bits
     private static final int ENTROPY_CODING_METHOD_PARTITIONED_RICE_ESCAPE_PARAMETER = 15;
 
     /**
@@ -48,23 +48,23 @@ public class EntropyPartitionedRice extends EntropyCodingMethod {
      */
     @Override
     void readResidual(BitInputStream is, int predictorOrder, int partitionOrder, Header header, int[] residual) throws IOException {
-        //System.out.println("readResidual Pred="+predictorOrder+" part="+partitionOrder);
+//        logger.log(Level.DEBUG, "readResidual Pred="+predictorOrder+" part="+partitionOrder);
         int sample = 0;
         int partitions = 1 << partitionOrder;
         int partitionSamples = partitionOrder > 0 ? header.blockSize >> partitionOrder : header.blockSize - predictorOrder;
         if (predictorOrder == 0) {
             if (header.blockSize < predictorOrder) {
-                //System.err.printf("NEED RESYNC  %d - %d%n", header.blockSize, predictorOrder);
+//                logger.log(Level.DEBUG, String.format("NEED RESYNC  %d - %d%n", header.blockSize, predictorOrder));
                 return;
             }
         } else {
             if (partitionSamples < predictorOrder) {
-                //System.err.printf("NEED RESYNC2  %d - %d%n", partitionSamples , predictorOrder);
+//                logger.log(Level.DEBUG, String.format("NEED RESYNC2  %d - %d%n", partitionSamples , predictorOrder));
                 return;
             }
         }
         contents.ensureSize(Math.max(6, partitionOrder));
-        //contents.parameters = new int[partitions];
+//        contents.parameters = new int[partitions];
 
         for (int partition = 0; partition < partitions; partition++) {
             int riceParameter = is.readRawUInt(ENTROPY_CODING_METHOD_PARTITIONED_RICE_PARAMETER_LEN);

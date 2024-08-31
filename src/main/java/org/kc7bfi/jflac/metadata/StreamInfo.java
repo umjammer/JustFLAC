@@ -22,6 +22,8 @@ package org.kc7bfi.jflac.metadata;
 
 import java.io.IOException;
 
+import javax.sound.sampled.AudioFormat;
+
 import org.kc7bfi.jflac.io.BitInputStream;
 import org.kc7bfi.jflac.io.BitOutputStream;
 
@@ -43,15 +45,15 @@ public class StreamInfo extends Metadata {
     private static final int STREAMINFO_TOTAL_SAMPLES_LEN = 36; // bits
     private static final int STREAMINFO_MD5SUM_LEN = 128; // bits
 
-    private byte[] md5sum = new byte[16];
+    private final byte[] md5sum = new byte[16];
 
-    private int minBlockSize;
-    private int maxBlockSize;
-    private int minFrameSize;
-    private int maxFrameSize;
-    private int sampleRate;
-    private int channels;
-    private int bitsPerSample;
+    private final int minBlockSize;
+    private final int maxBlockSize;
+    private final int minFrameSize;
+    private final int maxFrameSize;
+    private final int sampleRate;
+    private final int channels;
+    private final int bitsPerSample;
     private long totalSamples;
 
     /**
@@ -226,6 +228,12 @@ public class StreamInfo extends Metadata {
         return sampleRate;
     }
 
+    /**
+     * @return the Java Sound AudioFormat for this stream info.
+     */
+    public AudioFormat getAudioFormat() {
+        return new AudioFormat(sampleRate, bitsPerSample, channels, bitsPerSample > 8, false);
+    }
 
     /**
      * @return Returns the bitsPerSample.

@@ -27,10 +27,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.SequenceInputStream;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.net.URL;
 import java.nio.file.Files;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -44,6 +44,8 @@ import org.kc7bfi.jflac.io.BitInputStream;
 import org.kc7bfi.jflac.io.BitOutputStream;
 import org.kc7bfi.jflac.metadata.StreamInfo;
 
+import static java.lang.System.getLogger;
+
 
 /**
  * Provider for Flac audio file reading services. This implementation can parse
@@ -55,7 +57,7 @@ import org.kc7bfi.jflac.metadata.StreamInfo;
  */
 public class FlacAudioFileReader extends AudioFileReader {
 
-    private static final Logger logger = Logger.getLogger(FlacAudioFileReader.class.getName());
+    private static final Logger logger = getLogger(FlacAudioFileReader.class.getName());
 
     private FLACDecoder decoder;
     private StreamInfo streamInfo;
@@ -122,7 +124,7 @@ public class FlacAudioFileReader extends AudioFileReader {
      * @throws IOException                   if an I/O exception occurs.
      */
     protected AudioFileFormat getAudioFileFormat(InputStream bitStream, int mediaLength) throws UnsupportedAudioFileException, IOException {
-logger.fine("enter available: " + bitStream.available());
+logger.log(Level.DEBUG, "enter available: " + bitStream.available());
         if (!bitStream.markSupported()) {
             throw new IllegalArgumentException("must be mark supported");
         }
@@ -132,32 +134,32 @@ logger.fine("enter available: " + bitStream.available());
             decoder = new FLACDecoder(bitStream);
             streamInfo = decoder.readStreamInfo();
             if (streamInfo == null) {
-logger.fine("FLAC file reader: no stream info found");
+logger.log(Level.DEBUG, "FLAC file reader: no stream info found");
                 throw new UnsupportedAudioFileException("No StreamInfo found");
             }
 
             format = new FlacAudioFormat(streamInfo);
         } catch (IOException ioe) {
             if (ioe.getMessage().equals("Could not find Stream Sync")) {
-logger.finer("FLAC file reader: not a FLAC stream");
-logger.log(Level.FINEST, ioe.toString(), ioe);
+logger.log(Level.DEBUG, "FLAC file reader: not a FLAC stream");
+logger.log(Level.TRACE, ioe.getMessage(), ioe);
                 throw (UnsupportedAudioFileException) new UnsupportedAudioFileException(ioe.getMessage()).initCause(ioe);
             } else {
                 throw ioe;
             }
         } catch (Exception e) {
-logger.finer(e.toString());
-logger.log(Level.FINEST, e.toString(), e);
+logger.log(Level.DEBUG, e.toString());
+logger.log(Level.TRACE, e.toString(), e);
             throw (UnsupportedAudioFileException) new UnsupportedAudioFileException(e.getMessage()).initCause(e);
         } finally {
             try {
                 bitStream.reset();
             } catch (IOException e) {
-                logger.info(e.getMessage());
+                logger.log(Level.INFO, e.getMessage());
             }
-            logger.fine("finally available: " + bitStream.available());
+            logger.log(Level.DEBUG, "finally available: " + bitStream.available());
         }
-logger.fine("FLAC file reader: got stream with format " + format);
+logger.log(Level.DEBUG, "FLAC file reader: got stream with format " + format);
         return new AudioFileFormat(FlacFileFormatType.FLAC, format, AudioSystem.NOT_SPECIFIED);
     }
 

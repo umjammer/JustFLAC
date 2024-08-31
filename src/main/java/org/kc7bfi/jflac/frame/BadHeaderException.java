@@ -61,5 +61,4 @@ public class BadHeaderException extends Exception {
     public BadHeaderException(String msg, Throwable err) {
         super(msg, err);
     }
-
 }

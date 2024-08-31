@@ -44,7 +44,7 @@ public class CueSheet extends Metadata {
      * general, the media catalog number may be 0 to 128 bytes long; any
      * unused characters should be right-padded with NUL characters.
      */
-    protected byte[] mediaCatalogNumber = new byte[129];
+    protected final byte[] mediaCatalogNumber = new byte[129];
 
     /** The number of lead-in samples. */
     protected long leadIn;

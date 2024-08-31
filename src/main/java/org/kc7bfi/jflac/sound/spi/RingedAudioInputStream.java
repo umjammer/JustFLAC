@@ -52,7 +52,7 @@ public abstract class RingedAudioInputStream extends AudioInputStream {
      */
     private final byte[] single = new byte[1];
 
-    protected RingBuffer buffer = new RingBuffer();
+    protected final RingBuffer buffer = new RingBuffer();
 
     /**
      * Check to make sure that this stream has not been closed.

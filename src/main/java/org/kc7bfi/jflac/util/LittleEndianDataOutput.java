@@ -31,7 +31,7 @@ import java.io.IOException;
  */
 public class LittleEndianDataOutput implements DataOutput {
 
-    private DataOutput out;
+    private final DataOutput out;
 
     /**
      * The constructor.

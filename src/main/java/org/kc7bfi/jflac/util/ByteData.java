@@ -30,7 +30,7 @@ public class ByteData {
     private static final int DEFAULT_BUFFER_SIZE = 256;
 
     /** The byte array where data is stored. */
-    private byte[] data;
+    private final byte[] data;
 
     /** The number of bytes stored in the array. */
     private int len;

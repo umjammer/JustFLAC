@@ -35,7 +35,8 @@ public class BitOutputStream {
 
     private static final int BITS_PER_BLURB = 8;
 
-    private static final long[] MASK32 = new long[] {0, 0x0000000000000001, 0x0000000000000003, 0x0000000000000007, 0x000000000000000F,
+    private static final long[] MASK32 = new long[] {
+            0, 0x0000000000000001, 0x0000000000000003, 0x0000000000000007, 0x000000000000000F,
             0x000000000000001F, 0x000000000000003F, 0x000000000000007F, 0x00000000000000FF, 0x00000000000001FF, 0x00000000000003FF,
             0x00000000000007FF, 0x0000000000000FFF, 0x0000000000001FFF, 0x0000000000003FFF, 0x0000000000007FFF, 0x000000000000FFFF,
             0x000000000001FFFF, 0x000000000003FFFF, 0x000000000007FFFF, 0x00000000000FFFFF, 0x00000000001FFFFF, 0x00000000003FFFFF,
@@ -47,7 +48,8 @@ public class BitOutputStream {
             0x0001FFFFFFFFFFFFL, 0x0003FFFFFFFFFFFFL, 0x0007FFFFFFFFFFFFL, 0x000FFFFFFFFFFFFFL, 0x001FFFFFFFFFFFFFL,
             0x003FFFFFFFFFFFFFL, 0x007FFFFFFFFFFFFFL, 0x00FFFFFFFFFFFFFFL, 0x01FFFFFFFFFFFFFFL, 0x03FFFFFFFFFFFFFFL,
             0x07FFFFFFFFFFFFFFL, 0x0FFFFFFFFFFFFFFFL, 0x1FFFFFFFFFFFFFFFL, 0x3FFFFFFFFFFFFFFFL, 0x7FFFFFFFFFFFFFFFL,
-            0xFFFFFFFFFFFFFFFFL};
+            0xFFFFFFFFFFFFFFFFL
+    };
 
     private byte[] buffer = new byte[0];
     private int outCapacity = 0; // in blurbs
@@ -256,7 +258,7 @@ public class BitOutputStream {
         }
 
         // zero-out unused bits; WATCHOUT: other code relies on this, so this needs to stay
-        if (bits < 32) val &= (~(0xffffffff << bits)); // zero-out unused bits
+        if (bits < 32) val &= (~(0xffff_ffff << bits)); // zero-out unused bits
         totalBits += bits;
         while (bits > 0) {
             int n = BITS_PER_BLURB - outBits;
@@ -273,7 +275,7 @@ public class BitOutputStream {
                     buffer[outBlurbs++] = (byte) (val >> k);
 
                     // we know k < 32 so no need to protect against the gcc bug mentioned above
-                    val &= (~(0xffffffff << k));
+                    val &= (~(0xffff_ffff << k));
                     bits -= BITS_PER_BLURB;
                 }
             } else if (bits <= n) {
@@ -291,7 +293,7 @@ public class BitOutputStream {
                 buffer[outBlurbs] |= (val >> k);
 
                 // we know n > 0 so k < 32 so no need to protect against the gcc bug mentioned above
-                val &= (~(0xffffffff << k));
+                val &= (~(0xffff_ffff << k));
                 bits -= n;
                 outBlurbs++;
                 outBits = 0;
@@ -322,7 +324,7 @@ public class BitOutputStream {
                     buffer[outBlurbs++] = (byte) (val >> k);
 
                     // we know k < 64 so no need to protect against the gcc bug mentioned above
-                    val &= (~(0xffffffffffffffffL << k));
+                    val &= (~(0xffff_ffff_ffff_ffffL << k));
                     bits -= BITS_PER_BLURB;
                 }
             } else {
@@ -332,7 +334,7 @@ public class BitOutputStream {
                 buffer[outBlurbs] |= (val >> k);
 
                 // we know n > 0 so k < 64 so no need to protect against the gcc bug mentioned above
-                val &= (~(0xffffffffffffffffL << k));
+                val &= (~(0xffff_ffff_ffff_ffffL << k));
                 bits -= n;
                 outBits += n;
                 if (outBits == BITS_PER_BLURB) {
@@ -399,14 +401,14 @@ public class BitOutputStream {
         msbs = uval >> parameter;
         interestingBits = 1 + parameter;
         totalBits = interestingBits + msbs;
-        pattern = 1 << parameter; /* the unary end bit */
-        pattern |= (uval & ((1 << parameter) - 1)); /* the binary LSBs */
+        pattern = 1 << parameter; // the unary end bit
+        pattern |= (uval & ((1 << parameter) - 1)); // the binary LSBs
         if (totalBits <= 32) {
             writeRawUInt(pattern, totalBits);
         } else {
-            /* write the unary MSBs */
+            // write the unary MSBs
             writeZeroes(msbs);
-            /* write the unary end bit and binary LSBs */
+            // write the unary end bit and binary LSBs
             writeRawUInt(pattern, interestingBits);
         }
     }

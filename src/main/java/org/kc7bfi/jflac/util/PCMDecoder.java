@@ -34,15 +34,15 @@ import org.kc7bfi.jflac.metadata.StreamInfo;
  */
 public class PCMDecoder {
 
-    private long totalSamples;
-    private int channels;
-    private int bps;
-    private int sampleRate;
+    private final long totalSamples;
+    private final int channels;
+    private final int bps;
+    private final int sampleRate;
 
     private int samplesProcessed = 0;
     private int frameCounter = 0;
 
-    private ByteData buf;
+    private final ByteData buf;
 
     /**
      * The constructor.

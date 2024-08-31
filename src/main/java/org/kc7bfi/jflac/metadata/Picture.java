@@ -64,15 +64,15 @@ public class Picture extends Metadata {
     }
 
     private PictureType pictureType;
-    private int mimeTypeByteCount;
-    private String mimeString;      //ASCII 0x20 to 0x7e or --> (data is URL)
-    private int descStringByteCount;
-    private String descString;      // UTF-8
-    private int picPixelWidth;
-    private int picPixelHeight;
-    private int picBitsPerPixel;
-    private int picColorCount;      // for GIF, else 0
-    private int picByteCount;
+    private final int mimeTypeByteCount;
+    private final String mimeString;      //ASCII 0x20 to 0x7e or --> (data is URL)
+    private final int descStringByteCount;
+    private final String descString;      // UTF-8
+    private final int picPixelWidth;
+    private final int picPixelHeight;
+    private final int picBitsPerPixel;
+    private final int picColorCount;      // for GIF, else 0
+    private final int picByteCount;
 
     protected byte[] image;
 

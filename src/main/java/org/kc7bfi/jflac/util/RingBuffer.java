@@ -20,12 +20,20 @@
 
 package org.kc7bfi.jflac.util;
 
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
+
+import static java.lang.System.getLogger;
+
+
 /**
  * RingBuffer class.
  *
  * @author David R Robison
  */
 public class RingBuffer {
+
+    private static final Logger logger = getLogger(RingBuffer.class.getName());
 
     protected static final int DEFAULT_BUFFER_SIZE = 2048;
     protected volatile int bufferSize;
@@ -109,7 +117,7 @@ public class RingBuffer {
         synchronized (signal) {
             // see if we have enough room
             while (putAvailable() < len) {
-                try { signal.wait(1000); } catch (Exception e) { System.out.println("Put.Signal.wait:" + e); }
+                try { signal.wait(1000); } catch (Exception e) { logger.log(Level.DEBUG, "Put.Signal.wait:" + e); }
             }
 
             // copy data
@@ -159,7 +167,7 @@ public class RingBuffer {
                 try {
                     signal.wait(1000);
                 } catch (Exception e) {
-                    System.out.println("Get.Signal.wait:" + e);
+                    logger.log(Level.DEBUG, "Get.Signal.wait:" + e);
                 }
             }
             len = Math.min(len, getAvailable());
@@ -201,41 +209,5 @@ public class RingBuffer {
      */
     public void setEOF(boolean eof) {
         this.eof = eof;
-    }
-
-    /**
-     * Test main routine.
-     *
-     * @param args Not used
-     */
-    public static void main(String[] args) {
-        RingBuffer r = new RingBuffer(9);
-        byte[] b = "ABCDEFG".getBytes();
-        byte[] g = new byte[2];
-        System.out.println("Start");
-        r.put(b, 0, 3);
-        r.get(g, 0, 2);
-        System.out.println(new String(g));
-        r.put(b, 0, 3);
-        r.get(g, 0, 2);
-        System.out.println(new String(g));
-        r.put(b, 0, 3);
-        r.get(g, 0, 2);
-        System.out.println(new String(g));
-        r.put(b, 0, 3);
-        r.get(g, 0, 2);
-        System.out.println(new String(g));
-        r.put(b, 0, 3);
-        r.get(g, 0, 2);
-        System.out.println(new String(g));
-        r.put(b, 0, 3);
-        r.get(g, 0, 2);
-        System.out.println(new String(g));
-        r.put(b, 0, 3);
-        r.get(g, 0, 2);
-        System.out.println(new String(g));
-        r.put(b, 0, 3);
-        r.get(g, 0, 2);
-        System.out.println(new String(g));
     }
 }

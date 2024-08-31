@@ -178,19 +178,19 @@ public class FixedPredictor {
             break;
         case 2:
             for (int i = 0; i < idataLen; i++) {
-                /* == data[i] - 2*data[i-1] + data[i-2] */
+                //== data[i] - 2*data[i-1] + data[i-2]
                 residual[i] = data[i] - (data[i - 1] << 1) + data[i - 2];
             }
             break;
         case 3:
             for (int i = 0; i < idataLen; i++) {
-                /* == data[i] - 3*data[i-1] + 3*data[i-2] - data[i-3] */
+                //== data[i] - 3*data[i-1] + 3*data[i-2] - data[i-3]
                 residual[i] = data[i] - (((data[i - 1] - data[i - 2]) << 1) + (data[i - 1] - data[i - 2])) - data[i - 3];
             }
             break;
         case 4:
             for (int i = 0; i < idataLen; i++) {
-                /* == data[i] - 4*data[i-1] + 6*data[i-2] - 4*data[i-3] + data[i-4] */
+                //== data[i] - 4*data[i-1] + 6*data[i-2] - 4*data[i-3] + data[i-4]
                 residual[i] = data[i] - ((data[i - 1] + data[i - 3]) << 2) + ((data[i - 2] << 2) + (data[i - 2] << 1)) + data[i - 4];
             }
             break;
@@ -221,19 +221,19 @@ public class FixedPredictor {
             break;
         case 2:
             for (int i = 0; i < idataLen; i++) {
-                /* == residual[i] + 2*data[i-1] - data[i-2] */
+                //== residual[i] + 2*data[i-1] - data[i-2]
                 data[i + startAt] = residual[i] + (data[i + startAt - 1] << 1) - data[i + startAt - 2];
             }
             break;
         case 3:
             for (int i = 0; i < idataLen; i++) {
-                /* residual[i] + 3*data[i-1] - 3*data[i-2]) + data[i-3] */
+                //residual[i] + 3*data[i-1] - 3*data[i-2]) + data[i-3]
                 data[i + startAt] = residual[i] + (((data[i + startAt - 1] - data[i + startAt - 2]) << 1) + (data[i + startAt - 1] - data[i + startAt - 2])) + data[i + startAt - 3];
             }
             break;
         case 4:
             for (int i = 0; i < idataLen; i++) {
-                /* == residual[i] + 4*data[i-1] - 6*data[i-2] + 4*data[i-3] - data[i-4] */
+                //== residual[i] + 4*data[i-1] - 6*data[i-2] + 4*data[i-3] - data[i-4]
                 data[i + startAt] = residual[i] + ((data[i + startAt - 1] + data[i + startAt - 3]) << 2) - ((data[i + startAt - 2] << 2) + (data[i + startAt - 2] << 1)) - data[i + startAt - 4];
             }
             break;

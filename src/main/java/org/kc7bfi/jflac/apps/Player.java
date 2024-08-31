@@ -48,7 +48,7 @@ public class Player implements PCMProcessor {
     private AudioFormat fmt;
     private DataLine.Info info;
     private SourceDataLine line;
-    private List<LineListener> listeners = new ArrayList<>();
+    private final List<LineListener> listeners = new ArrayList<>();
 
     public void addListener(LineListener listener) {
         listeners.add(listener);

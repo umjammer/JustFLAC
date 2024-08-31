@@ -35,7 +35,7 @@ import org.kc7bfi.jflac.io.BitInputStream;
 public class ChannelConstant extends Channel {
 
     /** The constant signal value. */
-    private int value;
+    private final int value;
 
     /**
      * The constructor.

@@ -42,10 +42,10 @@ public abstract class Channel {
     public static final int ENTROPY_CODING_METHOD_PARTITIONED_RICE2_ORDER_LEN = 5;
 
     /** The FLAC Frame Header. */
-    protected Header header;
+    protected final Header header;
 
     /** The number of waisted bits in the frame. */
-    protected int wastedBits;
+    protected final int wastedBits;
 
     /**
      * The constructor.
