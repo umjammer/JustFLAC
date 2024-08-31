@@ -19,7 +19,7 @@ Pure Java FLAC decoder (Java Sound SPI) powered by [JustFlac](https://jitpack.io
 ## Usage
 
 ```java
-    AudioInputStream ais = AudioSystem.getAudioInputStream(Files.newInputStream(Paths.get(flac)));
+    AudioInputStream ais = AudioSystem.getAudioInputStream(Paths.get(flac).toFile());
     Clip clip = AudioSystem.getClip();
     clip.open(AudioSystem.getAudioInputStream(new AudioFormat(44100, 16, 2, true, false), ais));
     clip.loop(Clip.LOOP_CONTINUOUSLY);
